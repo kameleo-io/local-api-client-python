@@ -1,0 +1,4 @@
+build/
+dist/
+kameleo.local_api_client.egg-info/
+.idea/

@@ -1,0 +1,1 @@
+autorest --input-file=swagger.json --python --output-folder=.. --override-client-name=KameleoLocalApiClient --namespace=kameleo.local_api_client --package-name=kameleo.local_api_client
