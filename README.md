@@ -113,6 +113,7 @@ Several [examples](https://github.com/kameleo-io/local-api-examples) have been p
 - Saving/Loading a browsing session to/from a .kameleo file
 - Modify and Delete browser cookies
 - Hooking up Kameleo with an external browser (Puppeteer)
+- Start profile with extra WebDriver capabilities
 
 
 # Endpoints
