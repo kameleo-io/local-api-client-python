@@ -94,6 +94,7 @@ driver = webdriver.Remote(
 # Use any WebDriver command to drive the browser
 # and enjoy full protection from Selenium detection methods
 driver.get('https://google.com')
+driver.find_element('css selector', 'div[aria-modal="true"][tabindex="0"] button:not([aria-label]):last-child').click()
 driver.find_element('name', 'q').send_keys('Kameleo\n')
 print(driver.title)
 
