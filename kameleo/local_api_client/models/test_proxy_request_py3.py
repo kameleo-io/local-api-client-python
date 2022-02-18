@@ -13,19 +13,24 @@ class TestProxyRequest(Model):
 
     All required parameters must be populated in order to send to Azure.
 
-    :param proxy: Required.
-    :type proxy:
-     ~kameleo.local_api_client.models.ProxyConnectionTypeServerMultiLevelChoice
+    :param value: Required. Possible values include: 'none', 'http', 'socks5',
+     'ssh'
+    :type value: str or ~kameleo.local_api_client.models.enum
+    :param extra: Required.
+    :type extra: ~kameleo.local_api_client.models.Server
     """
 
     _validation = {
-        'proxy': {'required': True},
+        'value': {'required': True},
+        'extra': {'required': True},
     }
 
     _attribute_map = {
-        'proxy': {'key': 'proxy', 'type': 'ProxyConnectionTypeServerMultiLevelChoice'},
+        'value': {'key': 'value', 'type': 'str'},
+        'extra': {'key': 'extra', 'type': 'Server'},
     }
 
-    def __init__(self, *, proxy, **kwargs) -> None:
+    def __init__(self, *, value, extra, **kwargs) -> None:
         super(TestProxyRequest, self).__init__(**kwargs)
-        self.proxy = proxy
+        self.value = value
+        self.extra = extra

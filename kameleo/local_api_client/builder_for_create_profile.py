@@ -15,6 +15,8 @@ class BuilderForCreateProfile:
 
     @staticmethod
     def for_base_profile(base_profile_id):
+        if not base_profile_id:
+            raise ValueError("base_profile_id must be set")
         return BuilderForCreateProfile(base_profile_id)
 
     def build(self):
@@ -43,6 +45,16 @@ class BuilderForCreateProfile:
         """
         self.profile_request.webgl.value = value
         self.profile_request.webgl.extra = options
+        return self
+
+    def set_audio(self, value):
+        """Tells the mode how the audio will be spoofed. Possible values:
+            'noise': Add some noise to the Audio generation.
+            'block': Completely block the Audio API.
+            'off': Turn off the audio spoofing, use the original settings.
+        :param string value: Audio spoofing type. Possible values: 'noise', 'block', 'off'
+        """
+        self.profile_request.audio = value
         return self
 
     def set_timezone(self, value, options):
@@ -183,6 +195,7 @@ class BuilderForCreateProfile:
         """
         self.profile_request.canvas = "noise"
         self.profile_request.webgl.value = "noise"
+        self.profile_request.audio = "noise"
         self.profile_request.timezone.value = "automatic"
         self.profile_request.geolocation.value = "automatic"
         self.profile_request.web_rtc.value = "automatic"
@@ -198,6 +211,7 @@ class BuilderForCreateProfile:
             base_profile_id=base_profile_id,
             canvas="off",
             webgl=WebglSpoofingTypeWebglSpoofingOptionsMultiLevelChoice(value="off", extra=None),
+            audio="off",
             timezone=TimezoneSpoofingTypeTimezoneMultiLevelChoice(value="off", extra=None),
             geolocation=GeolocationSpoofingTypeGeolocationSpoofingOptionsMultiLevelChoice(value="off", extra=None),
             proxy=ProxyConnectionTypeServerMultiLevelChoice(value="none", extra=None),

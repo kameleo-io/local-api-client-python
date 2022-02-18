@@ -19,6 +19,8 @@ class UpdateProfileRequest(Model):
     :param webgl: Required.
     :type webgl:
      ~kameleo.local_api_client.models.WebglSpoofingTypeWebglSpoofingOptionsMultiLevelChoice
+    :param audio: Required. Possible values include: 'off', 'noise', 'block'
+    :type audio: str or ~kameleo.local_api_client.models.enum
     :param timezone: Required.
     :type timezone:
      ~kameleo.local_api_client.models.TimezoneSpoofingTypeTimezoneMultiLevelChoice
@@ -46,9 +48,13 @@ class UpdateProfileRequest(Model):
     :param password_manager: Required. Possible values include: 'enabled',
      'disabled'
     :type password_manager: str or ~kameleo.local_api_client.models.enum
-    :param extensions: A list of abolute paths from where the profile should
-     load extensions or addons when starting the browser. For chrome and edge
-     use CRX3 format extensions. For firefox use signed xpi format addons.
+    :param extensions: A list of extensions or addons should be loaded to the
+     browser when starting the profile. For extensions that are added now, it
+     should be an absolute path.
+     For extensions already added to the profile in a previous update, the name
+     is only enough.
+     For chrome and edge use CRX3 format extensions. For firefox use signed xpi
+     format addons.
     :type extensions: list[str]
     :param notes: A free text including any notes written by the user.
     :type notes: str
@@ -62,6 +68,7 @@ class UpdateProfileRequest(Model):
     _validation = {
         'canvas': {'required': True},
         'webgl': {'required': True},
+        'audio': {'required': True},
         'timezone': {'required': True},
         'geolocation': {'required': True},
         'proxy': {'required': True},
@@ -76,6 +83,7 @@ class UpdateProfileRequest(Model):
     _attribute_map = {
         'canvas': {'key': 'canvas', 'type': 'str'},
         'webgl': {'key': 'webgl', 'type': 'WebglSpoofingTypeWebglSpoofingOptionsMultiLevelChoice'},
+        'audio': {'key': 'audio', 'type': 'str'},
         'timezone': {'key': 'timezone', 'type': 'TimezoneSpoofingTypeTimezoneMultiLevelChoice'},
         'geolocation': {'key': 'geolocation', 'type': 'GeolocationSpoofingTypeGeolocationSpoofingOptionsMultiLevelChoice'},
         'proxy': {'key': 'proxy', 'type': 'ProxyConnectionTypeServerMultiLevelChoice'},
@@ -94,6 +102,7 @@ class UpdateProfileRequest(Model):
         super(UpdateProfileRequest, self).__init__(**kwargs)
         self.canvas = kwargs.get('canvas', None)
         self.webgl = kwargs.get('webgl', None)
+        self.audio = kwargs.get('audio', None)
         self.timezone = kwargs.get('timezone', None)
         self.geolocation = kwargs.get('geolocation', None)
         self.proxy = kwargs.get('proxy', None)
