@@ -768,6 +768,15 @@
     }
   },
   "definitions": {
+    "AudioSpoofingType": {
+      "description": "Tells the mode how the Audio will be spoofed. Possible values:\r\n'noise': Add some noise to the Audio generation\r\n'block': Completely block the Audio API\r\n'off': Turn off the spoofing, use the original settings",
+      "enum": [
+        "off",
+        "noise",
+        "block"
+      ],
+      "type": "string"
+    },
     "BaseProfile": {
       "description": "Representation of a base profile which is used to build profiles from.",
       "required": [
@@ -1009,19 +1018,16 @@
           "format": "int64",
           "description": "This unix timestamp formatted attribute is used to set persistent cookies. It signifies how long the browser should use the persistent cookie and when the cookie should be deleted.\r\nIf this attribute is not specified, then the lifetime of the cookie is the same as that of browser session, i.e.it will be a non-persistent cookie.",
           "type": "integer",
-          "readOnly": true,
           "example": 1568986993
         },
         "session": {
           "description": "Session cookies are deleted when the current session ends. The browser defines when the \"current session\" ends, and some browsers use session restoring when restarting, which can cause session cookies to last indefinitely long.",
           "type": "boolean",
-          "readOnly": true,
           "example": false
         },
         "storeId": {
           "description": "The ID of the cookie store containing this cookie.",
           "type": "string",
-          "readOnly": true,
           "example": "0"
         }
       }
@@ -1095,10 +1101,12 @@
     },
     "CreateProfileRequest": {
       "required": [
+        "audio",
         "baseProfileId",
         "canvas",
         "fonts",
         "geolocation",
+        "passwordManager",
         "plugins",
         "proxy",
         "screen",
@@ -1118,6 +1126,9 @@
         },
         "webgl": {
           "$ref": "#/definitions/WebglSpoofingTypeWebglSpoofingOptionsMultiLevelChoice"
+        },
+        "audio": {
+          "$ref": "#/definitions/AudioSpoofingType"
         },
         "timezone": {
           "$ref": "#/definitions/TimezoneSpoofingTypeTimezoneMultiLevelChoice"
@@ -1182,7 +1193,6 @@
         "name": {
           "description": "Name of the device. This is only available for mobile profiles.",
           "type": "string",
-          "readOnly": true,
           "example": "Samsung SM-A705FN"
         }
       }
@@ -1355,8 +1365,7 @@
       "properties": {
         "code": {
           "format": "int32",
-          "type": "integer",
-          "readOnly": true
+          "type": "integer"
         },
         "error": {
           "type": "object",
@@ -1437,6 +1446,7 @@
     },
     "ProfileResponse": {
       "required": [
+        "audio",
         "baseProfile",
         "canvas",
         "createdAt",
@@ -1483,6 +1493,9 @@
         "webgl": {
           "$ref": "#/definitions/WebglSpoofingTypeWebglSpoofingOptionsMultiLevelChoice"
         },
+        "audio": {
+          "$ref": "#/definitions/AudioSpoofingType"
+        },
         "timezone": {
           "$ref": "#/definitions/TimezoneSpoofingTypeTimezoneMultiLevelChoice"
         },
@@ -1513,7 +1526,7 @@
           "$ref": "#/definitions/PasswordManagerType"
         },
         "extensions": {
-          "description": "A list of abolute paths from where the profile should load extensions or addons when starting the browser. For chrome and edge use CRX3 format extensions. For firefox use signed xpi format addons.",
+          "description": "A list of extensions or addons that will be loaded to the profile when the profile is started. For chrome and edge use CRX3 format extensions. For firefox use signed xpi format addons.",
           "type": "array",
           "items": {
             "type": "string"
@@ -1650,12 +1663,16 @@
     },
     "TestProxyRequest": {
       "required": [
-        "proxy"
+        "extra",
+        "value"
       ],
       "type": "object",
       "properties": {
-        "proxy": {
-          "$ref": "#/definitions/ProxyConnectionTypeServerMultiLevelChoice"
+        "value": {
+          "$ref": "#/definitions/ProxyConnectionType"
+        },
+        "extra": {
+          "$ref": "#/definitions/Server"
         }
       }
     },
@@ -1704,6 +1721,7 @@
     },
     "UpdateProfileRequest": {
       "required": [
+        "audio",
         "canvas",
         "fonts",
         "geolocation",
@@ -1723,6 +1741,9 @@
         },
         "webgl": {
           "$ref": "#/definitions/WebglSpoofingTypeWebglSpoofingOptionsMultiLevelChoice"
+        },
+        "audio": {
+          "$ref": "#/definitions/AudioSpoofingType"
         },
         "timezone": {
           "$ref": "#/definitions/TimezoneSpoofingTypeTimezoneMultiLevelChoice"
@@ -1755,7 +1776,7 @@
           "$ref": "#/definitions/PasswordManagerType"
         },
         "extensions": {
-          "description": "A list of abolute paths from where the profile should load extensions or addons when starting the browser. For chrome and edge use CRX3 format extensions. For firefox use signed xpi format addons.",
+          "description": "A list of extensions or addons should be loaded to the browser when starting the profile. For extensions that are added now, it should be an absolute path.\r\nFor extensions already added to the profile in a previous update, the name is only enough.\r\nFor chrome and edge use CRX3 format extensions. For firefox use signed xpi format addons.",
           "type": "array",
           "items": {
             "type": "string"

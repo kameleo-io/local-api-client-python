@@ -23,6 +23,8 @@ class CreateProfileRequest(Model):
     :param webgl: Required.
     :type webgl:
      ~kameleo.local_api_client.models.WebglSpoofingTypeWebglSpoofingOptionsMultiLevelChoice
+    :param audio: Required. Possible values include: 'off', 'noise', 'block'
+    :type audio: str or ~kameleo.local_api_client.models.enum
     :param timezone: Required.
     :type timezone:
      ~kameleo.local_api_client.models.TimezoneSpoofingTypeTimezoneMultiLevelChoice
@@ -47,7 +49,8 @@ class CreateProfileRequest(Model):
     :param start_page: This website will be opened in the browser when the
      profile launches.
     :type start_page: str
-    :param password_manager: Possible values include: 'enabled', 'disabled'
+    :param password_manager: Required. Possible values include: 'enabled',
+     'disabled'
     :type password_manager: str or ~kameleo.local_api_client.models.enum
     :param extensions: A list of abolute paths from where the profile should
      load extensions or addons when starting the browser. For chrome and edge
@@ -66,6 +69,7 @@ class CreateProfileRequest(Model):
         'base_profile_id': {'required': True},
         'canvas': {'required': True},
         'webgl': {'required': True},
+        'audio': {'required': True},
         'timezone': {'required': True},
         'geolocation': {'required': True},
         'proxy': {'required': True},
@@ -73,12 +77,14 @@ class CreateProfileRequest(Model):
         'fonts': {'required': True},
         'plugins': {'required': True},
         'screen': {'required': True},
+        'password_manager': {'required': True},
     }
 
     _attribute_map = {
         'base_profile_id': {'key': 'baseProfileId', 'type': 'str'},
         'canvas': {'key': 'canvas', 'type': 'str'},
         'webgl': {'key': 'webgl', 'type': 'WebglSpoofingTypeWebglSpoofingOptionsMultiLevelChoice'},
+        'audio': {'key': 'audio', 'type': 'str'},
         'timezone': {'key': 'timezone', 'type': 'TimezoneSpoofingTypeTimezoneMultiLevelChoice'},
         'geolocation': {'key': 'geolocation', 'type': 'GeolocationSpoofingTypeGeolocationSpoofingOptionsMultiLevelChoice'},
         'proxy': {'key': 'proxy', 'type': 'ProxyConnectionTypeServerMultiLevelChoice'},
@@ -93,11 +99,12 @@ class CreateProfileRequest(Model):
         'launcher': {'key': 'launcher', 'type': 'str'},
     }
 
-    def __init__(self, *, base_profile_id: str, canvas, webgl, timezone, geolocation, proxy, web_rtc, fonts, plugins, screen, start_page: str=None, password_manager=None, extensions=None, notes: str=None, launcher: str=None, **kwargs) -> None:
+    def __init__(self, *, base_profile_id: str, canvas, webgl, audio, timezone, geolocation, proxy, web_rtc, fonts, plugins, screen, password_manager, start_page: str=None, extensions=None, notes: str=None, launcher: str=None, **kwargs) -> None:
         super(CreateProfileRequest, self).__init__(**kwargs)
         self.base_profile_id = base_profile_id
         self.canvas = canvas
         self.webgl = webgl
+        self.audio = audio
         self.timezone = timezone
         self.geolocation = geolocation
         self.proxy = proxy

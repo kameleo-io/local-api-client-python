@@ -11,9 +11,6 @@ from msrest.serialization import Model
 class BrowserCookie(Model):
     """Representation of a cookie.
 
-    Variables are only populated by the server, and will be ignored when
-    sending a request.
-
     All required parameters must be populated in order to send to Azure.
 
     :param domain: Required. The domain attribute signifies the domain for
@@ -53,19 +50,19 @@ class BrowserCookie(Model):
      external site, such as by following a link; None has no restrictions on
      cross-site requests.
     :type same_site: str
-    :ivar expiration_date: This unix timestamp formatted attribute is used to
+    :param expiration_date: This unix timestamp formatted attribute is used to
      set persistent cookies. It signifies how long the browser should use the
      persistent cookie and when the cookie should be deleted.
      If this attribute is not specified, then the lifetime of the cookie is the
      same as that of browser session, i.e.it will be a non-persistent cookie.
-    :vartype expiration_date: long
-    :ivar session: Session cookies are deleted when the current session ends.
+    :type expiration_date: long
+    :param session: Session cookies are deleted when the current session ends.
      The browser defines when the "current session" ends, and some browsers use
      session restoring when restarting, which can cause session cookies to last
      indefinitely long.
-    :vartype session: bool
-    :ivar store_id: The ID of the cookie store containing this cookie.
-    :vartype store_id: str
+    :type session: bool
+    :param store_id: The ID of the cookie store containing this cookie.
+    :type store_id: str
     """
 
     _validation = {
@@ -77,9 +74,6 @@ class BrowserCookie(Model):
         'http_only': {'required': True},
         'secure': {'required': True},
         'same_site': {'required': True},
-        'expiration_date': {'readonly': True},
-        'session': {'readonly': True},
-        'store_id': {'readonly': True},
     }
 
     _attribute_map = {
@@ -96,7 +90,7 @@ class BrowserCookie(Model):
         'store_id': {'key': 'storeId', 'type': 'str'},
     }
 
-    def __init__(self, *, domain: str, name: str, path: str, value: str, host_only: bool, http_only: bool, secure: bool, same_site: str, **kwargs) -> None:
+    def __init__(self, *, domain: str, name: str, path: str, value: str, host_only: bool, http_only: bool, secure: bool, same_site: str, expiration_date: int=None, session: bool=None, store_id: str=None, **kwargs) -> None:
         super(BrowserCookie, self).__init__(**kwargs)
         self.domain = domain
         self.name = name
@@ -106,6 +100,6 @@ class BrowserCookie(Model):
         self.http_only = http_only
         self.secure = secure
         self.same_site = same_site
-        self.expiration_date = None
-        self.session = None
-        self.store_id = None
+        self.expiration_date = expiration_date
+        self.session = session
+        self.store_id = store_id
