@@ -1,7 +1,7 @@
 <img src="https://raw.githubusercontent.com/kameleo-io/local-api-client-python/HEAD/docs/kameleo-logo.png" width="150" align="right" />
 
 # Kameleo Local API Client
-With [Kameleo](https://kameleo.io), you can easily crate multiple virtual browser profiles to work with multiple accounts. It helps you hide your actual timezone, geolocation, language, IP address and creates natural browser fingerprints to prevent detection by anti-bot systems. Kameleo is compatible with [Selenium](https://www.selenium.dev/), [Playwright](https://playwright.dev/), and [Puppeteer](https://pptr.dev/) frameworks for automating web scraping tasks. This Python package provides convenient access to the [Local API](https://app.swaggerhub.com/apis/kameleo-team/kameleo-local-api/) REST interface of the Kameleo Client. See the [article](https://help.kameleo.io/hc/en-us/articles/4418166326417) in our knowledge base for Getting Started with Kameleo Automation.
+With [Kameleo](https://kameleo.io), you can easily create multiple virtual browser profiles to work with multiple accounts. It helps you hide your actual timezone, geolocation, language, IP address and creates natural browser fingerprints to prevent detection by anti-bot systems. Kameleo is compatible with [Selenium](https://www.selenium.dev/), [Playwright](https://playwright.dev/), and [Puppeteer](https://pptr.dev/) frameworks for automating web scraping tasks. This Python package provides convenient access to the [Local API](https://app.swaggerhub.com/apis/kameleo-team/kameleo-local-api/) REST interface of the Kameleo Client. See the [article](https://help.kameleo.io/hc/en-us/articles/4418166326417) in our knowledge base for Getting Started with Kameleo Automation.
 
 
 # Features
@@ -143,13 +143,15 @@ The full example can be found [here](https://github.com/kameleo-io/local-api-exa
 # Connect to the browser with Playwright
 browser_ws_endpoint = f'ws://localhost:{kameleo_port}/playwright/{profile.id}'
 with sync_playwright() as playwright:
-    browser = playwright.firefox.launch(
-        # The Playwright framework is not designed to connect to already running 
-        # browsers. To overcome this limitation, a tool bundled with Kameleo, named 
-        # pw-bridge.exe will bridge the communication gap between the running Firefox 
+    browser = playwright.firefox.launch_persistent_context(
+        '',
+        # The Playwright framework is not designed to connect to already running
+        # browsers. To overcome this limitation, a tool bundled with Kameleo, named
+        # pw-bridge.exe will bridge the communication gap between the running Firefox
         # instance and this playwright script.
-        executable_path='<PATH_TO_KAMELEO_FOLDER>>\\pw-bridge.exe',
-        args=[f'-target {browser_ws_endpoint}'])
+        executable_path='<PATH_TO_KAMELEO_FOLDER>\\pw-bridge.exe',
+        args=[f'-target {browser_ws_endpoint}'],
+        viewport=None)
     
     # Kameleo will open the a new page in the default browser context.
     # NOTE: We DO NOT recommend using multiple browser contexts, as this might interfere 

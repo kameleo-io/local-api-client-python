@@ -193,9 +193,9 @@ class BuilderForCreateProfile:
     def set_recommended_defaults(self):
         """This sets all the profile options to the defaults recommended by Kameleo Team. Please consider providing Proxy settings to your profile.
         """
-        self.profile_request.canvas = "noise"
-        self.profile_request.webgl.value = "noise"
-        self.profile_request.audio = "noise"
+        self.profile_request.canvas = "intelligent"
+        self.profile_request.webgl.value = "off"
+        self.profile_request.audio = "off"
         self.profile_request.timezone.value = "automatic"
         self.profile_request.geolocation.value = "automatic"
         self.profile_request.web_rtc.value = "automatic"
