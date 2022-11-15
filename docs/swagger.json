@@ -81,25 +81,25 @@
           {
             "in": "query",
             "name": "deviceType",
-            "description": "Filter option for the Device Type. Possible values are 'desktop', 'mobile'. For example set it to mobile if you only want to get mobile profiles.",
+            "description": "Filter option for the Device Type. Possible values are 'desktop', 'mobile'.\r\nYou can also use a comma-separated list to provide more than one value.",
             "type": "string"
           },
           {
             "in": "query",
             "name": "osFamily",
-            "description": "Filter option for os family. Possible values are 'windows', 'macos', 'linux', 'android', 'ios'. For example set it to windows if you only want to get Windows profiles.",
+            "description": "Filter option for os family. Possible values are 'windows', 'macos', 'linux', 'android', 'ios'.\r\nYou can also use a comma-separated list to provide more than one value.",
             "type": "string"
           },
           {
             "in": "query",
             "name": "browserProduct",
-            "description": "Filter option for browser product. Possible values are 'chrome', 'firefox', 'edge', 'safari'. For example set it to safari if you only want to get profiles with Safari browser.",
+            "description": "Filter option for browser product. Possible values are 'chrome', 'firefox', 'edge', 'safari'.\r\nYou can also use a comma-separated list to provide more than one value.",
             "type": "string"
           },
           {
             "in": "query",
             "name": "language",
-            "description": "Filter option for os language. Use ISO 639-1 language code format. For example set it to en-gb if you only want to get English profiles.",
+            "description": "Filter option for os language. Use ISO 639-1 language code format.\r\nFor example, set it to en-gb if you want to get only English profiles from Great-Britain.\r\nYou can also use a comma-separated list to provide more than one value.\r\nThis field also supports wildcard for the sublanguage part: to retrieve both en-us, en-gb, and en-ca profiles, use 'en-*' as value.",
             "type": "string"
           }
         ],
@@ -687,7 +687,7 @@
         "tags": [
           "Profile"
         ],
-        "summary": "Saves a profile to a file. It will create a .kameleo file to the required location. It will store all the profile settings, browsing data, cookies, history, bookmarks, installed extension / addons. Later it can be reloaded.",
+        "summary": "Saves a profile to a file. It will create a .kameleo file to the given location. It will store all the profile settings, browsing data, cookies, history, bookmarks, installed extension / addons. Later it can be reloaded.",
         "operationId": "SaveProfile",
         "consumes": [
           "application/json"
@@ -710,6 +710,42 @@
             "schema": {
               "$ref": "#/definitions/SaveProfileRequest"
             }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK.",
+            "schema": {
+              "$ref": "#/definitions/ProfileResponse"
+            }
+          },
+          "default": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ProblemResponse"
+            }
+          }
+        }
+      }
+    },
+    "/profiles/{guid}/duplicate": {
+      "post": {
+        "tags": [
+          "Profile"
+        ],
+        "summary": "Creates a duplicate of a loaded profile in memory. The created profile contains all the profile settings, browsing data, cookies, history, bookmarks and installed extensions. This operation does not perform any filesystem activity and will not affect your existing profile.",
+        "operationId": "DuplicateProfile",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "guid",
+            "description": "The unique identifier of the profile",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
           }
         ],
         "responses": {
@@ -762,6 +798,47 @@
             "schema": {
               "$ref": "#/definitions/ProblemResponse"
             }
+          }
+        }
+      }
+    },
+    "/profiles/{guid}/upgrade": {
+      "post": {
+        "tags": [
+          "Profile"
+        ],
+        "summary": "Upgrades the profile to the latest available browser version from the server. The exact target of the upgrade depends on the profile's current device, browser, operating system, and language settings.",
+        "operationId": "UpgradeProfile",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "guid",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK.",
+            "schema": {
+              "$ref": "#/definitions/ProfileResponse"
+            }
+          },
+          "default": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ProblemResponse"
+            }
+          },
+          "204": {
+            "description": "No new browser version is available for this profile."
+          },
+          "409": {
+            "description": "Cannot upgrade profile because it is running."
           }
         }
       }
@@ -1018,16 +1095,19 @@
           "format": "int64",
           "description": "This unix timestamp formatted attribute is used to set persistent cookies. It signifies how long the browser should use the persistent cookie and when the cookie should be deleted.\r\nIf this attribute is not specified, then the lifetime of the cookie is the same as that of browser session, i.e.it will be a non-persistent cookie.",
           "type": "integer",
+          "readOnly": true,
           "example": 1568986993
         },
         "session": {
           "description": "Session cookies are deleted when the current session ends. The browser defines when the \"current session\" ends, and some browsers use session restoring when restarting, which can cause session cookies to last indefinitely long.",
           "type": "boolean",
+          "readOnly": true,
           "example": false
         },
         "storeId": {
           "description": "The ID of the cookie store containing this cookie.",
           "type": "string",
+          "readOnly": true,
           "example": "0"
         }
       }
@@ -1121,6 +1201,21 @@
           "type": "string",
           "example": "555b894595b5cd242ead1533218a5ee93dd7c7ebfbff4dccb80fdb112f6cda27"
         },
+        "name": {
+          "description": "Sets a human readable name for the profile. The value obtained by file name for existing profiles. For new profiles the value is generated by random.",
+          "type": "string"
+        },
+        "tags": {
+          "description": "Use tags to categorize profiles by labeling them accordingly.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "example": [
+            "facebook",
+            "instagram"
+          ]
+        },
         "canvas": {
           "$ref": "#/definitions/CanvasSpoofingType"
         },
@@ -1193,6 +1288,7 @@
         "name": {
           "description": "Name of the device. This is only available for mobile profiles.",
           "type": "string",
+          "readOnly": true,
           "example": "Samsung SM-A705FN"
         }
       }
@@ -1365,7 +1461,8 @@
       "properties": {
         "code": {
           "format": "int32",
-          "type": "integer"
+          "type": "integer",
+          "readOnly": true
         },
         "error": {
           "type": "object",
@@ -1401,12 +1498,16 @@
       "description": "A preview about the profile with some of its properties.",
       "required": [
         "browser",
+        "createdAt",
         "device",
         "id",
         "language",
         "launcher",
+        "name",
         "os",
-        "status"
+        "proxy",
+        "status",
+        "tags"
       ],
       "type": "object",
       "properties": {
@@ -1415,6 +1516,31 @@
           "description": "A unique identifier of the profile",
           "type": "string",
           "example": "a7cafbbe-6bc0-4575-8c6e-f1adf391f180"
+        },
+        "name": {
+          "description": "The name of the profile",
+          "type": "string",
+          "example": "mystic-turtle"
+        },
+        "tags": {
+          "description": "Profile tags",
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "example": [
+            "facebook",
+            "instagram"
+          ]
+        },
+        "proxy": {
+          "$ref": "#/definitions/ProxyConnectionTypeServerMultiLevelChoice"
+        },
+        "createdAt": {
+          "format": "date-time",
+          "description": "Date when the profile was created.",
+          "type": "string",
+          "example": "2020-05-02T03:10:32.2452701+10:00"
         },
         "lastKnownPath": {
           "description": "An absolute path where the related .kameleo profile file was accessed lastly. This is updated when a profile is saved to a .kameleo file, or loaded from a .kameleo file.",
@@ -1455,6 +1581,7 @@
         "geolocation",
         "id",
         "launcher",
+        "name",
         "notes",
         "passwordManager",
         "plugins",
@@ -1462,6 +1589,7 @@
         "screen",
         "startPage",
         "status",
+        "tags",
         "timezone",
         "webgl",
         "webRtc"
@@ -1473,6 +1601,22 @@
           "description": "A unique identifier of the profile",
           "type": "string",
           "example": "a7cafbbe-6bc0-4575-8c6e-f1adf391f180"
+        },
+        "name": {
+          "description": "Profile name property. The value obtained by file name for existing profiles. For new profiles the value is generated by a random name generator.",
+          "type": "string",
+          "example": "mystic-turtle"
+        },
+        "tags": {
+          "description": "Profile tags",
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "example": [
+            "facebook",
+            "instagram"
+          ]
         },
         "lastKnownPath": {
           "description": "An absolute path where the related .kameleo profile file was accessed lastly. This is updated when a profile is saved to a .kameleo file, or loaded from a .kameleo file.",
@@ -1725,6 +1869,7 @@
         "canvas",
         "fonts",
         "geolocation",
+        "name",
         "passwordManager",
         "plugins",
         "proxy",
@@ -1787,6 +1932,21 @@
           "type": "string",
           "example": "I used this profile for affiliate marketing."
         },
+        "name": {
+          "description": "Profile name property. The value obtained by file name for existing profiles. For new profiles the value is generated by a random name generator.",
+          "type": "string"
+        },
+        "tags": {
+          "description": "Profile tags",
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "example": [
+            "facebook",
+            "instagram"
+          ]
+        },
         "launcher": {
           "description": "The mode how the profile should be launched. It determines which browser to launch. This cannot be modified after creation. Possible values are 'automatic', 'chrome', 'chromium', 'firefox', 'edge', 'external'",
           "type": "string",
@@ -1798,6 +1958,8 @@
       "required": [
         "capabilities",
         "email",
+        "emailConfirmed",
+        "gracePeriod",
         "subscriptionEnd",
         "userId"
       ],
@@ -1813,6 +1975,11 @@
           "description": "The email address of the authenticated user.",
           "type": "string",
           "example": "user@email.com"
+        },
+        "emailConfirmed": {
+          "description": "A boolean value indicating whether the email address is confirmed.",
+          "type": "boolean",
+          "example": true
         },
         "subscriptionEnd": {
           "format": "date-time",
@@ -1830,6 +1997,11 @@
             "saveProfile",
             "automation"
           ]
+        },
+        "gracePeriod": {
+          "description": "A boolean value indicates whether the subscription is in a grace period and should be renewed immediately.",
+          "type": "boolean",
+          "example": true
         },
         "lastAppLogin": {
           "format": "date-time",
@@ -1858,7 +2030,7 @@
           }
         },
         "additionalOptions": {
-          "description": "List of additional WebDriver options that can be passed at startup. It is applicable for both chromium based browsers and for firefox.",
+          "description": "List of additional Kameleo options that can be passed at startup. It applies to all desktop profiles. See Kameleo Help Center for available options.",
           "type": "array",
           "items": {
             "$ref": "#/definitions/Preference"
@@ -1866,47 +2038,8 @@
         }
       }
     },
-    "WebglSpoofingOptions": {
-      "description": "When the WebGL spoofing is set to noise these extra settings can be used to ovveride the values in the base profile.",
-      "type": "object",
-      "properties": {
-        "vendor": {
-          "description": "Unmasked vendor",
-          "type": "string",
-          "example": "Google Inc."
-        },
-        "renderer": {
-          "description": "Unmasked renderer",
-          "type": "string",
-          "example": "ANGLE (Intel(R) HD Graphics 630 Direct3D11 vs_5_0 ps_5_0)"
-        }
-      }
-    },
-    "WebglSpoofingType": {
-      "description": "Tells the mode how the WebGL will be spoofed. Possible values:\r\n'noise': Add some noise to the WebGL generation\r\n'block': Completely block the 3D API\r\n'off': Turn off the spoofing, use the original settings",
-      "enum": [
-        "noise",
-        "block",
-        "off"
-      ],
-      "type": "string"
-    },
-    "WebglSpoofingTypeWebglSpoofingOptionsMultiLevelChoice": {
-      "required": [
-        "value"
-      ],
-      "type": "object",
-      "properties": {
-        "value": {
-          "$ref": "#/definitions/WebglSpoofingType"
-        },
-        "extra": {
-          "$ref": "#/definitions/WebglSpoofingOptions"
-        }
-      }
-    },
     "WebRtcSpoofingOptions": {
-      "description": "When the Geolocation spoofing is set to manual these extra settings will be used as well.",
+      "description": "When the WebRTC spoofing is set to manual these extra settings will be used as well.",
       "required": [
         "privateIp",
         "publicIp"
@@ -1946,6 +2079,45 @@
         },
         "extra": {
           "$ref": "#/definitions/WebRtcSpoofingOptions"
+        }
+      }
+    },
+    "WebglSpoofingOptions": {
+      "description": "When the WebGL spoofing is set to noise these extra settings can be used to ovveride the values in the base profile.",
+      "type": "object",
+      "properties": {
+        "vendor": {
+          "description": "Unmasked vendor",
+          "type": "string",
+          "example": "Google Inc."
+        },
+        "renderer": {
+          "description": "Unmasked renderer",
+          "type": "string",
+          "example": "ANGLE (Intel(R) HD Graphics 630 Direct3D11 vs_5_0 ps_5_0)"
+        }
+      }
+    },
+    "WebglSpoofingType": {
+      "description": "Tells the mode how the WebGL will be spoofed. Possible values:\r\n'noise': Add some noise to the WebGL generation\r\n'block': Completely block the 3D API\r\n'off': Turn off the spoofing, use the original settings",
+      "enum": [
+        "noise",
+        "block",
+        "off"
+      ],
+      "type": "string"
+    },
+    "WebglSpoofingTypeWebglSpoofingOptionsMultiLevelChoice": {
+      "required": [
+        "value"
+      ],
+      "type": "object",
+      "properties": {
+        "value": {
+          "$ref": "#/definitions/WebglSpoofingType"
+        },
+        "extra": {
+          "$ref": "#/definitions/WebglSpoofingOptions"
         }
       }
     }

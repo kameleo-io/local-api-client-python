@@ -20,9 +20,9 @@ class WebDriverSettings(Model):
      startup. In case of Chromium based options it will be a user profile
      preference. In case of Firefox profiles it will be a preference.
     :type preferences: list[~kameleo.local_api_client.models.Preference]
-    :param additional_options: List of additional WebDriver options that can
-     be passed at startup. It is applicable for both chromium based browsers
-     and for firefox.
+    :param additional_options: List of additional Kameleo options that can be
+     passed at startup. It applies to all desktop profiles. See Kameleo Help
+     Center for available options.
     :type additional_options:
      list[~kameleo.local_api_client.models.Preference]
     """

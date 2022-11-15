@@ -177,6 +177,18 @@ class BuilderForCreateProfile:
         self.profile_request.notes = notes
         return self
 
+    def set_name(self, name):
+        """Sets the name of the profile.
+        """
+        self.profile_request.name = name
+        return self
+
+    def set_tags(self, tags):
+        """Sets the tags of the profile.
+        """
+        self.profile_request.tags = tags
+        return self
+    
     def set_launcher(self, browser_launcher):
         """The mode how the profile should be launched. It determines which browser to launch. This cannot be modified after creation. Possible values are:
             'automatic': Automatically choose launcher based on DeviceType and BrowserProduct property.
@@ -193,6 +205,7 @@ class BuilderForCreateProfile:
     def set_recommended_defaults(self):
         """This sets all the profile options to the defaults recommended by Kameleo Team. Please consider providing Proxy settings to your profile.
         """
+        self.profile_request.name = ""
         self.profile_request.canvas = "intelligent"
         self.profile_request.webgl.value = "off"
         self.profile_request.audio = "off"

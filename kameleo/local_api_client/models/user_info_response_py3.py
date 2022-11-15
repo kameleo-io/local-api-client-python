@@ -17,12 +17,18 @@ class UserInfoResponse(Model):
     :type user_id: str
     :param email: Required. The email address of the authenticated user.
     :type email: str
+    :param email_confirmed: Required. A boolean value indicating whether the
+     email address is confirmed.
+    :type email_confirmed: bool
     :param subscription_end: Required. The end date of the authenticated
      user's current subscription.
     :type subscription_end: datetime
     :param capabilities: Required. The capabilities that the authenticated
      user owns thanks to his current subscription.
     :type capabilities: list[str]
+    :param grace_period: Required. A boolean value indicates whether the
+     subscription is in a grace period and should be renewed immediately.
+    :type grace_period: bool
     :param last_app_login: The last date when the user authenticated by the
      app.
     :type last_app_login: datetime
@@ -31,22 +37,28 @@ class UserInfoResponse(Model):
     _validation = {
         'user_id': {'required': True},
         'email': {'required': True},
+        'email_confirmed': {'required': True},
         'subscription_end': {'required': True},
         'capabilities': {'required': True},
+        'grace_period': {'required': True},
     }
 
     _attribute_map = {
         'user_id': {'key': 'userId', 'type': 'str'},
         'email': {'key': 'email', 'type': 'str'},
+        'email_confirmed': {'key': 'emailConfirmed', 'type': 'bool'},
         'subscription_end': {'key': 'subscriptionEnd', 'type': 'iso-8601'},
         'capabilities': {'key': 'capabilities', 'type': '[str]'},
+        'grace_period': {'key': 'gracePeriod', 'type': 'bool'},
         'last_app_login': {'key': 'lastAppLogin', 'type': 'iso-8601'},
     }
 
-    def __init__(self, *, user_id: str, email: str, subscription_end, capabilities, last_app_login=None, **kwargs) -> None:
+    def __init__(self, *, user_id: str, email: str, email_confirmed: bool, subscription_end, capabilities, grace_period: bool, last_app_login=None, **kwargs) -> None:
         super(UserInfoResponse, self).__init__(**kwargs)
         self.user_id = user_id
         self.email = email
+        self.email_confirmed = email_confirmed
         self.subscription_end = subscription_end
         self.capabilities = capabilities
+        self.grace_period = grace_period
         self.last_app_login = last_app_login

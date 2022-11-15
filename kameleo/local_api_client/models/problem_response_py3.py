@@ -12,20 +12,27 @@ from msrest.exceptions import HttpOperationError
 class ProblemResponse(Model):
     """ProblemResponse.
 
-    :param code:
-    :type code: int
+    Variables are only populated by the server, and will be ignored when
+    sending a request.
+
+    :ivar code:
+    :vartype code: int
     :param error:
     :type error: dict[str, list[str]]
     """
+
+    _validation = {
+        'code': {'readonly': True},
+    }
 
     _attribute_map = {
         'code': {'key': 'code', 'type': 'int'},
         'error': {'key': 'error', 'type': '{[str]}'},
     }
 
-    def __init__(self, *, code: int=None, error=None, **kwargs) -> None:
+    def __init__(self, *, error=None, **kwargs) -> None:
         super(ProblemResponse, self).__init__(**kwargs)
-        self.code = code
+        self.code = None
         self.error = error
 
 

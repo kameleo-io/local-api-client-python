@@ -9,8 +9,8 @@ from msrest.serialization import Model
 
 
 class WebRtcSpoofingOptions(Model):
-    """When the Geolocation spoofing is set to manual these extra settings will be
-    used as well.
+    """When the WebRTC spoofing is set to manual these extra settings will be used
+    as well.
 
     All required parameters must be populated in order to send to Azure.
 
