@@ -15,6 +15,15 @@ class ProfilePreview(Model):
 
     :param id: Required. A unique identifier of the profile
     :type id: str
+    :param name: Required. The name of the profile
+    :type name: str
+    :param tags: Required. Profile tags
+    :type tags: list[str]
+    :param proxy: Required.
+    :type proxy:
+     ~kameleo.local_api_client.models.ProxyConnectionTypeServerMultiLevelChoice
+    :param created_at: Required. Date when the profile was created.
+    :type created_at: datetime
     :param last_known_path: An absolute path where the related .kameleo
      profile file was accessed lastly. This is updated when a profile is saved
      to a .kameleo file, or loaded from a .kameleo file.
@@ -39,6 +48,10 @@ class ProfilePreview(Model):
 
     _validation = {
         'id': {'required': True},
+        'name': {'required': True},
+        'tags': {'required': True},
+        'proxy': {'required': True},
+        'created_at': {'required': True},
         'device': {'required': True},
         'os': {'required': True},
         'browser': {'required': True},
@@ -49,6 +62,10 @@ class ProfilePreview(Model):
 
     _attribute_map = {
         'id': {'key': 'id', 'type': 'str'},
+        'name': {'key': 'name', 'type': 'str'},
+        'tags': {'key': 'tags', 'type': '[str]'},
+        'proxy': {'key': 'proxy', 'type': 'ProxyConnectionTypeServerMultiLevelChoice'},
+        'created_at': {'key': 'createdAt', 'type': 'iso-8601'},
         'last_known_path': {'key': 'lastKnownPath', 'type': 'str'},
         'device': {'key': 'device', 'type': 'Device'},
         'os': {'key': 'os', 'type': 'Os'},
@@ -58,9 +75,13 @@ class ProfilePreview(Model):
         'status': {'key': 'status', 'type': 'StatusResponse'},
     }
 
-    def __init__(self, *, id: str, device, os, browser, language: str, launcher: str, status, last_known_path: str=None, **kwargs) -> None:
+    def __init__(self, *, id: str, name: str, tags, proxy, created_at, device, os, browser, language: str, launcher: str, status, last_known_path: str=None, **kwargs) -> None:
         super(ProfilePreview, self).__init__(**kwargs)
         self.id = id
+        self.name = name
+        self.tags = tags
+        self.proxy = proxy
+        self.created_at = created_at
         self.last_known_path = last_known_path
         self.device = device
         self.os = os

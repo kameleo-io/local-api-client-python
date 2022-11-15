@@ -134,20 +134,28 @@ class KameleoLocalApiClient(SDKClient):
         profiles.
 
         :param device_type: Filter option for the Device Type. Possible values
-         are 'desktop', 'mobile'. For example set it to mobile if you only want
-         to get mobile profiles.
+         are 'desktop', 'mobile'.
+         You can also use a comma-separated list to provide more than one
+         value.
         :type device_type: str
         :param os_family: Filter option for os family. Possible values are
-         'windows', 'macos', 'linux', 'android', 'ios'. For example set it to
-         windows if you only want to get Windows profiles.
+         'windows', 'macos', 'linux', 'android', 'ios'.
+         You can also use a comma-separated list to provide more than one
+         value.
         :type os_family: str
         :param browser_product: Filter option for browser product. Possible
-         values are 'chrome', 'firefox', 'edge', 'safari'. For example set it
-         to safari if you only want to get profiles with Safari browser.
+         values are 'chrome', 'firefox', 'edge', 'safari'.
+         You can also use a comma-separated list to provide more than one
+         value.
         :type browser_product: str
         :param language: Filter option for os language. Use ISO 639-1 language
-         code format. For example set it to en-gb if you only want to get
-         English profiles.
+         code format.
+         For example, set it to en-gb if you want to get only English profiles
+         from Great-Britain.
+         You can also use a comma-separated list to provide more than one
+         value.
+         This field also supports wildcard for the sublanguage part: to
+         retrieve both en-us, en-gb, and en-ca profiles, use 'en-*' as value.
         :type language: str
         :param dict custom_headers: headers that will be added to the request
         :param bool raw: returns the direct response alongside the
@@ -1029,10 +1037,10 @@ class KameleoLocalApiClient(SDKClient):
 
     def save_profile(
             self, guid, body=None, custom_headers=None, raw=False, **operation_config):
-        """Saves a profile to a file. It will create a .kameleo file to the
-        required location. It will store all the profile settings, browsing
-        data, cookies, history, bookmarks, installed extension / addons. Later
-        it can be reloaded.
+        """Saves a profile to a file. It will create a .kameleo file to the given
+        location. It will store all the profile settings, browsing data,
+        cookies, history, bookmarks, installed extension / addons. Later it can
+        be reloaded.
 
         :param guid: The unique identifier of the profile
         :type guid: str
@@ -1091,6 +1099,61 @@ class KameleoLocalApiClient(SDKClient):
         return deserialized
     save_profile.metadata = {'url': '/profiles/{guid}/save'}
 
+    def duplicate_profile(
+            self, guid, custom_headers=None, raw=False, **operation_config):
+        """Creates a duplicate of a loaded profile in memory. The created profile
+        contains all the profile settings, browsing data, cookies, history,
+        bookmarks and installed extensions. This operation does not perform any
+        filesystem activity and will not affect your existing profile.
+
+        :param guid: The unique identifier of the profile
+        :type guid: str
+        :param dict custom_headers: headers that will be added to the request
+        :param bool raw: returns the direct response alongside the
+         deserialized response
+        :param operation_config: :ref:`Operation configuration
+         overrides<msrest:optionsforoperations>`.
+        :return: ProfileResponse or ClientRawResponse if raw=true
+        :rtype: ~kameleo.local_api_client.models.ProfileResponse or
+         ~msrest.pipeline.ClientRawResponse
+        :raises:
+         :class:`ProblemResponseException<kameleo.local_api_client.models.ProblemResponseException>`
+        """
+        # Construct URL
+        url = self.duplicate_profile.metadata['url']
+        path_format_arguments = {
+            'guid': self._serialize.url("guid", guid, 'str')
+        }
+        url = self._client.format_url(url, **path_format_arguments)
+
+        # Construct parameters
+        query_parameters = {}
+
+        # Construct headers
+        header_parameters = {}
+        header_parameters['Accept'] = 'application/json'
+        if custom_headers:
+            header_parameters.update(custom_headers)
+
+        # Construct and send request
+        request = self._client.post(url, query_parameters, header_parameters)
+        response = self._client.send(request, stream=False, **operation_config)
+
+        if response.status_code not in [200]:
+            raise models.ProblemResponseException(self._deserialize, response)
+
+        deserialized = None
+
+        if response.status_code == 200:
+            deserialized = self._deserialize('ProfileResponse', response)
+
+        if raw:
+            client_raw_response = ClientRawResponse(deserialized, response)
+            return client_raw_response
+
+        return deserialized
+    duplicate_profile.metadata = {'url': '/profiles/{guid}/duplicate'}
+
     def load_profile(
             self, body=None, custom_headers=None, raw=False, **operation_config):
         """Loads a profile from a file. It will load the profile from a .kameleo
@@ -1147,3 +1210,57 @@ class KameleoLocalApiClient(SDKClient):
 
         return deserialized
     load_profile.metadata = {'url': '/profiles/load'}
+
+    def upgrade_profile(
+            self, guid, custom_headers=None, raw=False, **operation_config):
+        """Upgrades the profile to the latest available browser version from the
+        server. The exact target of the upgrade depends on the profile's
+        current device, browser, operating system, and language settings.
+
+        :param guid:
+        :type guid: str
+        :param dict custom_headers: headers that will be added to the request
+        :param bool raw: returns the direct response alongside the
+         deserialized response
+        :param operation_config: :ref:`Operation configuration
+         overrides<msrest:optionsforoperations>`.
+        :return: ProfileResponse or ClientRawResponse if raw=true
+        :rtype: ~kameleo.local_api_client.models.ProfileResponse or
+         ~msrest.pipeline.ClientRawResponse
+        :raises:
+         :class:`ProblemResponseException<kameleo.local_api_client.models.ProblemResponseException>`
+        """
+        # Construct URL
+        url = self.upgrade_profile.metadata['url']
+        path_format_arguments = {
+            'guid': self._serialize.url("guid", guid, 'str')
+        }
+        url = self._client.format_url(url, **path_format_arguments)
+
+        # Construct parameters
+        query_parameters = {}
+
+        # Construct headers
+        header_parameters = {}
+        header_parameters['Accept'] = 'application/json'
+        if custom_headers:
+            header_parameters.update(custom_headers)
+
+        # Construct and send request
+        request = self._client.post(url, query_parameters, header_parameters)
+        response = self._client.send(request, stream=False, **operation_config)
+
+        if response.status_code not in [200, 204, 409]:
+            raise models.ProblemResponseException(self._deserialize, response)
+
+        deserialized = None
+
+        if response.status_code == 200:
+            deserialized = self._deserialize('ProfileResponse', response)
+
+        if raw:
+            client_raw_response = ClientRawResponse(deserialized, response)
+            return client_raw_response
+
+        return deserialized
+    upgrade_profile.metadata = {'url': '/profiles/{guid}/upgrade'}
