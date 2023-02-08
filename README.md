@@ -169,6 +169,45 @@ with sync_playwright() as playwright:
 
 The full example can be found [here](https://github.com/kameleo-io/local-api-examples/blob/master/python/connect_with_playwright_to_firefox/app.py).
 
+# Automate mobile profiles
+Kameleo can emulate mobile devices in the custom built Chromium.
+
+```python
+# Search for a mobile Base Profiles
+base_profile_list = client.search_base_profiles(
+    device_type='mobile',
+    os_family='ios',
+    browser_product='safari',
+    language='en-us'
+)
+
+# Create a new profile with recommended settings
+# Choose one of the Base Profiles
+# Set the launcher to 'chromium' so the mobile profile will be started in Chromium by Kameleo
+create_profile_request = BuilderForCreateProfile \
+    .for_base_profile(base_profile_list[0].id) \
+    .set_recommended_defaults() \
+    .set_launcher('chromium') \
+    .build()
+profile = client.create_profile(body=create_profile_request)
+
+# Start the profile
+client.start_profile_with_web_driver_settings(profile.id, body={
+    # This allows you to click on elements using the cursor when emulating a touch screen in the browser.
+    # If you leave this out, your script may time out after clicks and fail.
+    'additionalOptions': [
+        {
+            'key': 'disableTouchEmulation',
+            'value': True,
+        },
+    ],
+})
+
+# At this point you can automate the browser with your favorite framework
+```
+The full example can be found [here](https://github.com/kameleo-io/local-api-examples/blob/master/python/automate_mobile_profiles_on_desktop/app.py).
+
+
 # Example codes
 [Several examples](https://github.com/kameleo-io/local-api-examples) have been prepared in a different repository to showcase the most interesting features. Feel free to create a pull request to add new example codes.
 
@@ -179,10 +218,14 @@ The full example can be found [here](https://github.com/kameleo-io/local-api-exa
 - Using Selenium with Local API
 - Using Playwright with Kameleo
 - Using Puppeteer with Kameleo
+- How to emulate mobile devices
 - Adding an HTTP, SOCKS or SSH proxy to profile
 - Saving/Loading a browsing session to/from a .kameleo file
 - Modify and Delete browser cookies
 - Start profile with extra WebDriver capabilities
+- How to duplicate virtual browser profiles
+- Test proxies
+- Refresh the browser of the emulated profiles
 
 > Note: _If you are interested in more information about Kameleo, or have encountered an issue with using it, please check out our [Help Center](https://help.kameleo.io/)._
 
