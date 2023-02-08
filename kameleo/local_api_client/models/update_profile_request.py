@@ -16,9 +16,11 @@ class UpdateProfileRequest(Model):
     :param canvas: Required. Possible values include: 'intelligent', 'noise',
      'block', 'off'
     :type canvas: str or ~kameleo.local_api_client.models.enum
-    :param webgl: Required.
-    :type webgl:
-     ~kameleo.local_api_client.models.WebglSpoofingTypeWebglSpoofingOptionsMultiLevelChoice
+    :param webgl: Required. Possible values include: 'noise', 'block', 'off'
+    :type webgl: str or ~kameleo.local_api_client.models.enum
+    :param webgl_meta: Required.
+    :type webgl_meta:
+     ~kameleo.local_api_client.models.WebglMetaSpoofingTypeWebglMetaSpoofingOptionsMultiLevelChoice
     :param audio: Required. Possible values include: 'off', 'noise', 'block'
     :type audio: str or ~kameleo.local_api_client.models.enum
     :param timezone: Required.
@@ -74,6 +76,7 @@ class UpdateProfileRequest(Model):
     _validation = {
         'canvas': {'required': True},
         'webgl': {'required': True},
+        'webgl_meta': {'required': True},
         'audio': {'required': True},
         'timezone': {'required': True},
         'geolocation': {'required': True},
@@ -84,12 +87,13 @@ class UpdateProfileRequest(Model):
         'screen': {'required': True},
         'start_page': {'required': True},
         'password_manager': {'required': True},
-        'name': {'required': True},
+        'name': {'required': True, 'min_length': 1},
     }
 
     _attribute_map = {
         'canvas': {'key': 'canvas', 'type': 'str'},
-        'webgl': {'key': 'webgl', 'type': 'WebglSpoofingTypeWebglSpoofingOptionsMultiLevelChoice'},
+        'webgl': {'key': 'webgl', 'type': 'str'},
+        'webgl_meta': {'key': 'webglMeta', 'type': 'WebglMetaSpoofingTypeWebglMetaSpoofingOptionsMultiLevelChoice'},
         'audio': {'key': 'audio', 'type': 'str'},
         'timezone': {'key': 'timezone', 'type': 'TimezoneSpoofingTypeTimezoneMultiLevelChoice'},
         'geolocation': {'key': 'geolocation', 'type': 'GeolocationSpoofingTypeGeolocationSpoofingOptionsMultiLevelChoice'},
@@ -111,6 +115,7 @@ class UpdateProfileRequest(Model):
         super(UpdateProfileRequest, self).__init__(**kwargs)
         self.canvas = kwargs.get('canvas', None)
         self.webgl = kwargs.get('webgl', None)
+        self.webgl_meta = kwargs.get('webgl_meta', None)
         self.audio = kwargs.get('audio', None)
         self.timezone = kwargs.get('timezone', None)
         self.geolocation = kwargs.get('geolocation', None)

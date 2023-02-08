@@ -26,9 +26,11 @@ class CreateProfileRequest(Model):
     :param canvas: Required. Possible values include: 'intelligent', 'noise',
      'block', 'off'
     :type canvas: str or ~kameleo.local_api_client.models.enum
-    :param webgl: Required.
-    :type webgl:
-     ~kameleo.local_api_client.models.WebglSpoofingTypeWebglSpoofingOptionsMultiLevelChoice
+    :param webgl: Required. Possible values include: 'noise', 'block', 'off'
+    :type webgl: str or ~kameleo.local_api_client.models.enum
+    :param webgl_meta: Required.
+    :type webgl_meta:
+     ~kameleo.local_api_client.models.WebglMetaSpoofingTypeWebglMetaSpoofingOptionsMultiLevelChoice
     :param audio: Required. Possible values include: 'off', 'noise', 'block'
     :type audio: str or ~kameleo.local_api_client.models.enum
     :param timezone: Required.
@@ -72,9 +74,10 @@ class CreateProfileRequest(Model):
     """
 
     _validation = {
-        'base_profile_id': {'required': True},
+        'base_profile_id': {'required': True, 'min_length': 1},
         'canvas': {'required': True},
         'webgl': {'required': True},
+        'webgl_meta': {'required': True},
         'audio': {'required': True},
         'timezone': {'required': True},
         'geolocation': {'required': True},
@@ -91,7 +94,8 @@ class CreateProfileRequest(Model):
         'name': {'key': 'name', 'type': 'str'},
         'tags': {'key': 'tags', 'type': '[str]'},
         'canvas': {'key': 'canvas', 'type': 'str'},
-        'webgl': {'key': 'webgl', 'type': 'WebglSpoofingTypeWebglSpoofingOptionsMultiLevelChoice'},
+        'webgl': {'key': 'webgl', 'type': 'str'},
+        'webgl_meta': {'key': 'webglMeta', 'type': 'WebglMetaSpoofingTypeWebglMetaSpoofingOptionsMultiLevelChoice'},
         'audio': {'key': 'audio', 'type': 'str'},
         'timezone': {'key': 'timezone', 'type': 'TimezoneSpoofingTypeTimezoneMultiLevelChoice'},
         'geolocation': {'key': 'geolocation', 'type': 'GeolocationSpoofingTypeGeolocationSpoofingOptionsMultiLevelChoice'},
@@ -114,6 +118,7 @@ class CreateProfileRequest(Model):
         self.tags = kwargs.get('tags', None)
         self.canvas = kwargs.get('canvas', None)
         self.webgl = kwargs.get('webgl', None)
+        self.webgl_meta = kwargs.get('webgl_meta', None)
         self.audio = kwargs.get('audio', None)
         self.timezone = kwargs.get('timezone', None)
         self.geolocation = kwargs.get('geolocation', None)

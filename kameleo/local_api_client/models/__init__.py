@@ -9,13 +9,14 @@ try:
     from .device_py3 import Device
     from .os_py3 import Os
     from .browser_py3 import Browser
+    from .webgl_meta_py3 import WebglMeta
     from .base_profile_py3 import BaseProfile
     from .base_profile_preview_py3 import BaseProfilePreview
     from .base_profile_search_parameters_py3 import BaseProfileSearchParameters
     from .browser_cookie_py3 import BrowserCookie
     from .cookie_request_py3 import CookieRequest
-    from .webgl_spoofing_options_py3 import WebglSpoofingOptions
-    from .webgl_spoofing_type_webgl_spoofing_options_multi_level_choice_py3 import WebglSpoofingTypeWebglSpoofingOptionsMultiLevelChoice
+    from .webgl_meta_spoofing_options_py3 import WebglMetaSpoofingOptions
+    from .webgl_meta_spoofing_type_webgl_meta_spoofing_options_multi_level_choice_py3 import WebglMetaSpoofingTypeWebglMetaSpoofingOptionsMultiLevelChoice
     from .timezone_spoofing_type_timezone_multi_level_choice_py3 import TimezoneSpoofingTypeTimezoneMultiLevelChoice
     from .geolocation_spoofing_options_py3 import GeolocationSpoofingOptions
     from .geolocation_spoofing_type_geolocation_spoofing_options_multi_level_choice_py3 import GeolocationSpoofingTypeGeolocationSpoofingOptionsMultiLevelChoice
@@ -43,13 +44,14 @@ except (SyntaxError, ImportError):
     from .device import Device
     from .os import Os
     from .browser import Browser
+    from .webgl_meta import WebglMeta
     from .base_profile import BaseProfile
     from .base_profile_preview import BaseProfilePreview
     from .base_profile_search_parameters import BaseProfileSearchParameters
     from .browser_cookie import BrowserCookie
     from .cookie_request import CookieRequest
-    from .webgl_spoofing_options import WebglSpoofingOptions
-    from .webgl_spoofing_type_webgl_spoofing_options_multi_level_choice import WebglSpoofingTypeWebglSpoofingOptionsMultiLevelChoice
+    from .webgl_meta_spoofing_options import WebglMetaSpoofingOptions
+    from .webgl_meta_spoofing_type_webgl_meta_spoofing_options_multi_level_choice import WebglMetaSpoofingTypeWebglMetaSpoofingOptionsMultiLevelChoice
     from .timezone_spoofing_type_timezone_multi_level_choice import TimezoneSpoofingTypeTimezoneMultiLevelChoice
     from .geolocation_spoofing_options import GeolocationSpoofingOptions
     from .geolocation_spoofing_type_geolocation_spoofing_options_multi_level_choice import GeolocationSpoofingTypeGeolocationSpoofingOptionsMultiLevelChoice
@@ -78,13 +80,14 @@ __all__ = [
     'Device',
     'Os',
     'Browser',
+    'WebglMeta',
     'BaseProfile',
     'BaseProfilePreview',
     'BaseProfileSearchParameters',
     'BrowserCookie',
     'CookieRequest',
-    'WebglSpoofingOptions',
-    'WebglSpoofingTypeWebglSpoofingOptionsMultiLevelChoice',
+    'WebglMetaSpoofingOptions',
+    'WebglMetaSpoofingTypeWebglMetaSpoofingOptionsMultiLevelChoice',
     'TimezoneSpoofingTypeTimezoneMultiLevelChoice',
     'GeolocationSpoofingOptions',
     'GeolocationSpoofingTypeGeolocationSpoofingOptionsMultiLevelChoice',

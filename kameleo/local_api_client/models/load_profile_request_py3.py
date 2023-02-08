@@ -18,7 +18,7 @@ class LoadProfileRequest(Model):
     """
 
     _validation = {
-        'path': {'required': True},
+        'path': {'required': True, 'min_length': 1},
     }
 
     _attribute_map = {

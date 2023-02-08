@@ -11,22 +11,18 @@ from msrest.serialization import Model
 class Device(Model):
     """Device.
 
-    Variables are only populated by the server, and will be ignored when
-    sending a request.
-
     All required parameters must be populated in order to send to Azure.
 
     :param type: Required. Type of the device. Possible values are: 'desktop',
      'mobile'.
     :type type: str
-    :ivar name: Name of the device. This is only available for mobile
+    :param name: Name of the device. This is only available for mobile
      profiles.
-    :vartype name: str
+    :type name: str
     """
 
     _validation = {
         'type': {'required': True},
-        'name': {'readonly': True},
     }
 
     _attribute_map = {
@@ -34,7 +30,7 @@ class Device(Model):
         'name': {'key': 'name', 'type': 'str'},
     }
 
-    def __init__(self, *, type: str, **kwargs) -> None:
+    def __init__(self, *, type: str, name: str=None, **kwargs) -> None:
         super(Device, self).__init__(**kwargs)
         self.type = type
-        self.name = None
+        self.name = name
