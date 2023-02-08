@@ -32,9 +32,11 @@ class ProfileResponse(Model):
     :param canvas: Required. Possible values include: 'intelligent', 'noise',
      'block', 'off'
     :type canvas: str or ~kameleo.local_api_client.models.enum
-    :param webgl: Required.
-    :type webgl:
-     ~kameleo.local_api_client.models.WebglSpoofingTypeWebglSpoofingOptionsMultiLevelChoice
+    :param webgl: Required. Possible values include: 'noise', 'block', 'off'
+    :type webgl: str or ~kameleo.local_api_client.models.enum
+    :param webgl_meta: Required.
+    :type webgl_meta:
+     ~kameleo.local_api_client.models.WebglMetaSpoofingTypeWebglMetaSpoofingOptionsMultiLevelChoice
     :param audio: Required. Possible values include: 'off', 'noise', 'block'
     :type audio: str or ~kameleo.local_api_client.models.enum
     :param timezone: Required.
@@ -88,6 +90,7 @@ class ProfileResponse(Model):
         'base_profile': {'required': True},
         'canvas': {'required': True},
         'webgl': {'required': True},
+        'webgl_meta': {'required': True},
         'audio': {'required': True},
         'timezone': {'required': True},
         'geolocation': {'required': True},
@@ -112,7 +115,8 @@ class ProfileResponse(Model):
         'created_at': {'key': 'createdAt', 'type': 'iso-8601'},
         'base_profile': {'key': 'baseProfile', 'type': 'BaseProfile'},
         'canvas': {'key': 'canvas', 'type': 'str'},
-        'webgl': {'key': 'webgl', 'type': 'WebglSpoofingTypeWebglSpoofingOptionsMultiLevelChoice'},
+        'webgl': {'key': 'webgl', 'type': 'str'},
+        'webgl_meta': {'key': 'webglMeta', 'type': 'WebglMetaSpoofingTypeWebglMetaSpoofingOptionsMultiLevelChoice'},
         'audio': {'key': 'audio', 'type': 'str'},
         'timezone': {'key': 'timezone', 'type': 'TimezoneSpoofingTypeTimezoneMultiLevelChoice'},
         'geolocation': {'key': 'geolocation', 'type': 'GeolocationSpoofingTypeGeolocationSpoofingOptionsMultiLevelChoice'},
@@ -129,7 +133,7 @@ class ProfileResponse(Model):
         'status': {'key': 'status', 'type': 'StatusResponse'},
     }
 
-    def __init__(self, *, id: str, name: str, tags, created_at, base_profile, canvas, webgl, audio, timezone, geolocation, proxy, web_rtc, fonts, plugins, screen, start_page: str, password_manager, extensions, notes: str, launcher: str, status, last_known_path: str=None, **kwargs) -> None:
+    def __init__(self, *, id: str, name: str, tags, created_at, base_profile, canvas, webgl, webgl_meta, audio, timezone, geolocation, proxy, web_rtc, fonts, plugins, screen, start_page: str, password_manager, extensions, notes: str, launcher: str, status, last_known_path: str=None, **kwargs) -> None:
         super(ProfileResponse, self).__init__(**kwargs)
         self.id = id
         self.name = name
@@ -139,6 +143,7 @@ class ProfileResponse(Model):
         self.base_profile = base_profile
         self.canvas = canvas
         self.webgl = webgl
+        self.webgl_meta = webgl_meta
         self.audio = audio
         self.timezone = timezone
         self.geolocation = geolocation

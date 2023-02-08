@@ -7,7 +7,7 @@ from .models.web_rtc_spoofing_type_web_rtc_spoofing_options_multi_level_choice_p
 from .models.font_spoofing_type_font_ilist_multi_level_choice_py3 import FontSpoofingTypeFontIListMultiLevelChoice
 from .models.plugin_spoofing_type_plugin_ilist_multi_level_choice_py3 import PluginSpoofingTypePluginIListMultiLevelChoice
 from .models.screen_spoofing_type_screen_size_multi_level_choice_py3 import ScreenSpoofingTypeScreenSizeMultiLevelChoice
-
+from .models.webgl_meta_spoofing_type_webgl_meta_spoofing_options_multi_level_choice_py3 import WebglMetaSpoofingTypeWebglMetaSpoofingOptionsMultiLevelChoice
 
 class BuilderForCreateProfile:
     def __init__(self, base_profile_id):
@@ -33,18 +33,28 @@ class BuilderForCreateProfile:
         """
         self.profile_request.canvas = value
         return self
-    
-    def set_webgl(self, value, options):
+
+    def set_webgl(self, value):
         """Set the Webgl spoofing. Possible values:
             'noise': Add some noise to the WebGL generation
             'block': Completely block the 3D API
             'off': Turn off the spoofing, use the original settings
         :param string value: WebGL spoofing type. Possible values: 'noise', 'block', 'off'
-        :param options: Provide unmasked_vendor and unmasked_renderer
-        :type options: ~kameleo.local_api_client.models.WebglSpoofingOptions
         """
-        self.profile_request.webgl.value = value
-        self.profile_request.webgl.extra = options
+        self.profile_request.webgl = value
+        return self
+
+    def set_webgl_meta(self, value, options):
+        """Tells the mode how the WebGL vendor and renderer will be spoofed. Possible values:
+            'automatic': The vendor and renderer values comes from the base profile.
+            'manual': Manually set the vendor and renderer values.
+            'off': Turn off the spoofing, use the original settings.
+            :param string value: WebGLMeta spoofing type. Possible values: 'automatic', 'manual', 'off'
+            :param options: When the WebglMeta spoofing is set to manual the webgl gpu vendor and renderer is required. For example: Google Inc. (NVIDIA)/ANGLE (NVIDIA, NVIDIA GeForce GTX 1050 Ti Direct3D11 vs_5_0 ps_5_0, D3D11)
+            :type options: ~kameleo.local_api_client.models.WebglMetaSpoofingOptions
+        """
+        self.profile_request.webgl_meta.value = value
+        self.profile_request.webgl_meta.extra = options
         return self
 
     def set_audio(self, value):
@@ -207,7 +217,8 @@ class BuilderForCreateProfile:
         """
         self.profile_request.name = ""
         self.profile_request.canvas = "intelligent"
-        self.profile_request.webgl.value = "off"
+        self.profile_request.webgl = "off"
+        self.profile_request.webgl_meta.value = "automatic"
         self.profile_request.audio = "off"
         self.profile_request.timezone.value = "automatic"
         self.profile_request.geolocation.value = "automatic"
@@ -218,12 +229,13 @@ class BuilderForCreateProfile:
         self.profile_request.launcher = "automatic"
 
         return self;
-    
+
     def reset(self, base_profile_id):
         return CreateProfileRequest(
             base_profile_id=base_profile_id,
             canvas="off",
-            webgl=WebglSpoofingTypeWebglSpoofingOptionsMultiLevelChoice(value="off", extra=None),
+            webgl="off",
+            webgl_meta=WebglMetaSpoofingTypeWebglMetaSpoofingOptionsMultiLevelChoice(value="off", extra=None),
             audio="off",
             timezone=TimezoneSpoofingTypeTimezoneMultiLevelChoice(value="off", extra=None),
             geolocation=GeolocationSpoofingTypeGeolocationSpoofingOptionsMultiLevelChoice(value="off", extra=None),

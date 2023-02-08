@@ -729,7 +729,7 @@
       }
     },
     "/profiles/{guid}/duplicate": {
-      "post": {
+      "get": {
         "tags": [
           "Profile"
         ],
@@ -803,7 +803,7 @@
       }
     },
     "/profiles/{guid}/upgrade": {
-      "post": {
+      "get": {
         "tags": [
           "Profile"
         ],
@@ -865,7 +865,8 @@
         "os",
         "plugins",
         "resolution",
-        "version"
+        "version",
+        "webglMeta"
       ],
       "type": "object",
       "properties": {
@@ -918,6 +919,9 @@
             "internal-pdf-viewer",
             "internal-nacl-plugin"
           ]
+        },
+        "webglMeta": {
+          "$ref": "#/definitions/WebglMeta"
         }
       }
     },
@@ -1095,19 +1099,16 @@
           "format": "int64",
           "description": "This unix timestamp formatted attribute is used to set persistent cookies. It signifies how long the browser should use the persistent cookie and when the cookie should be deleted.\r\nIf this attribute is not specified, then the lifetime of the cookie is the same as that of browser session, i.e.it will be a non-persistent cookie.",
           "type": "integer",
-          "readOnly": true,
           "example": 1568986993
         },
         "session": {
           "description": "Session cookies are deleted when the current session ends. The browser defines when the \"current session\" ends, and some browsers use session restoring when restarting, which can cause session cookies to last indefinitely long.",
           "type": "boolean",
-          "readOnly": true,
           "example": false
         },
         "storeId": {
           "description": "The ID of the cookie store containing this cookie.",
           "type": "string",
-          "readOnly": true,
           "example": "0"
         }
       }
@@ -1133,6 +1134,7 @@
       "properties": {
         "domain": {
           "description": "The domain attribute signifies the domain for which the cookie is valid and can be submitted with every request for this domain or its subdomains. If this attribute is not specified, then the hostname of the originating server is used as the default value.",
+          "minLength": 1,
           "type": "string",
           "example": ".google.com"
         },
@@ -1143,6 +1145,7 @@
         },
         "path": {
           "description": "The path attribute indicates a URL path that must exist in the requested URL in order to send the Cookie header. The %x2F (\"/\") character is considered a directory separator, and subdirectories match as well.",
+          "minLength": 1,
           "type": "string",
           "example": "/gmail/about"
         },
@@ -1192,12 +1195,14 @@
         "screen",
         "timezone",
         "webgl",
+        "webglMeta",
         "webRtc"
       ],
       "type": "object",
       "properties": {
         "baseProfileId": {
           "description": "The unique identifier of the base profile. This references the base profile which should be used to build the new profile.",
+          "minLength": 1,
           "type": "string",
           "example": "555b894595b5cd242ead1533218a5ee93dd7c7ebfbff4dccb80fdb112f6cda27"
         },
@@ -1220,7 +1225,10 @@
           "$ref": "#/definitions/CanvasSpoofingType"
         },
         "webgl": {
-          "$ref": "#/definitions/WebglSpoofingTypeWebglSpoofingOptionsMultiLevelChoice"
+          "$ref": "#/definitions/WebglSpoofingType"
+        },
+        "webglMeta": {
+          "$ref": "#/definitions/WebglMetaSpoofingTypeWebglMetaSpoofingOptionsMultiLevelChoice"
         },
         "audio": {
           "$ref": "#/definitions/AudioSpoofingType"
@@ -1288,7 +1296,6 @@
         "name": {
           "description": "Name of the device. This is only available for mobile profiles.",
           "type": "string",
-          "readOnly": true,
           "example": "Samsung SM-A705FN"
         }
       }
@@ -1374,6 +1381,7 @@
       "properties": {
         "path": {
           "description": "The path where the profile should be loaded from",
+          "minLength": 1,
           "type": "string"
         }
       }
@@ -1461,8 +1469,7 @@
       "properties": {
         "code": {
           "format": "int32",
-          "type": "integer",
-          "readOnly": true
+          "type": "integer"
         },
         "error": {
           "type": "object",
@@ -1592,6 +1599,7 @@
         "tags",
         "timezone",
         "webgl",
+        "webglMeta",
         "webRtc"
       ],
       "type": "object",
@@ -1635,7 +1643,10 @@
           "$ref": "#/definitions/CanvasSpoofingType"
         },
         "webgl": {
-          "$ref": "#/definitions/WebglSpoofingTypeWebglSpoofingOptionsMultiLevelChoice"
+          "$ref": "#/definitions/WebglSpoofingType"
+        },
+        "webglMeta": {
+          "$ref": "#/definitions/WebglMetaSpoofingTypeWebglMetaSpoofingOptionsMultiLevelChoice"
         },
         "audio": {
           "$ref": "#/definitions/AudioSpoofingType"
@@ -1724,6 +1735,7 @@
       "properties": {
         "path": {
           "description": "The path where the profile should be saved.",
+          "minLength": 1,
           "type": "string"
         }
       }
@@ -1877,6 +1889,7 @@
         "startPage",
         "timezone",
         "webgl",
+        "webglMeta",
         "webRtc"
       ],
       "type": "object",
@@ -1885,7 +1898,10 @@
           "$ref": "#/definitions/CanvasSpoofingType"
         },
         "webgl": {
-          "$ref": "#/definitions/WebglSpoofingTypeWebglSpoofingOptionsMultiLevelChoice"
+          "$ref": "#/definitions/WebglSpoofingType"
+        },
+        "webglMeta": {
+          "$ref": "#/definitions/WebglMetaSpoofingTypeWebglMetaSpoofingOptionsMultiLevelChoice"
         },
         "audio": {
           "$ref": "#/definitions/AudioSpoofingType"
@@ -1934,6 +1950,7 @@
         },
         "name": {
           "description": "Profile name property. The value obtained by file name for existing profiles. For new profiles the value is generated by a random name generator.",
+          "minLength": 1,
           "type": "string"
         },
         "tags": {
@@ -2082,8 +2099,26 @@
         }
       }
     },
-    "WebglSpoofingOptions": {
-      "description": "When the WebGL spoofing is set to noise these extra settings can be used to ovveride the values in the base profile.",
+    "WebglMeta": {
+      "required": [
+        "vendor"
+      ],
+      "type": "object",
+      "properties": {
+        "vendor": {
+          "description": "The UnmaskedVendor field from WebGL context",
+          "type": "string",
+          "example": "Google Inc. (AMD)"
+        },
+        "renderer": {
+          "description": "The UnmaskedRenderer field from WebGL context",
+          "type": "string",
+          "example": "ANGLE (AMD, AMD Radeon(TM) RX Vega 11 Graphics Direct3D11 vs_5_0 ps_5_0, D3D11)"
+        }
+      }
+    },
+    "WebglMetaSpoofingOptions": {
+      "description": "When the WebGL Meta spoofing is used, these settings can override the values in the base profile.",
       "type": "object",
       "properties": {
         "vendor": {
@@ -2098,6 +2133,29 @@
         }
       }
     },
+    "WebglMetaSpoofingType": {
+      "description": "Tells the mode how the WebGL vendor and renderer will be spoofed. Possible values:\r\n'automatic': The vendor and renderer values comes from the base profile.\r\n'manual': Manually set the vendor and renderer values.\r\n'off': Turn off the spoofing, use the original settings",
+      "enum": [
+        "automatic",
+        "manual",
+        "off"
+      ],
+      "type": "string"
+    },
+    "WebglMetaSpoofingTypeWebglMetaSpoofingOptionsMultiLevelChoice": {
+      "required": [
+        "value"
+      ],
+      "type": "object",
+      "properties": {
+        "value": {
+          "$ref": "#/definitions/WebglMetaSpoofingType"
+        },
+        "extra": {
+          "$ref": "#/definitions/WebglMetaSpoofingOptions"
+        }
+      }
+    },
     "WebglSpoofingType": {
       "description": "Tells the mode how the WebGL will be spoofed. Possible values:\r\n'noise': Add some noise to the WebGL generation\r\n'block': Completely block the 3D API\r\n'off': Turn off the spoofing, use the original settings",
       "enum": [
@@ -2106,20 +2164,6 @@
         "off"
       ],
       "type": "string"
-    },
-    "WebglSpoofingTypeWebglSpoofingOptionsMultiLevelChoice": {
-      "required": [
-        "value"
-      ],
-      "type": "object",
-      "properties": {
-        "value": {
-          "$ref": "#/definitions/WebglSpoofingType"
-        },
-        "extra": {
-          "$ref": "#/definitions/WebglSpoofingOptions"
-        }
-      }
     }
   }
 }

@@ -35,6 +35,8 @@ class BaseProfile(Model):
     :type fonts: list[str]
     :param plugins: Required. A list of plugins included in the profile
     :type plugins: list[str]
+    :param webgl_meta: Required.
+    :type webgl_meta: ~kameleo.local_api_client.models.WebglMeta
     """
 
     _validation = {
@@ -47,6 +49,7 @@ class BaseProfile(Model):
         'resolution': {'required': True},
         'fonts': {'required': True},
         'plugins': {'required': True},
+        'webgl_meta': {'required': True},
     }
 
     _attribute_map = {
@@ -59,9 +62,10 @@ class BaseProfile(Model):
         'resolution': {'key': 'resolution', 'type': 'str'},
         'fonts': {'key': 'fonts', 'type': '[str]'},
         'plugins': {'key': 'plugins', 'type': '[str]'},
+        'webgl_meta': {'key': 'webglMeta', 'type': 'WebglMeta'},
     }
 
-    def __init__(self, *, version: str, id: str, device, os, browser, language: str, resolution: str, fonts, plugins, **kwargs) -> None:
+    def __init__(self, *, version: str, id: str, device, os, browser, language: str, resolution: str, fonts, plugins, webgl_meta, **kwargs) -> None:
         super(BaseProfile, self).__init__(**kwargs)
         self.version = version
         self.id = id
@@ -72,3 +76,4 @@ class BaseProfile(Model):
         self.resolution = resolution
         self.fonts = fonts
         self.plugins = plugins
+        self.webgl_meta = webgl_meta

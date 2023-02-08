@@ -8,29 +8,27 @@
 from msrest.serialization import Model
 
 
-class Device(Model):
-    """Device.
+class WebglMeta(Model):
+    """WebglMeta.
 
     All required parameters must be populated in order to send to Azure.
 
-    :param type: Required. Type of the device. Possible values are: 'desktop',
-     'mobile'.
-    :type type: str
-    :param name: Name of the device. This is only available for mobile
-     profiles.
-    :type name: str
+    :param vendor: Required. The UnmaskedVendor field from WebGL context
+    :type vendor: str
+    :param renderer: The UnmaskedRenderer field from WebGL context
+    :type renderer: str
     """
 
     _validation = {
-        'type': {'required': True},
+        'vendor': {'required': True},
     }
 
     _attribute_map = {
-        'type': {'key': 'type', 'type': 'str'},
-        'name': {'key': 'name', 'type': 'str'},
+        'vendor': {'key': 'vendor', 'type': 'str'},
+        'renderer': {'key': 'renderer', 'type': 'str'},
     }
 
     def __init__(self, **kwargs):
-        super(Device, self).__init__(**kwargs)
-        self.type = kwargs.get('type', None)
-        self.name = kwargs.get('name', None)
+        super(WebglMeta, self).__init__(**kwargs)
+        self.vendor = kwargs.get('vendor', None)
+        self.renderer = kwargs.get('renderer', None)

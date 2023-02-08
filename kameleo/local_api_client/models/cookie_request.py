@@ -59,9 +59,9 @@ class CookieRequest(Model):
     """
 
     _validation = {
-        'domain': {'required': True},
+        'domain': {'required': True, 'min_length': 1},
         'name': {'required': True},
-        'path': {'required': True},
+        'path': {'required': True, 'min_length': 1},
         'value': {'required': True},
     }
 
