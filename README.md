@@ -36,32 +36,27 @@ pip install kameleo.local_api_client
 
 ## 3. Start a browser with out-of-the-box fingerprinting protection 
 ```python
-from kameleo.local_api_client.kameleo_local_api_client import KameleoLocalApiClient
+from kameleo.local_api_client import KameleoLocalApiClient
 from kameleo.local_api_client.builder_for_create_profile import BuilderForCreateProfile
-from kameleo.local_api_client.models.problem_response_py3 import ProblemResponseException
-import json
 
-try:
-    client = KameleoLocalApiClient()
-    base_profiles = client.search_base_profiles(
-        device_type='desktop',
-        browser_product='chrome'
-    )
-    
-    # Create a new profile with recommended settings
-    # for browser fingerprinting protection
-    create_profile_request = BuilderForCreateProfile \
-        .for_base_profile(base_profiles[0].id) \
-        .set_recommended_defaults() \
-        .build()
-    profile = client.create_profile(body=create_profile_request)
-    
-    # Start the browser
-    client.start_profile(profile.id)
-    
-    # At this point you can automate the browser with your favorite framework
-except ProblemResponseException as e:
-    raise Exception([str(e), json.dumps(e.error.error)])
+client = KameleoLocalApiClient()
+base_profiles = client.search_base_profiles(
+    device_type='desktop',
+    browser_product='chrome'
+)
+
+# Create a new profile with recommended settings
+# for browser fingerprinting protection
+create_profile_request = BuilderForCreateProfile \
+    .for_base_profile(base_profiles[0].id) \
+    .set_recommended_defaults() \
+    .build()
+profile = client.create_profile(body=create_profile_request)
+
+# Start the browser
+client.start_profile(profile.id)
+
+# At this point you can automate the browser with your favorite framework
 ```
 
 # Automate Kameleo profiles with Selenium
