@@ -1,13 +1,7 @@
-from .models.create_profile_request_py3 import CreateProfileRequest
-from .models.webgl_spoofing_type_webgl_spoofing_options_multi_level_choice_py3 import WebglSpoofingTypeWebglSpoofingOptionsMultiLevelChoice
-from .models.timezone_spoofing_type_timezone_multi_level_choice_py3 import TimezoneSpoofingTypeTimezoneMultiLevelChoice
-from .models.geolocation_spoofing_type_geolocation_spoofing_options_multi_level_choice_py3 import GeolocationSpoofingTypeGeolocationSpoofingOptionsMultiLevelChoice
-from .models.proxy_connection_type_server_multi_level_choice_py3 import ProxyConnectionTypeServerMultiLevelChoice
-from .models.web_rtc_spoofing_type_web_rtc_spoofing_options_multi_level_choice_py3 import WebRtcSpoofingTypeWebRtcSpoofingOptionsMultiLevelChoice
-from .models.font_spoofing_type_font_ilist_multi_level_choice_py3 import FontSpoofingTypeFontIListMultiLevelChoice
-from .models.plugin_spoofing_type_plugin_ilist_multi_level_choice_py3 import PluginSpoofingTypePluginIListMultiLevelChoice
-from .models.screen_spoofing_type_screen_size_multi_level_choice_py3 import ScreenSpoofingTypeScreenSizeMultiLevelChoice
-from .models.webgl_meta_spoofing_type_webgl_meta_spoofing_options_multi_level_choice_py3 import WebglMetaSpoofingTypeWebglMetaSpoofingOptionsMultiLevelChoice
+from typing import Optional, Union, IO
+
+from kameleo.local_api_client._serialization import JSON
+
 
 class BuilderForCreateProfile:
     def __init__(self, base_profile_id):
@@ -21,7 +15,7 @@ class BuilderForCreateProfile:
 
     def build(self):
         result = self.profile_request
-        self.profile_request = self.reset(result.base_profile_id)
+        self.profile_request = self.reset(result['baseProfileId'])
         return result
 
     def set_canvas(self, value):
@@ -31,7 +25,7 @@ class BuilderForCreateProfile:
             'off': Turn off the spoofing, use the original settings.
         :param string value: Canvas spoofing type. Possible values: 'noise', 'block', 'off'
         """
-        self.profile_request.canvas = value
+        self.profile_request['canvas'] = value
         return self
 
     def set_webgl(self, value):
@@ -41,7 +35,7 @@ class BuilderForCreateProfile:
             'off': Turn off the spoofing, use the original settings
         :param string value: WebGL spoofing type. Possible values: 'noise', 'block', 'off'
         """
-        self.profile_request.webgl = value
+        self.profile_request['webgl'] = value
         return self
 
     def set_webgl_meta(self, value, options):
@@ -53,8 +47,8 @@ class BuilderForCreateProfile:
             :param options: When the WebglMeta spoofing is set to manual the webgl gpu vendor and renderer is required. For example: Google Inc. (NVIDIA)/ANGLE (NVIDIA, NVIDIA GeForce GTX 1050 Ti Direct3D11 vs_5_0 ps_5_0, D3D11)
             :type options: ~kameleo.local_api_client.models.WebglMetaSpoofingOptions
         """
-        self.profile_request.webgl_meta.value = value
-        self.profile_request.webgl_meta.extra = options
+        self.profile_request['webglMeta']['value'] = value
+        self.profile_request['webglMeta']['options'] = options
         return self
 
     def set_audio(self, value):
@@ -64,7 +58,7 @@ class BuilderForCreateProfile:
             'off': Turn off the audio spoofing, use the original settings.
         :param string value: Audio spoofing type. Possible values: 'noise', 'block', 'off'
         """
-        self.profile_request.audio = value
+        self.profile_request['audio'] = value
         return self
 
     def set_timezone(self, value, options):
@@ -75,8 +69,8 @@ class BuilderForCreateProfile:
         :param string value: Timezone spoofing type. Possible values: 'automatic', 'manual', 'off'
         :param str options: When the Timezone spoofing is set to manual the timezone in Iana format is required. For example: America/Grenada
         """
-        self.profile_request.timezone.value = value
-        self.profile_request.timezone.extra = options
+        self.profile_request['timezone']['value'] = value
+        self.profile_request['timezone']['extra'] = options
         return self
 
     def set_geolocation(self, value, options):
@@ -89,8 +83,8 @@ class BuilderForCreateProfile:
         :param options: When the Geolocation spoofing is set to manual the Geolocation coordinates must be provided
         :type options: ~kameleo.local_api_client.models.GeolocationSpoofingOptions
         """
-        self.profile_request.geolocation.value = value
-        self.profile_request.geolocation.extra = options
+        self.profile_request['geolocation']['value'] = value
+        self.profile_request['geolocation']['extra'] = options
         return self
 
     def set_proxy(self, value, options):
@@ -103,8 +97,8 @@ class BuilderForCreateProfile:
         :param options: When the Proxy connection is set, a Proxy Server must be provided
         :type options: ~kameleo.local_api_client.models.Server
         """
-        self.profile_request.proxy.value = value
-        self.profile_request.proxy.extra = options
+        self.profile_request['proxy']['value'] = value
+        self.profile_request['proxy']['extra'] = options
         return self
 
     def set_web_rtc(self, value, options):
@@ -117,8 +111,8 @@ class BuilderForCreateProfile:
         :param options: When the WebRTC spoofing is set to manual, the private_ip and public_ip must be provided
         :type options: ~kameleo.local_api_client.models.WebRtcSpoofingOptions
         """
-        self.profile_request.web_rtc.value = value
-        self.profile_request.web_rtc.extra = options
+        self.profile_request['webRtc']['value'] = value
+        self.profile_request['webRtc']['extra'] = options
         return self
 
     def set_fonts(self, value, options):
@@ -129,8 +123,8 @@ class BuilderForCreateProfile:
         :param options: When the Font spoofing is set to enabled, a list can be provided to overrider the fonts coming from the base profile.
         :type options: list[str]
         """
-        self.profile_request.fonts.value = value
-        self.profile_request.fonts.extra = options
+        self.profile_request['fonts']['value'] = value
+        self.profile_request['fonts']['extra'] = options
         return self
 
     def set_plugins(self, value, options):
@@ -141,15 +135,15 @@ class BuilderForCreateProfile:
         :param options: When the Plugins spoofing is set to enabled, a list can be provided to EXCLUDE plugins from the plugins of the base profile.
         :type options: list[str]
         """
-        self.profile_request.plugins.value = value
-        self.profile_request.plugins.extra = options
+        self.profile_request['plugins']['value'] = value
+        self.profile_request['plugins']['extra'] = options
         return self
 
     def set_start_page(self, value):
         """This website will be opened in the browser when the profile launches.
         :param string value: The url of the start page
         """
-        self.profile_request.start_page = value
+        self.profile_request['startPage'] = value
         return self
 
     def set_password_manager(self, value):
@@ -158,7 +152,7 @@ class BuilderForCreateProfile:
             'disable': Disable password manager.
         :param string value: Password Manager possible values: 'enabled', 'disabled'
         """
-        self.profile_request.password_manager = value
+        self.profile_request['passwordManager'] = value
         return self
 
     def set_screen(self, value, options):
@@ -169,8 +163,8 @@ class BuilderForCreateProfile:
         :param string value: Screen spoofing type. Possible values: 'automatic', 'manual', 'off'
         :param string options: When the Screen spoofing is set to manual, the required screen size must be provided. For example: 1080x1920
         """
-        self.profile_request.screen.value = value
-        self.profile_request.screen.extra = options
+        self.profile_request['screen']['value'] = value
+        self.profile_request['screen']['extra'] = options
         return self
 
     def set_extensions(self, absolute_paths):
@@ -178,27 +172,27 @@ class BuilderForCreateProfile:
         :param absolute_paths: A list of abolute paths from where the profile should load extensions or addons when starting the browser.
         :type absolute_paths: list[str]
         """
-        self.profile_request.extensions = absolute_paths
+        self.profile_request['extensions'] = absolute_paths
         return self
-    
+
     def set_notes(self, notes):
         """A free text including any notes written by the user.
         """
-        self.profile_request.notes = notes
+        self.profile_request['notes'] = notes
         return self
 
     def set_name(self, name):
         """Sets the name of the profile.
         """
-        self.profile_request.name = name
+        self.profile_request['name'] = name
         return self
 
     def set_tags(self, tags):
         """Sets the tags of the profile.
         """
-        self.profile_request.tags = tags
+        self.profile_request['tags'] = tags
         return self
-    
+
     def set_launcher(self, browser_launcher):
         """The mode how the profile should be launched. It determines which browser to launch. This cannot be modified after creation. Possible values are:
             'automatic': Automatically choose launcher based on DeviceType and BrowserProduct property.
@@ -209,39 +203,65 @@ class BuilderForCreateProfile:
             'external': Only start the external spoofing engine and connect any browser manually. This is also used for Mobile Device spoofing.
         :param string browser_launcher: Browser Launcher. Possible values: 'automatic', 'chrome', 'chromium', 'firefox', 'edge', 'external'
         """
-        self.profile_request.launcher = browser_launcher
+        self.profile_request['launcher'] = browser_launcher
         return self
 
     def set_recommended_defaults(self):
         """This sets all the profile options to the defaults recommended by Kameleo Team. Please consider providing Proxy settings to your profile.
         """
-        self.profile_request.name = ""
-        self.profile_request.canvas = "intelligent"
-        self.profile_request.webgl = "off"
-        self.profile_request.webgl_meta.value = "automatic"
-        self.profile_request.audio = "off"
-        self.profile_request.timezone.value = "automatic"
-        self.profile_request.geolocation.value = "automatic"
-        self.profile_request.web_rtc.value = "automatic"
-        self.profile_request.fonts.value = "enabled"
-        self.profile_request.plugins.value = "enabled"
-        self.profile_request.screen.value = "automatic"
-        self.profile_request.launcher = "automatic"
+        self.profile_request['name'] = ""
+        self.profile_request['canvas'] = "intelligent"
+        self.profile_request['webgl'] = "off"
+        self.profile_request['webglMeta']['value'] = "automatic"
+        self.profile_request['audio'] = "off"
+        self.profile_request['timezone']['value'] = "automatic"
+        self.profile_request['geolocation']['value'] = "automatic"
+        self.profile_request['webRtc']['value'] = "automatic"
+        self.profile_request['fonts']['value'] = "enabled"
+        self.profile_request['plugins']['value'] = "enabled"
+        self.profile_request['screen']['value'] = "automatic"
+        self.profile_request['launcher'] = "automatic"
 
-        return self;
+        return self
 
-    def reset(self, base_profile_id):
-        return CreateProfileRequest(
-            base_profile_id=base_profile_id,
-            canvas="off",
-            webgl="off",
-            webgl_meta=WebglMetaSpoofingTypeWebglMetaSpoofingOptionsMultiLevelChoice(value="off", extra=None),
-            audio="off",
-            timezone=TimezoneSpoofingTypeTimezoneMultiLevelChoice(value="off", extra=None),
-            geolocation=GeolocationSpoofingTypeGeolocationSpoofingOptionsMultiLevelChoice(value="off", extra=None),
-            proxy=ProxyConnectionTypeServerMultiLevelChoice(value="none", extra=None),
-            web_rtc=WebRtcSpoofingTypeWebRtcSpoofingOptionsMultiLevelChoice(value="off", extra=None),
-            fonts=FontSpoofingTypeFontIListMultiLevelChoice(value="disabled", extra=None),
-            plugins=PluginSpoofingTypePluginIListMultiLevelChoice(value="disabled", extra=None),
-            screen=ScreenSpoofingTypeScreenSizeMultiLevelChoice(value="off", extra=None),
-            password_manager="disabled")
+    def reset(self, base_profile_id) -> Optional[Union[JSON, IO]]:
+        data = {
+            "baseProfileId": base_profile_id,
+            "canvas": "off",
+            "webgl": "off",
+            "webglMeta": {
+                "value": "off",
+                "extra": None
+            },
+            "audio": "off",
+            "timezone": {
+                "value": "off",
+                "extra": None
+            },
+            "geolocation": {
+                "value": "off",
+                "extra": None
+            },
+            "proxy": {
+                "value": "none",
+                "extra": None
+            },
+            "webRtc": {
+                "value": "off",
+                "extra": None
+            },
+            "fonts": {
+                "value": "disabled",
+                "extra": None
+            },
+            "plugins": {
+                "value": "disabled",
+                "extra": None
+            },
+            "screen": {
+                "value": "off",
+                "extra": None
+            },
+            "passwordManager": "disabled"
+        }
+        return data
