@@ -34,7 +34,7 @@ pip install kameleo.local_api_client
 ./Kameleo.CLI.exe email="your@email.com" password="Pa$$w0rd"
 ```
 
-## 3. Start a browser with out-of-the-box fingerprinting protection 
+## 3. Start a browser with out-of-the-box fingerprinting protection
 ```python
 from kameleo.local_api_client import KameleoLocalApiClient
 from kameleo.local_api_client.builder_for_create_profile import BuilderForCreateProfile
@@ -70,8 +70,9 @@ from selenium import webdriver
 
 ```python
 # Connect to the running browser instance using WebDriver
+kameleo_port = 5050
 options = webdriver.ChromeOptions()
-options.add_experimental_option("kameleo:profileId", profile.id)
+options.add_experimental_option('kameleo:profileId', profile.id)
 driver = webdriver.Remote(
     command_executor=f'http://localhost:{kameleo_port}/webdriver',
     options=options
@@ -90,11 +91,12 @@ Kameleo lets you control Chromium-based browsers (sorry Firefox fans) using the 
 You need to import the [Pyppeteer library](https://pypi.org/project/pyppeteer/).
 
 ```python
-import pyppeteer   
+import pyppeteer
 ```
 
 ```python
 # Connect to the browser with Puppeteer through CDP
+kameleo_port = 5050
 browser_ws_endpoint = f'ws://localhost:{kameleo_port}/puppeteer/{profile.id}'
 browser = await pyppeteer.launcher.connect(browserWSEndpoint=browser_ws_endpoint, defaultViewport=False)
 page = await browser.newPage()
@@ -104,7 +106,7 @@ page = await browser.newPage()
 await page.goto('https://google.com')
 ```
 
-The full example can be found [here](https://github.com/kameleo-io/local-api-examples/blob/master/python/connect_with_puppeteer_to_chrome/app.py).
+The full example can be found [here](https://github.com/kameleo-io/local-api-examples/blob/master/python/connect_with_puppeteer/app.py).
 
 # Automate Kameleo profiles with Playwright
 Kameleo allows you to control the browser with the official [Playwright package](https://pypi.org/project/playwright/). It works little bit different with Chromium-based browsers and Firefox, so we provide an example for both. Here we showcase how you can connect to the browser that is already started by Kameleo.
@@ -115,10 +117,13 @@ import playwright
 from playwright.sync_api import sync_playwright
 ```
 
+You can find more details here: [Using Kameleo with Playwright framework – Kameleo Support Center](https://help.kameleo.io/hc/en-us/articles/4419471627793-Using-Kameleo-with-Playwright-framework).
+
 ## Chromium-based profiles with Playwright
 
 ```python
 # Connect to the browser with Playwright through CDP
+kameleo_port = 5050
 browser_ws_endpoint = f'ws://localhost:{kameleo_port}/playwright/{profile.id}'
 with sync_playwright() as playwright:
     browser = playwright.chromium.connect_over_cdp(endpoint_url=browser_ws_endpoint)
@@ -136,20 +141,23 @@ The full example can be found [here](https://github.com/kameleo-io/local-api-exa
 
 ```python
 # Connect to the browser with Playwright
+kameleo_port = 5050
 browser_ws_endpoint = f'ws://localhost:{kameleo_port}/playwright/{profile.id}'
 with sync_playwright() as playwright:
+    # The exact path to the bridge executable is subject to change. Here, we use %LOCALAPPDATA%\Programs\Kameleo\pw-bridge.exe
+    executable_path_example = path.expandvars(r'%LOCALAPPDATA%\Programs\Kameleo\pw-bridge.exe')
     browser = playwright.firefox.launch_persistent_context(
         '',
         # The Playwright framework is not designed to connect to already running
         # browsers. To overcome this limitation, a tool bundled with Kameleo, named
         # pw-bridge.exe will bridge the communication gap between the running Firefox
         # instance and this playwright script.
-        executable_path='<PATH_TO_KAMELEO_FOLDER>\\pw-bridge.exe',
+        executable_path=executable_path_example,
         args=[f'-target {browser_ws_endpoint}'],
         viewport=None)
-    
+
     # Kameleo will open the a new page in the default browser context.
-    # NOTE: We DO NOT recommend using multiple browser contexts, as this might interfere 
+    # NOTE: We DO NOT recommend using multiple browser contexts, as this might interfere
     #       with Kameleo's browser fingerprint modification features.
     page = browser.new_page()
 
@@ -187,7 +195,7 @@ create_profile_request = BuilderForCreateProfile \
 profile = client.create_profile(body=create_profile_request)
 
 # Start the profile
-client.start_profile_with_web_driver_settings(profile.id, body={
+client.start_profile_with_options(profile.id, body={
     # This allows you to click on elements using the cursor when emulating a touch screen in the browser.
     # If you leave this out, your script may time out after clicks and fail.
     'additionalOptions': [
@@ -219,7 +227,6 @@ The full example can be found [here](https://github.com/kameleo-io/local-api-exa
 - Modify and Delete browser cookies
 - Start profile with extra WebDriver capabilities
 - How to duplicate virtual browser profiles
-- Test proxies
 - Refresh the browser of the emulated profiles
 
 > Note: _If you are interested in more information about Kameleo, or have encountered an issue with using it, please check out our [Help Center](https://help.kameleo.io/)._
@@ -228,6 +235,8 @@ The full example can be found [here](https://github.com/kameleo-io/local-api-exa
 # Endpoints
 Available API endpoints with exhaustive descriptions and example values are documented on this [SwaggerHub](https://app.swaggerhub.com/apis/kameleo-team/kameleo-local-api/) page. This package has built-in [IntelliSense](https://code.visualstudio.com/docs/editor/intellisense) support in Visual Studio Code, no extra package installation needed.
 
+# Package
+This package can be found on PyPI here: [kameleo.local-api-client](https://pypi.org/project/kameleo.local-api-client/).
 
 # License
 This project is released under MIT License. Please refer the LICENSE.txt for more details.
