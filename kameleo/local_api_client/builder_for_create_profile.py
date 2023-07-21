@@ -48,7 +48,7 @@ class BuilderForCreateProfile:
             :type options: ~kameleo.local_api_client.models.WebglMetaSpoofingOptions
         """
         self.profile_request['webglMeta']['value'] = value
-        self.profile_request['webglMeta']['options'] = options
+        self.profile_request['webglMeta']['extra'] = options
         return self
 
     def set_audio(self, value):
@@ -127,18 +127,6 @@ class BuilderForCreateProfile:
         self.profile_request['fonts']['extra'] = options
         return self
 
-    def set_plugins(self, value, options):
-        """Tells the mode how the Plugins will be spoofed. Possible values:
-            'enabled': Enable plugins spoofing. A list can be provided to EXCLUDE plugins from the plugins of the base profile.
-            'disable': Disable plugins spoofing.
-        :param string value: Plugins spoofing type. Possible values: 'enabled', 'disabled'
-        :param options: When the Plugins spoofing is set to enabled, a list can be provided to EXCLUDE plugins from the plugins of the base profile.
-        :type options: list[str]
-        """
-        self.profile_request['plugins']['value'] = value
-        self.profile_request['plugins']['extra'] = options
-        return self
-
     def set_start_page(self, value):
         """This website will be opened in the browser when the profile launches.
         :param string value: The url of the start page
@@ -194,14 +182,10 @@ class BuilderForCreateProfile:
         return self
 
     def set_launcher(self, browser_launcher):
-        """The mode how the profile should be launched. It determines which browser to launch. This cannot be modified after creation. Possible values are:
-            'automatic': Automatically choose launcher based on DeviceType and BrowserProduct property.
-            'chrome': Forcefully start the profile in Chrome.
-            'chromium': Forcefully start the profile in Chromium.
-            'firefox': Forcefully start the profile in Firefox.
-            'edge': Forcefully start the profile in Edge.
-            'external': Only start the external spoofing engine and connect any browser manually. This is also used for Mobile Device spoofing.
-        :param string browser_launcher: Browser Launcher. Possible values: 'automatic', 'chrome', 'chromium', 'firefox', 'edge', 'external'
+        """The mode how the profile should be launched. It determines which browser to launch. This cannot be modified after creation.
+            Possible values for Desktop profiles 'automatic'.
+            Possible values for Mobile profiles: 'chromium', 'external'.
+        :param string browser_launcher: Browser Launcher. Possible values: 'automatic', 'external'
         """
         self.profile_request['launcher'] = browser_launcher
         return self
@@ -218,7 +202,6 @@ class BuilderForCreateProfile:
         self.profile_request['geolocation']['value'] = "automatic"
         self.profile_request['webRtc']['value'] = "automatic"
         self.profile_request['fonts']['value'] = "enabled"
-        self.profile_request['plugins']['value'] = "enabled"
         self.profile_request['screen']['value'] = "automatic"
         self.profile_request['launcher'] = "automatic"
 
@@ -251,10 +234,6 @@ class BuilderForCreateProfile:
                 "extra": None
             },
             "fonts": {
-                "value": "disabled",
-                "extra": None
-            },
-            "plugins": {
                 "value": "disabled",
                 "extra": None
             },

@@ -1,26 +1,20 @@
 import setuptools
 from distutils.util import convert_path
 
-with open("README.md", "r") as fh:
-    long_description = fh.read()
-
-# Version parsing
-main_ns = {}
-ver_path = convert_path('kameleo/local_api_client/version.py')
-with open(ver_path) as ver_file:
-    exec(ver_file.read(), main_ns)
-
+VERSION = '1.0.0'
+exec(open(convert_path('kameleo/local_api_client/_version.py')).read())
 
 setuptools.setup(
     name='kameleo.local_api_client',
-    version=main_ns['VERSION'],
+    version=VERSION,
     author='Kameleo Team',
     author_email='support@kameleo.io',
     description='This Python package provides convenient access to the Local API REST interface of the Kameleo Client.',
-    long_description=long_description,
+    long_description=open('README.md').read(),
     long_description_content_type='text/markdown',
     url='https://github.com/kameleo-io/local-api-client-python',
     packages=setuptools.find_packages(),
+    setup_requires=['wheel'],
     install_requires=['msrest'],
     license='MIT',
     classifiers=[
