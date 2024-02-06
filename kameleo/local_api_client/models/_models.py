@@ -613,6 +613,9 @@ class CreateProfileRequest(_serialization.Model):  # pylint: disable=too-many-in
     :vartype fonts: ~kameleo.local_api_client.models.FontSpoofingTypeFontIListMultiLevelChoice
     :ivar screen: Required.
     :vartype screen: ~kameleo.local_api_client.models.ScreenSpoofingTypeScreenSizeMultiLevelChoice
+    :ivar hardware_concurrency:
+    :vartype hardware_concurrency:
+     ~kameleo.local_api_client.models.HardwareConcurrencySpoofingTypeInt32NullableMultiLevelChoice
     :ivar start_page: This website will be opened in the browser when the profile launches.
     :vartype start_page: str
     :ivar password_manager: Tells if the browser should support credential saving. Possible values
@@ -629,7 +632,7 @@ class CreateProfileRequest(_serialization.Model):  # pylint: disable=too-many-in
     :vartype notes: str
     :ivar launcher: This setting determines which browser engine is launched when a profile is
      started. This can be modified only before the first start. Possible values for Desktop
-     profiles: 'automatic'. Possible values for Mobile proiles: 'chromium', 'external'.
+     profiles: 'automatic'. Possible values for Mobile profiles: 'chromium', 'external'.
     :vartype launcher: str
     """
 
@@ -665,6 +668,10 @@ class CreateProfileRequest(_serialization.Model):  # pylint: disable=too-many-in
         "web_rtc": {"key": "webRtc", "type": "WebRtcSpoofingTypeWebRtcSpoofingOptionsMultiLevelChoice"},
         "fonts": {"key": "fonts", "type": "FontSpoofingTypeFontIListMultiLevelChoice"},
         "screen": {"key": "screen", "type": "ScreenSpoofingTypeScreenSizeMultiLevelChoice"},
+        "hardware_concurrency": {
+            "key": "hardwareConcurrency",
+            "type": "HardwareConcurrencySpoofingTypeInt32NullableMultiLevelChoice",
+        },
         "start_page": {"key": "startPage", "type": "str"},
         "password_manager": {"key": "passwordManager", "type": "str"},
         "extensions": {"key": "extensions", "type": "[str]"},
@@ -689,6 +696,7 @@ class CreateProfileRequest(_serialization.Model):  # pylint: disable=too-many-in
         password_manager: Union[str, "_models.PasswordManagerType"],
         name: Optional[str] = None,
         tags: Optional[List[str]] = None,
+        hardware_concurrency: Optional["_models.HardwareConcurrencySpoofingTypeInt32NullableMultiLevelChoice"] = None,
         start_page: Optional[str] = None,
         extensions: Optional[List[str]] = None,
         notes: Optional[str] = None,
@@ -743,6 +751,9 @@ class CreateProfileRequest(_serialization.Model):  # pylint: disable=too-many-in
         :keyword screen: Required.
         :paramtype screen:
          ~kameleo.local_api_client.models.ScreenSpoofingTypeScreenSizeMultiLevelChoice
+        :keyword hardware_concurrency:
+        :paramtype hardware_concurrency:
+         ~kameleo.local_api_client.models.HardwareConcurrencySpoofingTypeInt32NullableMultiLevelChoice
         :keyword start_page: This website will be opened in the browser when the profile launches.
         :paramtype start_page: str
         :keyword password_manager: Tells if the browser should support credential saving. Possible
@@ -759,7 +770,7 @@ class CreateProfileRequest(_serialization.Model):  # pylint: disable=too-many-in
         :paramtype notes: str
         :keyword launcher: This setting determines which browser engine is launched when a profile is
          started. This can be modified only before the first start. Possible values for Desktop
-         profiles: 'automatic'. Possible values for Mobile proiles: 'chromium', 'external'.
+         profiles: 'automatic'. Possible values for Mobile profiles: 'chromium', 'external'.
         :paramtype launcher: str
         """
         super().__init__(**kwargs)
@@ -776,6 +787,7 @@ class CreateProfileRequest(_serialization.Model):  # pylint: disable=too-many-in
         self.web_rtc = web_rtc
         self.fonts = fonts
         self.screen = screen
+        self.hardware_concurrency = hardware_concurrency
         self.start_page = start_page
         self.password_manager = password_manager
         self.extensions = extensions
@@ -964,6 +976,52 @@ class GeolocationSpoofingTypeGeolocationSpoofingOptionsMultiLevelChoice(_seriali
         self.extra = extra
 
 
+class HardwareConcurrencySpoofingTypeInt32NullableMultiLevelChoice(_serialization.Model):
+    """HardwareConcurrencySpoofingTypeInt32NullableMultiLevelChoice.
+
+    All required parameters must be populated in order to send to Azure.
+
+    :ivar value: Tells the mode how the HardwareConcurrency will be spoofed. Possible values:
+     'automatic': Automatically set the values based on the Base Profile.
+     'manual': Manually set the value in the profile. Valid values: 1, 2, 4, 8, 12, 16.
+     'off': Turn off the spoofing, use the original settings. Required. Known values are:
+     "automatic", "manual", and "off".
+    :vartype value: str or ~kameleo.local_api_client.models.HardwareConcurrencySpoofingType
+    :ivar extra:
+    :vartype extra: int
+    """
+
+    _validation = {
+        "value": {"required": True},
+    }
+
+    _attribute_map = {
+        "value": {"key": "value", "type": "str"},
+        "extra": {"key": "extra", "type": "int"},
+    }
+
+    def __init__(
+        self,
+        *,
+        value: Union[str, "_models.HardwareConcurrencySpoofingType"],
+        extra: Optional[int] = None,
+        **kwargs: Any
+    ) -> None:
+        """
+        :keyword value: Tells the mode how the HardwareConcurrency will be spoofed. Possible values:
+         'automatic': Automatically set the values based on the Base Profile.
+         'manual': Manually set the value in the profile. Valid values: 1, 2, 4, 8, 12, 16.
+         'off': Turn off the spoofing, use the original settings. Required. Known values are:
+         "automatic", "manual", and "off".
+        :paramtype value: str or ~kameleo.local_api_client.models.HardwareConcurrencySpoofingType
+        :keyword extra:
+        :paramtype extra: int
+        """
+        super().__init__(**kwargs)
+        self.value = value
+        self.extra = extra
+
+
 class ImportProfileRequest(_serialization.Model):
     """Tells where the profile should be imported from.
 
@@ -1125,7 +1183,7 @@ class ProfilePreview(_serialization.Model):  # pylint: disable=too-many-instance
     :vartype language: str
     :ivar launcher: This setting determines which browser engine is launched when a profile is
      started. This can be modified only before the first start. Possible values for Desktop
-     profiles: 'automatic'. Possible values for Mobile proiles: 'chromium', 'external'. Required.
+     profiles: 'automatic'. Possible values for Mobile profiles: 'chromium', 'external'. Required.
     :vartype launcher: str
     :ivar status: Status information about the profile. Required.
     :vartype status: ~kameleo.local_api_client.models.StatusResponse
@@ -1197,7 +1255,7 @@ class ProfilePreview(_serialization.Model):  # pylint: disable=too-many-instance
         :paramtype language: str
         :keyword launcher: This setting determines which browser engine is launched when a profile is
          started. This can be modified only before the first start. Possible values for Desktop
-         profiles: 'automatic'. Possible values for Mobile proiles: 'chromium', 'external'. Required.
+         profiles: 'automatic'. Possible values for Mobile profiles: 'chromium', 'external'. Required.
         :paramtype launcher: str
         :keyword status: Status information about the profile. Required.
         :paramtype status: ~kameleo.local_api_client.models.StatusResponse
@@ -1271,6 +1329,9 @@ class ProfileResponse(_serialization.Model):  # pylint: disable=too-many-instanc
     :vartype fonts: ~kameleo.local_api_client.models.FontSpoofingTypeFontIListMultiLevelChoice
     :ivar screen: Required.
     :vartype screen: ~kameleo.local_api_client.models.ScreenSpoofingTypeScreenSizeMultiLevelChoice
+    :ivar hardware_concurrency: Required.
+    :vartype hardware_concurrency:
+     ~kameleo.local_api_client.models.HardwareConcurrencySpoofingTypeInt32NullableMultiLevelChoice
     :ivar start_page: This website will be opened in the browser when the profile launches.
      Required.
     :vartype start_page: str
@@ -1288,7 +1349,7 @@ class ProfileResponse(_serialization.Model):  # pylint: disable=too-many-instanc
     :vartype notes: str
     :ivar launcher: This setting determines which browser engine is launched when a profile is
      started. This can be modified only before the first start. Possible values for Desktop
-     profiles: 'automatic'. Possible values for Mobile proiles: 'chromium', 'external'. Required.
+     profiles: 'automatic'. Possible values for Mobile profiles: 'chromium', 'external'. Required.
     :vartype launcher: str
     :ivar status: Status information about the profile. Required.
     :vartype status: ~kameleo.local_api_client.models.StatusResponse
@@ -1310,6 +1371,7 @@ class ProfileResponse(_serialization.Model):  # pylint: disable=too-many-instanc
         "web_rtc": {"required": True},
         "fonts": {"required": True},
         "screen": {"required": True},
+        "hardware_concurrency": {"required": True},
         "start_page": {"required": True},
         "password_manager": {"required": True},
         "extensions": {"required": True},
@@ -1337,6 +1399,10 @@ class ProfileResponse(_serialization.Model):  # pylint: disable=too-many-instanc
         "web_rtc": {"key": "webRtc", "type": "WebRtcSpoofingTypeWebRtcSpoofingOptionsMultiLevelChoice"},
         "fonts": {"key": "fonts", "type": "FontSpoofingTypeFontIListMultiLevelChoice"},
         "screen": {"key": "screen", "type": "ScreenSpoofingTypeScreenSizeMultiLevelChoice"},
+        "hardware_concurrency": {
+            "key": "hardwareConcurrency",
+            "type": "HardwareConcurrencySpoofingTypeInt32NullableMultiLevelChoice",
+        },
         "start_page": {"key": "startPage", "type": "str"},
         "password_manager": {"key": "passwordManager", "type": "str"},
         "extensions": {"key": "extensions", "type": "[str]"},
@@ -1363,6 +1429,7 @@ class ProfileResponse(_serialization.Model):  # pylint: disable=too-many-instanc
         web_rtc: "_models.WebRtcSpoofingTypeWebRtcSpoofingOptionsMultiLevelChoice",
         fonts: "_models.FontSpoofingTypeFontIListMultiLevelChoice",
         screen: "_models.ScreenSpoofingTypeScreenSizeMultiLevelChoice",
+        hardware_concurrency: "_models.HardwareConcurrencySpoofingTypeInt32NullableMultiLevelChoice",
         start_page: str,
         password_manager: Union[str, "_models.PasswordManagerType"],
         extensions: List[str],
@@ -1423,6 +1490,9 @@ class ProfileResponse(_serialization.Model):  # pylint: disable=too-many-instanc
         :keyword screen: Required.
         :paramtype screen:
          ~kameleo.local_api_client.models.ScreenSpoofingTypeScreenSizeMultiLevelChoice
+        :keyword hardware_concurrency: Required.
+        :paramtype hardware_concurrency:
+         ~kameleo.local_api_client.models.HardwareConcurrencySpoofingTypeInt32NullableMultiLevelChoice
         :keyword start_page: This website will be opened in the browser when the profile launches.
          Required.
         :paramtype start_page: str
@@ -1440,7 +1510,7 @@ class ProfileResponse(_serialization.Model):  # pylint: disable=too-many-instanc
         :paramtype notes: str
         :keyword launcher: This setting determines which browser engine is launched when a profile is
          started. This can be modified only before the first start. Possible values for Desktop
-         profiles: 'automatic'. Possible values for Mobile proiles: 'chromium', 'external'. Required.
+         profiles: 'automatic'. Possible values for Mobile profiles: 'chromium', 'external'. Required.
         :paramtype launcher: str
         :keyword status: Status information about the profile. Required.
         :paramtype status: ~kameleo.local_api_client.models.StatusResponse
@@ -1461,6 +1531,7 @@ class ProfileResponse(_serialization.Model):  # pylint: disable=too-many-instanc
         self.web_rtc = web_rtc
         self.fonts = fonts
         self.screen = screen
+        self.hardware_concurrency = hardware_concurrency
         self.start_page = start_page
         self.password_manager = password_manager
         self.extensions = extensions
@@ -1629,14 +1700,18 @@ class StatusResponse(_serialization.Model):
      'unsaved': Profile is not saved
      'saved': Profile is saved and up-to-date. Required. Known values are: "unsaved" and "saved".
     :vartype persistence_state: str or ~kameleo.local_api_client.models.ProfilePersistenceState
-    :ivar lifetime_state: Tells the lifetime state of the profile. This is important, because
-     several actions can only be performed in a specific state. Possible values:
-     'created': Profile is created but never started.
-     'starting': Profile is starting the browser.
-     'running': Profile is running the browser.
-     'terminating': Profile is terminating the browser.
-     'terminated': Profile is not running, but it has been run at least once. Required. Known
-     values are: "created", "starting", "running", "terminating", and "terminated".
+    :ivar lifetime_state: Represents the lifetime states of a profile, indicating which actions
+     can be performed with the associated browser engine at each state. Possible values are:
+
+
+     * Unknown: State of the profile is undefined.
+     * Created: Profile is created; the associated browser engine is not started.
+     * Starting: The associated browser engine is starting.
+     * Running: The associated browser engine is currently running.
+     * Terminating: The associated browser engine is in the process of terminating.
+     * Terminated: The associated browser engine is not running but has been started at least once.
+     Required. Known values are: "created", "starting", "running", "terminating", "terminated", and
+     "unknown".
     :vartype lifetime_state: str or ~kameleo.local_api_client.models.ProfileLifetimeState
     :ivar external_spoofing_engine_port: In case of running profiles which use an external browser
      this shows the connection port (for mobile profiles as well).
@@ -1667,14 +1742,18 @@ class StatusResponse(_serialization.Model):
          'unsaved': Profile is not saved
          'saved': Profile is saved and up-to-date. Required. Known values are: "unsaved" and "saved".
         :paramtype persistence_state: str or ~kameleo.local_api_client.models.ProfilePersistenceState
-        :keyword lifetime_state: Tells the lifetime state of the profile. This is important, because
-         several actions can only be performed in a specific state. Possible values:
-         'created': Profile is created but never started.
-         'starting': Profile is starting the browser.
-         'running': Profile is running the browser.
-         'terminating': Profile is terminating the browser.
-         'terminated': Profile is not running, but it has been run at least once. Required. Known
-         values are: "created", "starting", "running", "terminating", and "terminated".
+        :keyword lifetime_state: Represents the lifetime states of a profile, indicating which actions
+         can be performed with the associated browser engine at each state. Possible values are:
+
+
+         * Unknown: State of the profile is undefined.
+         * Created: Profile is created; the associated browser engine is not started.
+         * Starting: The associated browser engine is starting.
+         * Running: The associated browser engine is currently running.
+         * Terminating: The associated browser engine is in the process of terminating.
+         * Terminated: The associated browser engine is not running but has been started at least once.
+         Required. Known values are: "created", "starting", "running", "terminating", "terminated", and
+         "unknown".
         :paramtype lifetime_state: str or ~kameleo.local_api_client.models.ProfileLifetimeState
         :keyword external_spoofing_engine_port: In case of running profiles which use an external
          browser this shows the connection port (for mobile profiles as well).
@@ -1773,8 +1852,10 @@ class UpdateProfileRequest(_serialization.Model):  # pylint: disable=too-many-in
     :vartype fonts: ~kameleo.local_api_client.models.FontSpoofingTypeFontIListMultiLevelChoice
     :ivar screen: Required.
     :vartype screen: ~kameleo.local_api_client.models.ScreenSpoofingTypeScreenSizeMultiLevelChoice
+    :ivar hardware_concurrency: Required.
+    :vartype hardware_concurrency:
+     ~kameleo.local_api_client.models.HardwareConcurrencySpoofingTypeInt32NullableMultiLevelChoice
     :ivar start_page: This website will be opened in the browser when the profile launches.
-     Required.
     :vartype start_page: str
     :ivar password_manager: Tells if the browser should support credential saving. Possible values
      are:
@@ -1796,7 +1877,7 @@ class UpdateProfileRequest(_serialization.Model):  # pylint: disable=too-many-in
     :vartype tags: list[str]
     :ivar launcher: This setting determines which browser engine is launched when a profile is
      started. This can be modified only before the first start. Possible values for Desktop
-     profiles: 'automatic'. Possible values for Mobile proiles: 'chromium', 'external'.
+     profiles: 'automatic'. Possible values for Mobile profiles: 'chromium', 'external'.
     :vartype launcher: str
     """
 
@@ -1811,7 +1892,7 @@ class UpdateProfileRequest(_serialization.Model):  # pylint: disable=too-many-in
         "web_rtc": {"required": True},
         "fonts": {"required": True},
         "screen": {"required": True},
-        "start_page": {"required": True},
+        "hardware_concurrency": {"required": True},
         "password_manager": {"required": True},
         "name": {"required": True, "min_length": 1},
     }
@@ -1830,6 +1911,10 @@ class UpdateProfileRequest(_serialization.Model):  # pylint: disable=too-many-in
         "web_rtc": {"key": "webRtc", "type": "WebRtcSpoofingTypeWebRtcSpoofingOptionsMultiLevelChoice"},
         "fonts": {"key": "fonts", "type": "FontSpoofingTypeFontIListMultiLevelChoice"},
         "screen": {"key": "screen", "type": "ScreenSpoofingTypeScreenSizeMultiLevelChoice"},
+        "hardware_concurrency": {
+            "key": "hardwareConcurrency",
+            "type": "HardwareConcurrencySpoofingTypeInt32NullableMultiLevelChoice",
+        },
         "start_page": {"key": "startPage", "type": "str"},
         "password_manager": {"key": "passwordManager", "type": "str"},
         "extensions": {"key": "extensions", "type": "[str]"},
@@ -1852,9 +1937,10 @@ class UpdateProfileRequest(_serialization.Model):  # pylint: disable=too-many-in
         web_rtc: "_models.WebRtcSpoofingTypeWebRtcSpoofingOptionsMultiLevelChoice",
         fonts: "_models.FontSpoofingTypeFontIListMultiLevelChoice",
         screen: "_models.ScreenSpoofingTypeScreenSizeMultiLevelChoice",
-        start_page: str,
+        hardware_concurrency: "_models.HardwareConcurrencySpoofingTypeInt32NullableMultiLevelChoice",
         password_manager: Union[str, "_models.PasswordManagerType"],
         name: str,
+        start_page: Optional[str] = None,
         extensions: Optional[List[str]] = None,
         notes: Optional[str] = None,
         tags: Optional[List[str]] = None,
@@ -1901,8 +1987,10 @@ class UpdateProfileRequest(_serialization.Model):  # pylint: disable=too-many-in
         :keyword screen: Required.
         :paramtype screen:
          ~kameleo.local_api_client.models.ScreenSpoofingTypeScreenSizeMultiLevelChoice
+        :keyword hardware_concurrency: Required.
+        :paramtype hardware_concurrency:
+         ~kameleo.local_api_client.models.HardwareConcurrencySpoofingTypeInt32NullableMultiLevelChoice
         :keyword start_page: This website will be opened in the browser when the profile launches.
-         Required.
         :paramtype start_page: str
         :keyword password_manager: Tells if the browser should support credential saving. Possible
          values are:
@@ -1924,7 +2012,7 @@ class UpdateProfileRequest(_serialization.Model):  # pylint: disable=too-many-in
         :paramtype tags: list[str]
         :keyword launcher: This setting determines which browser engine is launched when a profile is
          started. This can be modified only before the first start. Possible values for Desktop
-         profiles: 'automatic'. Possible values for Mobile proiles: 'chromium', 'external'.
+         profiles: 'automatic'. Possible values for Mobile profiles: 'chromium', 'external'.
         :paramtype launcher: str
         """
         super().__init__(**kwargs)
@@ -1938,6 +2026,7 @@ class UpdateProfileRequest(_serialization.Model):  # pylint: disable=too-many-in
         self.web_rtc = web_rtc
         self.fonts = fonts
         self.screen = screen
+        self.hardware_concurrency = hardware_concurrency
         self.start_page = start_page
         self.password_manager = password_manager
         self.extensions = extensions
