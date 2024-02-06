@@ -181,6 +181,19 @@ class BuilderForCreateProfile:
         self.profile_request['tags'] = tags
         return self
 
+    def set_hardware_concurrency(self, value, options):
+        """Tells the mode how the HardwareConcurrency will be spoofed. Possible values:
+        'automatic': Automatically override the HardwareConcurrency based on the Base Profile.
+        'manual': Manually override the HardwareConcurrency.
+        'off': Turn off the spoofing, use the original settings.
+        :param int value: HardwareConcurrency spoofing type. Possible values: 'automatic', 'manual', 'off'
+        :param int options: When the HardwareConcurrency spoofing is set to manual, the required value must be provided.
+        Valid values: 1,2,4,8,16.
+        """
+        self.profile_request['hardwareConcurrency']['value'] = value
+        self.profile_request['hardwareConcurrency']['extra'] = options
+        return self
+
     def set_launcher(self, browser_launcher):
         """The mode how the profile should be launched. It determines which browser to launch. This cannot be modified after creation.
             Possible values for Desktop profiles 'automatic'.
@@ -203,6 +216,7 @@ class BuilderForCreateProfile:
         self.profile_request['webRtc']['value'] = "automatic"
         self.profile_request['fonts']['value'] = "enabled"
         self.profile_request['screen']['value'] = "automatic"
+        self.profile_request['hardwareConcurrency']['value'] = "automatic"
         self.profile_request['launcher'] = "automatic"
 
         return self
@@ -238,6 +252,10 @@ class BuilderForCreateProfile:
                 "extra": None
             },
             "screen": {
+                "value": "off",
+                "extra": None
+            },
+            "hardwareConcurrency": {
                 "value": "off",
                 "extra": None
             },

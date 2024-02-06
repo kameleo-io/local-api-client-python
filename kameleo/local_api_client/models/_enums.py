@@ -60,6 +60,18 @@ class GeolocationSpoofingType(str, Enum, metaclass=CaseInsensitiveEnumMeta):
     OFF = "off"
 
 
+class HardwareConcurrencySpoofingType(str, Enum, metaclass=CaseInsensitiveEnumMeta):
+    """Tells the mode how the HardwareConcurrency will be spoofed. Possible values:
+    'automatic': Automatically set the values based on the Base Profile.
+    'manual': Manually set the value in the profile. Valid values: 1, 2, 4, 8, 12, 16.
+    'off': Turn off the spoofing, use the original settings.
+    """
+
+    AUTOMATIC = "automatic"
+    MANUAL = "manual"
+    OFF = "off"
+
+
 class PasswordManagerType(str, Enum, metaclass=CaseInsensitiveEnumMeta):
     """Tells if the browser should support credential saving. Possible values are:
     'enabled': Credential saving is enabled.
@@ -71,13 +83,16 @@ class PasswordManagerType(str, Enum, metaclass=CaseInsensitiveEnumMeta):
 
 
 class ProfileLifetimeState(str, Enum, metaclass=CaseInsensitiveEnumMeta):
-    """Tells the lifetime state of the profile. This is important, because several actions can only be
-    performed in a specific state. Possible values:
-    'created': Profile is created but never started.
-    'starting': Profile is starting the browser.
-    'running': Profile is running the browser.
-    'terminating': Profile is terminating the browser.
-    'terminated': Profile is not running, but it has been run at least once.
+    """Represents the lifetime states of a profile, indicating which actions
+    can be performed with the associated browser engine at each state. Possible values are:
+
+
+    * Unknown: State of the profile is undefined.
+    * Created: Profile is created; the associated browser engine is not started.
+    * Starting: The associated browser engine is starting.
+    * Running: The associated browser engine is currently running.
+    * Terminating: The associated browser engine is in the process of terminating.
+    * Terminated: The associated browser engine is not running but has been started at least once.
     """
 
     CREATED = "created"
@@ -85,6 +100,7 @@ class ProfileLifetimeState(str, Enum, metaclass=CaseInsensitiveEnumMeta):
     RUNNING = "running"
     TERMINATING = "terminating"
     TERMINATED = "terminated"
+    UNKNOWN = "unknown"
 
 
 class ProfilePersistenceState(str, Enum, metaclass=CaseInsensitiveEnumMeta):

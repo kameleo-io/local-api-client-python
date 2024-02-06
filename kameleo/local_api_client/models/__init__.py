@@ -16,6 +16,7 @@ from ._models import ExportProfileRequest
 from ._models import FontSpoofingTypeFontIListMultiLevelChoice
 from ._models import GeolocationSpoofingOptions
 from ._models import GeolocationSpoofingTypeGeolocationSpoofingOptionsMultiLevelChoice
+from ._models import HardwareConcurrencySpoofingTypeInt32NullableMultiLevelChoice
 from ._models import ImportProfileRequest
 from ._models import Os
 from ._models import Preference
@@ -40,6 +41,7 @@ from ._enums import AudioSpoofingType
 from ._enums import CanvasSpoofingType
 from ._enums import FontSpoofingType
 from ._enums import GeolocationSpoofingType
+from ._enums import HardwareConcurrencySpoofingType
 from ._enums import PasswordManagerType
 from ._enums import ProfileLifetimeState
 from ._enums import ProfilePersistenceState
@@ -66,6 +68,7 @@ __all__ = [
     "FontSpoofingTypeFontIListMultiLevelChoice",
     "GeolocationSpoofingOptions",
     "GeolocationSpoofingTypeGeolocationSpoofingOptionsMultiLevelChoice",
+    "HardwareConcurrencySpoofingTypeInt32NullableMultiLevelChoice",
     "ImportProfileRequest",
     "Os",
     "Preference",
@@ -89,6 +92,7 @@ __all__ = [
     "CanvasSpoofingType",
     "FontSpoofingType",
     "GeolocationSpoofingType",
+    "HardwareConcurrencySpoofingType",
     "PasswordManagerType",
     "ProfileLifetimeState",
     "ProfilePersistenceState",
