@@ -12,6 +12,7 @@ from ._models import BrowserCookie
 from ._models import CookieRequest
 from ._models import CreateProfileRequest
 from ._models import Device
+from ._models import DeviceMemorySpoofingTypeDoubleNullableMultiLevelChoice
 from ._models import ExportProfileRequest
 from ._models import FontSpoofingTypeFontIListMultiLevelChoice
 from ._models import GeolocationSpoofingOptions
@@ -24,6 +25,7 @@ from ._models import ProblemResponse
 from ._models import ProfilePreview
 from ._models import ProfileResponse
 from ._models import ProxyConnectionTypeServerMultiLevelChoice
+from ._models import QuotaStatistics
 from ._models import ScreenSpoofingTypeScreenSizeMultiLevelChoice
 from ._models import Server
 from ._models import StatusResponse
@@ -39,12 +41,14 @@ from ._models import WebglMetaSpoofingTypeWebglMetaSpoofingOptionsMultiLevelChoi
 
 from ._enums import AudioSpoofingType
 from ._enums import CanvasSpoofingType
+from ._enums import DeviceMemorySpoofingType
 from ._enums import FontSpoofingType
 from ._enums import GeolocationSpoofingType
 from ._enums import HardwareConcurrencySpoofingType
 from ._enums import PasswordManagerType
 from ._enums import ProfileLifetimeState
 from ._enums import ProfilePersistenceState
+from ._enums import ProfileStorageLocation
 from ._enums import ProxyConnectionType
 from ._enums import ScreenSpoofingType
 from ._enums import TimezoneSpoofingType
@@ -64,6 +68,7 @@ __all__ = [
     "CookieRequest",
     "CreateProfileRequest",
     "Device",
+    "DeviceMemorySpoofingTypeDoubleNullableMultiLevelChoice",
     "ExportProfileRequest",
     "FontSpoofingTypeFontIListMultiLevelChoice",
     "GeolocationSpoofingOptions",
@@ -76,6 +81,7 @@ __all__ = [
     "ProfilePreview",
     "ProfileResponse",
     "ProxyConnectionTypeServerMultiLevelChoice",
+    "QuotaStatistics",
     "ScreenSpoofingTypeScreenSizeMultiLevelChoice",
     "Server",
     "StatusResponse",
@@ -90,12 +96,14 @@ __all__ = [
     "WebglMetaSpoofingTypeWebglMetaSpoofingOptionsMultiLevelChoice",
     "AudioSpoofingType",
     "CanvasSpoofingType",
+    "DeviceMemorySpoofingType",
     "FontSpoofingType",
     "GeolocationSpoofingType",
     "HardwareConcurrencySpoofingType",
     "PasswordManagerType",
     "ProfileLifetimeState",
     "ProfilePersistenceState",
+    "ProfileStorageLocation",
     "ProxyConnectionType",
     "ScreenSpoofingType",
     "TimezoneSpoofingType",

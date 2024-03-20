@@ -9,7 +9,7 @@ from azure.core import CaseInsensitiveEnumMeta
 
 
 class AudioSpoofingType(str, Enum, metaclass=CaseInsensitiveEnumMeta):
-    """Tells the mode how the Audio will be spoofed. Possible values:
+    """Specifies how the audio will be spoofed. Possible values:
     'noise': Add some noise to the Audio generation
     'block': Completely block the Audio API
     'off': Turn off the spoofing, use the original settings.
@@ -21,10 +21,10 @@ class AudioSpoofingType(str, Enum, metaclass=CaseInsensitiveEnumMeta):
 
 
 class CanvasSpoofingType(str, Enum, metaclass=CaseInsensitiveEnumMeta):
-    """Tells the mode how the canvas will be spoofed. Possible values:
-    'intelligent': Use some noise and in specific cases use the intelligent canvas spoofing. This
-    will result non unique canvas fingerprints.
-    'noise': Add some noise to the Canvas generation.
+    """Specifies how the canvas will be spoofed. Possible values:
+    'intelligent': Use intelligent canvas spoofing. This will result non-unique canvas
+    fingerprints.
+    'noise': Add some noise to canvas generation.
     'block': Completely block the 2D API.
     'off': Turn off the spoofing, use the original settings.
     """
@@ -35,8 +35,20 @@ class CanvasSpoofingType(str, Enum, metaclass=CaseInsensitiveEnumMeta):
     OFF = "off"
 
 
+class DeviceMemorySpoofingType(str, Enum, metaclass=CaseInsensitiveEnumMeta):
+    """Specifies how the deviceMemory will be spoofed. Possible values:
+    'automatic': Automatically set the values based on the Base Profile.
+    'manual': Manually set the value in the profile. Valid values: 0.25, 0.5, 1, 2, 4, 8.
+    'off': Turn off the spoofing, use the original settings.
+    """
+
+    AUTOMATIC = "automatic"
+    MANUAL = "manual"
+    OFF = "off"
+
+
 class FontSpoofingType(str, Enum, metaclass=CaseInsensitiveEnumMeta):
-    """Tells the mode how the Fonts will be spoofed. Possible values:
+    """Specifies how the fonts will be spoofed. Possible values:
     'enabled': Enable fonts spoofing. A list can be provided to override the fonts coming from the
     base profile.
     'disable': Disable fonts spoofing.
@@ -47,10 +59,10 @@ class FontSpoofingType(str, Enum, metaclass=CaseInsensitiveEnumMeta):
 
 
 class GeolocationSpoofingType(str, Enum, metaclass=CaseInsensitiveEnumMeta):
-    """Tells the mode how the Geolocation will be spoofed. Possible values:
+    """Specifies how the geolocation will be spoofed. Possible values:
     'automatic': Automatically set the values based on the IP address
     'manual': Manually set the longitude and latitude in the profile
-    'block': Completely block the GeolocationAPI
+    'block': Completely block the Geolocation API
     'off': Turn off the spoofing, use the original settings.
     """
 
@@ -61,7 +73,7 @@ class GeolocationSpoofingType(str, Enum, metaclass=CaseInsensitiveEnumMeta):
 
 
 class HardwareConcurrencySpoofingType(str, Enum, metaclass=CaseInsensitiveEnumMeta):
-    """Tells the mode how the HardwareConcurrency will be spoofed. Possible values:
+    """Specifies how the hardwareConcurrency will be spoofed. Possible values:
     'automatic': Automatically set the values based on the Base Profile.
     'manual': Manually set the value in the profile. Valid values: 1, 2, 4, 8, 12, 16.
     'off': Turn off the spoofing, use the original settings.
@@ -73,9 +85,9 @@ class HardwareConcurrencySpoofingType(str, Enum, metaclass=CaseInsensitiveEnumMe
 
 
 class PasswordManagerType(str, Enum, metaclass=CaseInsensitiveEnumMeta):
-    """Tells if the browser should support credential saving. Possible values are:
-    'enabled': Credential saving is enabled.
-    'disabled': Credential saving is disabled.
+    """Defines whether the browser can save login credentials. Possible values are:
+    'enabled': Credential saving is allowed.
+    'disabled': Credential saving is blocked.
     """
 
     ENABLED = "enabled"
@@ -100,17 +112,27 @@ class ProfileLifetimeState(str, Enum, metaclass=CaseInsensitiveEnumMeta):
     RUNNING = "running"
     TERMINATING = "terminating"
     TERMINATED = "terminated"
+    LOCKED = "locked"
     UNKNOWN = "unknown"
 
 
 class ProfilePersistenceState(str, Enum, metaclass=CaseInsensitiveEnumMeta):
-    """Tells if the profile is saved or not. Possible values:
-    'unsaved': Profile is not saved
-    'saved': Profile is saved and up-to-date.
+    """Indicates the current save state of a profile, including cloud sync status. Possible values:
+    'unsaved': The profile is not saved
+    'saved': The profile is saved and current
+    'syncing': The profile is currently synchronizing with the cloud.
     """
 
     UNSAVED = "unsaved"
     SAVED = "saved"
+    SYNCING = "syncing"
+
+
+class ProfileStorageLocation(str, Enum, metaclass=CaseInsensitiveEnumMeta):
+    """ProfileStorageLocation."""
+
+    LOCAL = "local"
+    CLOUD = "cloud"
 
 
 class ProxyConnectionType(str, Enum, metaclass=CaseInsensitiveEnumMeta):
@@ -129,7 +151,7 @@ class ProxyConnectionType(str, Enum, metaclass=CaseInsensitiveEnumMeta):
 
 
 class ScreenSpoofingType(str, Enum, metaclass=CaseInsensitiveEnumMeta):
-    """Tells the mode how the screen will be spoofed. Possible values:
+    """Specifies how the screen will be spoofed. Possible values:
     'automatic': Automatically override the screen resolution based on the Base Profile.
     'manual': Manually override the screen resolution.
     'off': Turn off the spoofing, use the original settings.
@@ -141,7 +163,7 @@ class ScreenSpoofingType(str, Enum, metaclass=CaseInsensitiveEnumMeta):
 
 
 class TimezoneSpoofingType(str, Enum, metaclass=CaseInsensitiveEnumMeta):
-    """Tells the mode how the Timezone will be spoofed. Possble values:
+    """Specifies how the timezone will be spoofed. Possble values:
     'automatic': Timezone is automatically set by the IP
     'manual': Timezone is manually overridden in the profile
     'off': Turn off the spoofing, use the original settings.
@@ -153,7 +175,7 @@ class TimezoneSpoofingType(str, Enum, metaclass=CaseInsensitiveEnumMeta):
 
 
 class WebglMetaSpoofingType(str, Enum, metaclass=CaseInsensitiveEnumMeta):
-    """Tells the mode how the WebGL vendor and renderer will be spoofed. Possible values:
+    """Specifies how the WebGL vendor and renderer will be spoofed. Possible values:
     'automatic': The vendor and renderer values comes from the base profile.
     'manual': Manually set the vendor and renderer values.
     'off': Turn off the spoofing, use the original settings.
@@ -165,7 +187,7 @@ class WebglMetaSpoofingType(str, Enum, metaclass=CaseInsensitiveEnumMeta):
 
 
 class WebglSpoofingType(str, Enum, metaclass=CaseInsensitiveEnumMeta):
-    """Tells the mode how the WebGL will be spoofed. Possible values:
+    """Specifies how the WebGL will be spoofed. Possible values:
     'noise': Add some noise to the WebGL generation
     'block': Completely block the 3D API
     'off': Turn off the spoofing, use the original settings.
@@ -177,7 +199,7 @@ class WebglSpoofingType(str, Enum, metaclass=CaseInsensitiveEnumMeta):
 
 
 class WebRtcSpoofingType(str, Enum, metaclass=CaseInsensitiveEnumMeta):
-    """Tells the mode how the WebRTC will be spoofed. Possible values:
+    """Specifies how the WebRTC will be spoofed. Possible values:
     'automatic': Automatically set the webRTC public IP by the IP, and generates a random private
     IP like '2d2f78e7-1b1e-4345-a21b-07c904c98394.local'
     'manual': Manually override the webRTC public IP and private IP in the profile
