@@ -575,15 +575,15 @@ class CreateProfileRequest(_serialization.Model):  # pylint: disable=too-many-in
     :vartype name: str
     :ivar tags: Use tags to categorize profiles by labeling them accordingly.
     :vartype tags: list[str]
-    :ivar canvas: Tells the mode how the canvas will be spoofed. Possible values:
-     'intelligent': Use some noise and in specific cases use the intelligent canvas spoofing. This
-     will result non unique canvas fingerprints.
-     'noise': Add some noise to the Canvas generation.
+    :ivar canvas: Specifies how the canvas will be spoofed. Possible values:
+     'intelligent': Use intelligent canvas spoofing. This will result non-unique canvas
+     fingerprints.
+     'noise': Add some noise to canvas generation.
      'block': Completely block the 2D API.
      'off': Turn off the spoofing, use the original settings. Required. Known values are:
      "intelligent", "noise", "block", and "off".
     :vartype canvas: str or ~kameleo.local_api_client.models.CanvasSpoofingType
-    :ivar webgl: Tells the mode how the WebGL will be spoofed. Possible values:
+    :ivar webgl: Specifies how the WebGL will be spoofed. Possible values:
      'noise': Add some noise to the WebGL generation
      'block': Completely block the 3D API
      'off': Turn off the spoofing, use the original settings. Required. Known values are: "noise",
@@ -592,7 +592,7 @@ class CreateProfileRequest(_serialization.Model):  # pylint: disable=too-many-in
     :ivar webgl_meta: Required.
     :vartype webgl_meta:
      ~kameleo.local_api_client.models.WebglMetaSpoofingTypeWebglMetaSpoofingOptionsMultiLevelChoice
-    :ivar audio: Tells the mode how the Audio will be spoofed. Possible values:
+    :ivar audio: Specifies how the audio will be spoofed. Possible values:
      'noise': Add some noise to the Audio generation
      'block': Completely block the Audio API
      'off': Turn off the spoofing, use the original settings. Required. Known values are: "off",
@@ -616,12 +616,15 @@ class CreateProfileRequest(_serialization.Model):  # pylint: disable=too-many-in
     :ivar hardware_concurrency:
     :vartype hardware_concurrency:
      ~kameleo.local_api_client.models.HardwareConcurrencySpoofingTypeInt32NullableMultiLevelChoice
+    :ivar device_memory:
+    :vartype device_memory:
+     ~kameleo.local_api_client.models.DeviceMemorySpoofingTypeDoubleNullableMultiLevelChoice
     :ivar start_page: This website will be opened in the browser when the profile launches.
     :vartype start_page: str
-    :ivar password_manager: Tells if the browser should support credential saving. Possible values
+    :ivar password_manager: Defines whether the browser can save login credentials. Possible values
      are:
-     'enabled': Credential saving is enabled.
-     'disabled': Credential saving is disabled. Required. Known values are: "enabled" and
+     'enabled': Credential saving is allowed.
+     'disabled': Credential saving is blocked. Required. Known values are: "enabled" and
      "disabled".
     :vartype password_manager: str or ~kameleo.local_api_client.models.PasswordManagerType
     :ivar extensions: A list of abolute paths from where the profile should load extensions or
@@ -630,6 +633,8 @@ class CreateProfileRequest(_serialization.Model):  # pylint: disable=too-many-in
     :vartype extensions: list[str]
     :ivar notes: A free text including any notes written by the user.
     :vartype notes: str
+    :ivar storage: Known values are: "local" and "cloud".
+    :vartype storage: str or ~kameleo.local_api_client.models.ProfileStorageLocation
     :ivar launcher: This setting determines which browser engine is launched when a profile is
      started. This can be modified only before the first start. Possible values for Desktop
      profiles: 'automatic'. Possible values for Mobile profiles: 'chromium', 'external'.
@@ -672,10 +677,12 @@ class CreateProfileRequest(_serialization.Model):  # pylint: disable=too-many-in
             "key": "hardwareConcurrency",
             "type": "HardwareConcurrencySpoofingTypeInt32NullableMultiLevelChoice",
         },
+        "device_memory": {"key": "deviceMemory", "type": "DeviceMemorySpoofingTypeDoubleNullableMultiLevelChoice"},
         "start_page": {"key": "startPage", "type": "str"},
         "password_manager": {"key": "passwordManager", "type": "str"},
         "extensions": {"key": "extensions", "type": "[str]"},
         "notes": {"key": "notes", "type": "str"},
+        "storage": {"key": "storage", "type": "str"},
         "launcher": {"key": "launcher", "type": "str"},
     }
 
@@ -697,9 +704,11 @@ class CreateProfileRequest(_serialization.Model):  # pylint: disable=too-many-in
         name: Optional[str] = None,
         tags: Optional[List[str]] = None,
         hardware_concurrency: Optional["_models.HardwareConcurrencySpoofingTypeInt32NullableMultiLevelChoice"] = None,
+        device_memory: Optional["_models.DeviceMemorySpoofingTypeDoubleNullableMultiLevelChoice"] = None,
         start_page: Optional[str] = None,
         extensions: Optional[List[str]] = None,
         notes: Optional[str] = None,
+        storage: Optional[Union[str, "_models.ProfileStorageLocation"]] = None,
         launcher: Optional[str] = None,
         **kwargs: Any
     ) -> None:
@@ -712,15 +721,15 @@ class CreateProfileRequest(_serialization.Model):  # pylint: disable=too-many-in
         :paramtype name: str
         :keyword tags: Use tags to categorize profiles by labeling them accordingly.
         :paramtype tags: list[str]
-        :keyword canvas: Tells the mode how the canvas will be spoofed. Possible values:
-         'intelligent': Use some noise and in specific cases use the intelligent canvas spoofing. This
-         will result non unique canvas fingerprints.
-         'noise': Add some noise to the Canvas generation.
+        :keyword canvas: Specifies how the canvas will be spoofed. Possible values:
+         'intelligent': Use intelligent canvas spoofing. This will result non-unique canvas
+         fingerprints.
+         'noise': Add some noise to canvas generation.
          'block': Completely block the 2D API.
          'off': Turn off the spoofing, use the original settings. Required. Known values are:
          "intelligent", "noise", "block", and "off".
         :paramtype canvas: str or ~kameleo.local_api_client.models.CanvasSpoofingType
-        :keyword webgl: Tells the mode how the WebGL will be spoofed. Possible values:
+        :keyword webgl: Specifies how the WebGL will be spoofed. Possible values:
          'noise': Add some noise to the WebGL generation
          'block': Completely block the 3D API
          'off': Turn off the spoofing, use the original settings. Required. Known values are: "noise",
@@ -729,7 +738,7 @@ class CreateProfileRequest(_serialization.Model):  # pylint: disable=too-many-in
         :keyword webgl_meta: Required.
         :paramtype webgl_meta:
          ~kameleo.local_api_client.models.WebglMetaSpoofingTypeWebglMetaSpoofingOptionsMultiLevelChoice
-        :keyword audio: Tells the mode how the Audio will be spoofed. Possible values:
+        :keyword audio: Specifies how the audio will be spoofed. Possible values:
          'noise': Add some noise to the Audio generation
          'block': Completely block the Audio API
          'off': Turn off the spoofing, use the original settings. Required. Known values are: "off",
@@ -754,12 +763,15 @@ class CreateProfileRequest(_serialization.Model):  # pylint: disable=too-many-in
         :keyword hardware_concurrency:
         :paramtype hardware_concurrency:
          ~kameleo.local_api_client.models.HardwareConcurrencySpoofingTypeInt32NullableMultiLevelChoice
+        :keyword device_memory:
+        :paramtype device_memory:
+         ~kameleo.local_api_client.models.DeviceMemorySpoofingTypeDoubleNullableMultiLevelChoice
         :keyword start_page: This website will be opened in the browser when the profile launches.
         :paramtype start_page: str
-        :keyword password_manager: Tells if the browser should support credential saving. Possible
+        :keyword password_manager: Defines whether the browser can save login credentials. Possible
          values are:
-         'enabled': Credential saving is enabled.
-         'disabled': Credential saving is disabled. Required. Known values are: "enabled" and
+         'enabled': Credential saving is allowed.
+         'disabled': Credential saving is blocked. Required. Known values are: "enabled" and
          "disabled".
         :paramtype password_manager: str or ~kameleo.local_api_client.models.PasswordManagerType
         :keyword extensions: A list of abolute paths from where the profile should load extensions or
@@ -768,6 +780,8 @@ class CreateProfileRequest(_serialization.Model):  # pylint: disable=too-many-in
         :paramtype extensions: list[str]
         :keyword notes: A free text including any notes written by the user.
         :paramtype notes: str
+        :keyword storage: Known values are: "local" and "cloud".
+        :paramtype storage: str or ~kameleo.local_api_client.models.ProfileStorageLocation
         :keyword launcher: This setting determines which browser engine is launched when a profile is
          started. This can be modified only before the first start. Possible values for Desktop
          profiles: 'automatic'. Possible values for Mobile profiles: 'chromium', 'external'.
@@ -788,10 +802,12 @@ class CreateProfileRequest(_serialization.Model):  # pylint: disable=too-many-in
         self.fonts = fonts
         self.screen = screen
         self.hardware_concurrency = hardware_concurrency
+        self.device_memory = device_memory
         self.start_page = start_page
         self.password_manager = password_manager
         self.extensions = extensions
         self.notes = notes
+        self.storage = storage
         self.launcher = launcher
 
 
@@ -827,12 +843,54 @@ class Device(_serialization.Model):
         self.name = name
 
 
-class ExportProfileRequest(_serialization.Model):
-    """Tells where the profile should be exported.
+class DeviceMemorySpoofingTypeDoubleNullableMultiLevelChoice(_serialization.Model):
+    """DeviceMemorySpoofingTypeDoubleNullableMultiLevelChoice.
 
     All required parameters must be populated in order to send to Azure.
 
-    :ivar path: The path where the profile should be exported. Required.
+    :ivar value: Specifies how the deviceMemory will be spoofed. Possible values:
+     'automatic': Automatically set the values based on the Base Profile.
+     'manual': Manually set the value in the profile. Valid values: 0.25, 0.5, 1, 2, 4, 8.
+     'off': Turn off the spoofing, use the original settings. Required. Known values are:
+     "automatic", "manual", and "off".
+    :vartype value: str or ~kameleo.local_api_client.models.DeviceMemorySpoofingType
+    :ivar extra:
+    :vartype extra: float
+    """
+
+    _validation = {
+        "value": {"required": True},
+    }
+
+    _attribute_map = {
+        "value": {"key": "value", "type": "str"},
+        "extra": {"key": "extra", "type": "float"},
+    }
+
+    def __init__(
+        self, *, value: Union[str, "_models.DeviceMemorySpoofingType"], extra: Optional[float] = None, **kwargs: Any
+    ) -> None:
+        """
+        :keyword value: Specifies how the deviceMemory will be spoofed. Possible values:
+         'automatic': Automatically set the values based on the Base Profile.
+         'manual': Manually set the value in the profile. Valid values: 0.25, 0.5, 1, 2, 4, 8.
+         'off': Turn off the spoofing, use the original settings. Required. Known values are:
+         "automatic", "manual", and "off".
+        :paramtype value: str or ~kameleo.local_api_client.models.DeviceMemorySpoofingType
+        :keyword extra:
+        :paramtype extra: float
+        """
+        super().__init__(**kwargs)
+        self.value = value
+        self.extra = extra
+
+
+class ExportProfileRequest(_serialization.Model):
+    """Defines the target location for profile export.
+
+    All required parameters must be populated in order to send to Azure.
+
+    :ivar path: Specifies the file path for exporting the profile. Required.
     :vartype path: str
     """
 
@@ -846,7 +904,7 @@ class ExportProfileRequest(_serialization.Model):
 
     def __init__(self, *, path: str, **kwargs: Any) -> None:
         """
-        :keyword path: The path where the profile should be exported. Required.
+        :keyword path: Specifies the file path for exporting the profile. Required.
         :paramtype path: str
         """
         super().__init__(**kwargs)
@@ -858,7 +916,7 @@ class FontSpoofingTypeFontIListMultiLevelChoice(_serialization.Model):
 
     All required parameters must be populated in order to send to Azure.
 
-    :ivar value: Tells the mode how the Fonts will be spoofed. Possible values:
+    :ivar value: Specifies how the fonts will be spoofed. Possible values:
      'enabled': Enable fonts spoofing. A list can be provided to override the fonts coming from the
      base profile.
      'disable': Disable fonts spoofing. Required. Known values are: "enabled" and "disabled".
@@ -880,7 +938,7 @@ class FontSpoofingTypeFontIListMultiLevelChoice(_serialization.Model):
         self, *, value: Union[str, "_models.FontSpoofingType"], extra: Optional[List[str]] = None, **kwargs: Any
     ) -> None:
         """
-        :keyword value: Tells the mode how the Fonts will be spoofed. Possible values:
+        :keyword value: Specifies how the fonts will be spoofed. Possible values:
          'enabled': Enable fonts spoofing. A list can be provided to override the fonts coming from the
          base profile.
          'disable': Disable fonts spoofing. Required. Known values are: "enabled" and "disabled".
@@ -931,10 +989,10 @@ class GeolocationSpoofingTypeGeolocationSpoofingOptionsMultiLevelChoice(_seriali
 
     All required parameters must be populated in order to send to Azure.
 
-    :ivar value: Tells the mode how the Geolocation will be spoofed. Possible values:
+    :ivar value: Specifies how the geolocation will be spoofed. Possible values:
      'automatic': Automatically set the values based on the IP address
      'manual': Manually set the longitude and latitude in the profile
-     'block': Completely block the GeolocationAPI
+     'block': Completely block the Geolocation API
      'off': Turn off the spoofing, use the original settings. Required. Known values are:
      "automatic", "manual", "block", and "off".
     :vartype value: str or ~kameleo.local_api_client.models.GeolocationSpoofingType
@@ -960,10 +1018,10 @@ class GeolocationSpoofingTypeGeolocationSpoofingOptionsMultiLevelChoice(_seriali
         **kwargs: Any
     ) -> None:
         """
-        :keyword value: Tells the mode how the Geolocation will be spoofed. Possible values:
+        :keyword value: Specifies how the geolocation will be spoofed. Possible values:
          'automatic': Automatically set the values based on the IP address
          'manual': Manually set the longitude and latitude in the profile
-         'block': Completely block the GeolocationAPI
+         'block': Completely block the Geolocation API
          'off': Turn off the spoofing, use the original settings. Required. Known values are:
          "automatic", "manual", "block", and "off".
         :paramtype value: str or ~kameleo.local_api_client.models.GeolocationSpoofingType
@@ -981,7 +1039,7 @@ class HardwareConcurrencySpoofingTypeInt32NullableMultiLevelChoice(_serializatio
 
     All required parameters must be populated in order to send to Azure.
 
-    :ivar value: Tells the mode how the HardwareConcurrency will be spoofed. Possible values:
+    :ivar value: Specifies how the hardwareConcurrency will be spoofed. Possible values:
      'automatic': Automatically set the values based on the Base Profile.
      'manual': Manually set the value in the profile. Valid values: 1, 2, 4, 8, 12, 16.
      'off': Turn off the spoofing, use the original settings. Required. Known values are:
@@ -1008,7 +1066,7 @@ class HardwareConcurrencySpoofingTypeInt32NullableMultiLevelChoice(_serializatio
         **kwargs: Any
     ) -> None:
         """
-        :keyword value: Tells the mode how the HardwareConcurrency will be spoofed. Possible values:
+        :keyword value: Specifies how the hardwareConcurrency will be spoofed. Possible values:
          'automatic': Automatically set the values based on the Base Profile.
          'manual': Manually set the value in the profile. Valid values: 1, 2, 4, 8, 12, 16.
          'off': Turn off the spoofing, use the original settings. Required. Known values are:
@@ -1023,11 +1081,11 @@ class HardwareConcurrencySpoofingTypeInt32NullableMultiLevelChoice(_serializatio
 
 
 class ImportProfileRequest(_serialization.Model):
-    """Tells where the profile should be imported from.
+    """Specifies the source location for profile import.
 
     All required parameters must be populated in order to send to Azure.
 
-    :ivar path: The path where the profile should be imported from. Required.
+    :ivar path: The file path from which the profile will be imported. Required.
     :vartype path: str
     """
 
@@ -1041,7 +1099,7 @@ class ImportProfileRequest(_serialization.Model):
 
     def __init__(self, *, path: str, **kwargs: Any) -> None:
         """
-        :keyword path: The path where the profile should be imported from. Required.
+        :keyword path: The file path from which the profile will be imported. Required.
         :paramtype path: str
         """
         super().__init__(**kwargs)
@@ -1053,14 +1111,14 @@ class Os(_serialization.Model):
 
     All required parameters must be populated in order to send to Azure.
 
-    :ivar family: Family of the OS. Possible values are 'windows', 'macos', 'linux', 'android',
-     'ios'. Required.
+    :ivar family: Specifies the operating system family. Possible values are 'windows', 'macos',
+     'linux', 'android', 'ios'. Required.
     :vartype family: str
-    :ivar version: Version of the OS. For example it helps you determine the exact version of the
-     macOS. Required.
+    :ivar version: The specific version of the OS. For example it helps you determine the exact
+     version of the macOS. Required.
     :vartype version: str
-    :ivar platform: Platform of the OS. Tells if it runs on 64 bit or 32 bit or some other
-     processor platform. Required.
+    :ivar platform: The OS's platform, indicating the processor architecture (e.g., 64-bit,
+     32-bit). Required.
     :vartype platform: str
     """
 
@@ -1078,14 +1136,14 @@ class Os(_serialization.Model):
 
     def __init__(self, *, family: str, version: str, platform: str, **kwargs: Any) -> None:
         """
-        :keyword family: Family of the OS. Possible values are 'windows', 'macos', 'linux', 'android',
-         'ios'. Required.
+        :keyword family: Specifies the operating system family. Possible values are 'windows', 'macos',
+         'linux', 'android', 'ios'. Required.
         :paramtype family: str
-        :keyword version: Version of the OS. For example it helps you determine the exact version of
-         the macOS. Required.
+        :keyword version: The specific version of the OS. For example it helps you determine the exact
+         version of the macOS. Required.
         :paramtype version: str
-        :keyword platform: Platform of the OS. Tells if it runs on 64 bit or 32 bit or some other
-         processor platform. Required.
+        :keyword platform: The OS's platform, indicating the processor architecture (e.g., 64-bit,
+         32-bit). Required.
         :paramtype platform: str
         """
         super().__init__(**kwargs)
@@ -1187,6 +1245,8 @@ class ProfilePreview(_serialization.Model):  # pylint: disable=too-many-instance
     :vartype launcher: str
     :ivar status: Status information about the profile. Required.
     :vartype status: ~kameleo.local_api_client.models.StatusResponse
+    :ivar storage: Known values are: "local" and "cloud".
+    :vartype storage: str or ~kameleo.local_api_client.models.ProfileStorageLocation
     """
 
     _validation = {
@@ -1215,6 +1275,7 @@ class ProfilePreview(_serialization.Model):  # pylint: disable=too-many-instance
         "language": {"key": "language", "type": "str"},
         "launcher": {"key": "launcher", "type": "str"},
         "status": {"key": "status", "type": "StatusResponse"},
+        "storage": {"key": "storage", "type": "str"},
     }
 
     def __init__(
@@ -1231,6 +1292,7 @@ class ProfilePreview(_serialization.Model):  # pylint: disable=too-many-instance
         language: str,
         launcher: str,
         status: "_models.StatusResponse",
+        storage: Optional[Union[str, "_models.ProfileStorageLocation"]] = None,
         **kwargs: Any
     ) -> None:
         """
@@ -1259,6 +1321,8 @@ class ProfilePreview(_serialization.Model):  # pylint: disable=too-many-instance
         :paramtype launcher: str
         :keyword status: Status information about the profile. Required.
         :paramtype status: ~kameleo.local_api_client.models.StatusResponse
+        :keyword storage: Known values are: "local" and "cloud".
+        :paramtype storage: str or ~kameleo.local_api_client.models.ProfileStorageLocation
         """
         super().__init__(**kwargs)
         self.id = id
@@ -1272,6 +1336,7 @@ class ProfilePreview(_serialization.Model):  # pylint: disable=too-many-instance
         self.language = language
         self.launcher = launcher
         self.status = status
+        self.storage = storage
 
 
 class ProfileResponse(_serialization.Model):  # pylint: disable=too-many-instance-attributes
@@ -1291,15 +1356,15 @@ class ProfileResponse(_serialization.Model):  # pylint: disable=too-many-instanc
     :ivar base_profile: Representation of a base profile which is used to build profiles from.
      Required.
     :vartype base_profile: ~kameleo.local_api_client.models.BaseProfile
-    :ivar canvas: Tells the mode how the canvas will be spoofed. Possible values:
-     'intelligent': Use some noise and in specific cases use the intelligent canvas spoofing. This
-     will result non unique canvas fingerprints.
-     'noise': Add some noise to the Canvas generation.
+    :ivar canvas: Specifies how the canvas will be spoofed. Possible values:
+     'intelligent': Use intelligent canvas spoofing. This will result non-unique canvas
+     fingerprints.
+     'noise': Add some noise to canvas generation.
      'block': Completely block the 2D API.
      'off': Turn off the spoofing, use the original settings. Required. Known values are:
      "intelligent", "noise", "block", and "off".
     :vartype canvas: str or ~kameleo.local_api_client.models.CanvasSpoofingType
-    :ivar webgl: Tells the mode how the WebGL will be spoofed. Possible values:
+    :ivar webgl: Specifies how the WebGL will be spoofed. Possible values:
      'noise': Add some noise to the WebGL generation
      'block': Completely block the 3D API
      'off': Turn off the spoofing, use the original settings. Required. Known values are: "noise",
@@ -1308,7 +1373,7 @@ class ProfileResponse(_serialization.Model):  # pylint: disable=too-many-instanc
     :ivar webgl_meta: Required.
     :vartype webgl_meta:
      ~kameleo.local_api_client.models.WebglMetaSpoofingTypeWebglMetaSpoofingOptionsMultiLevelChoice
-    :ivar audio: Tells the mode how the Audio will be spoofed. Possible values:
+    :ivar audio: Specifies how the audio will be spoofed. Possible values:
      'noise': Add some noise to the Audio generation
      'block': Completely block the Audio API
      'off': Turn off the spoofing, use the original settings. Required. Known values are: "off",
@@ -1332,13 +1397,16 @@ class ProfileResponse(_serialization.Model):  # pylint: disable=too-many-instanc
     :ivar hardware_concurrency: Required.
     :vartype hardware_concurrency:
      ~kameleo.local_api_client.models.HardwareConcurrencySpoofingTypeInt32NullableMultiLevelChoice
+    :ivar device_memory: Required.
+    :vartype device_memory:
+     ~kameleo.local_api_client.models.DeviceMemorySpoofingTypeDoubleNullableMultiLevelChoice
     :ivar start_page: This website will be opened in the browser when the profile launches.
      Required.
     :vartype start_page: str
-    :ivar password_manager: Tells if the browser should support credential saving. Possible values
+    :ivar password_manager: Defines whether the browser can save login credentials. Possible values
      are:
-     'enabled': Credential saving is enabled.
-     'disabled': Credential saving is disabled. Required. Known values are: "enabled" and
+     'enabled': Credential saving is allowed.
+     'disabled': Credential saving is blocked. Required. Known values are: "enabled" and
      "disabled".
     :vartype password_manager: str or ~kameleo.local_api_client.models.PasswordManagerType
     :ivar extensions: A list of extensions or addons that will be loaded to the profile when the
@@ -1353,6 +1421,8 @@ class ProfileResponse(_serialization.Model):  # pylint: disable=too-many-instanc
     :vartype launcher: str
     :ivar status: Status information about the profile. Required.
     :vartype status: ~kameleo.local_api_client.models.StatusResponse
+    :ivar storage: Known values are: "local" and "cloud".
+    :vartype storage: str or ~kameleo.local_api_client.models.ProfileStorageLocation
     """
 
     _validation = {
@@ -1372,6 +1442,7 @@ class ProfileResponse(_serialization.Model):  # pylint: disable=too-many-instanc
         "fonts": {"required": True},
         "screen": {"required": True},
         "hardware_concurrency": {"required": True},
+        "device_memory": {"required": True},
         "start_page": {"required": True},
         "password_manager": {"required": True},
         "extensions": {"required": True},
@@ -1403,15 +1474,17 @@ class ProfileResponse(_serialization.Model):  # pylint: disable=too-many-instanc
             "key": "hardwareConcurrency",
             "type": "HardwareConcurrencySpoofingTypeInt32NullableMultiLevelChoice",
         },
+        "device_memory": {"key": "deviceMemory", "type": "DeviceMemorySpoofingTypeDoubleNullableMultiLevelChoice"},
         "start_page": {"key": "startPage", "type": "str"},
         "password_manager": {"key": "passwordManager", "type": "str"},
         "extensions": {"key": "extensions", "type": "[str]"},
         "notes": {"key": "notes", "type": "str"},
         "launcher": {"key": "launcher", "type": "str"},
         "status": {"key": "status", "type": "StatusResponse"},
+        "storage": {"key": "storage", "type": "str"},
     }
 
-    def __init__(
+    def __init__(  # pylint: disable=too-many-locals
         self,
         *,
         id: str,  # pylint: disable=redefined-builtin
@@ -1430,12 +1503,14 @@ class ProfileResponse(_serialization.Model):  # pylint: disable=too-many-instanc
         fonts: "_models.FontSpoofingTypeFontIListMultiLevelChoice",
         screen: "_models.ScreenSpoofingTypeScreenSizeMultiLevelChoice",
         hardware_concurrency: "_models.HardwareConcurrencySpoofingTypeInt32NullableMultiLevelChoice",
+        device_memory: "_models.DeviceMemorySpoofingTypeDoubleNullableMultiLevelChoice",
         start_page: str,
         password_manager: Union[str, "_models.PasswordManagerType"],
         extensions: List[str],
         notes: str,
         launcher: str,
         status: "_models.StatusResponse",
+        storage: Optional[Union[str, "_models.ProfileStorageLocation"]] = None,
         **kwargs: Any
     ) -> None:
         """
@@ -1451,15 +1526,15 @@ class ProfileResponse(_serialization.Model):  # pylint: disable=too-many-instanc
         :keyword base_profile: Representation of a base profile which is used to build profiles from.
          Required.
         :paramtype base_profile: ~kameleo.local_api_client.models.BaseProfile
-        :keyword canvas: Tells the mode how the canvas will be spoofed. Possible values:
-         'intelligent': Use some noise and in specific cases use the intelligent canvas spoofing. This
-         will result non unique canvas fingerprints.
-         'noise': Add some noise to the Canvas generation.
+        :keyword canvas: Specifies how the canvas will be spoofed. Possible values:
+         'intelligent': Use intelligent canvas spoofing. This will result non-unique canvas
+         fingerprints.
+         'noise': Add some noise to canvas generation.
          'block': Completely block the 2D API.
          'off': Turn off the spoofing, use the original settings. Required. Known values are:
          "intelligent", "noise", "block", and "off".
         :paramtype canvas: str or ~kameleo.local_api_client.models.CanvasSpoofingType
-        :keyword webgl: Tells the mode how the WebGL will be spoofed. Possible values:
+        :keyword webgl: Specifies how the WebGL will be spoofed. Possible values:
          'noise': Add some noise to the WebGL generation
          'block': Completely block the 3D API
          'off': Turn off the spoofing, use the original settings. Required. Known values are: "noise",
@@ -1468,7 +1543,7 @@ class ProfileResponse(_serialization.Model):  # pylint: disable=too-many-instanc
         :keyword webgl_meta: Required.
         :paramtype webgl_meta:
          ~kameleo.local_api_client.models.WebglMetaSpoofingTypeWebglMetaSpoofingOptionsMultiLevelChoice
-        :keyword audio: Tells the mode how the Audio will be spoofed. Possible values:
+        :keyword audio: Specifies how the audio will be spoofed. Possible values:
          'noise': Add some noise to the Audio generation
          'block': Completely block the Audio API
          'off': Turn off the spoofing, use the original settings. Required. Known values are: "off",
@@ -1493,13 +1568,16 @@ class ProfileResponse(_serialization.Model):  # pylint: disable=too-many-instanc
         :keyword hardware_concurrency: Required.
         :paramtype hardware_concurrency:
          ~kameleo.local_api_client.models.HardwareConcurrencySpoofingTypeInt32NullableMultiLevelChoice
+        :keyword device_memory: Required.
+        :paramtype device_memory:
+         ~kameleo.local_api_client.models.DeviceMemorySpoofingTypeDoubleNullableMultiLevelChoice
         :keyword start_page: This website will be opened in the browser when the profile launches.
          Required.
         :paramtype start_page: str
-        :keyword password_manager: Tells if the browser should support credential saving. Possible
+        :keyword password_manager: Defines whether the browser can save login credentials. Possible
          values are:
-         'enabled': Credential saving is enabled.
-         'disabled': Credential saving is disabled. Required. Known values are: "enabled" and
+         'enabled': Credential saving is allowed.
+         'disabled': Credential saving is blocked. Required. Known values are: "enabled" and
          "disabled".
         :paramtype password_manager: str or ~kameleo.local_api_client.models.PasswordManagerType
         :keyword extensions: A list of extensions or addons that will be loaded to the profile when the
@@ -1514,6 +1592,8 @@ class ProfileResponse(_serialization.Model):  # pylint: disable=too-many-instanc
         :paramtype launcher: str
         :keyword status: Status information about the profile. Required.
         :paramtype status: ~kameleo.local_api_client.models.StatusResponse
+        :keyword storage: Known values are: "local" and "cloud".
+        :paramtype storage: str or ~kameleo.local_api_client.models.ProfileStorageLocation
         """
         super().__init__(**kwargs)
         self.id = id
@@ -1532,12 +1612,14 @@ class ProfileResponse(_serialization.Model):  # pylint: disable=too-many-instanc
         self.fonts = fonts
         self.screen = screen
         self.hardware_concurrency = hardware_concurrency
+        self.device_memory = device_memory
         self.start_page = start_page
         self.password_manager = password_manager
         self.extensions = extensions
         self.notes = notes
         self.launcher = launcher
         self.status = status
+        self.storage = storage
 
 
 class ProxyConnectionTypeServerMultiLevelChoice(_serialization.Model):
@@ -1590,12 +1672,49 @@ class ProxyConnectionTypeServerMultiLevelChoice(_serialization.Model):
         self.extra = extra
 
 
+class QuotaStatistics(_serialization.Model):
+    """QuotaStatistics.
+
+    All required parameters must be populated in order to send to Azure.
+
+    :ivar current_usage: Indicates the current count of profiles accessible to the user, always a
+     non-negative value. Required.
+    :vartype current_usage: int
+    :ivar maximum_limit: Indicates the maximum permitted profile count for the user, with null
+     implying no limit. Required.
+    :vartype maximum_limit: int
+    """
+
+    _validation = {
+        "current_usage": {"required": True},
+        "maximum_limit": {"required": True},
+    }
+
+    _attribute_map = {
+        "current_usage": {"key": "currentUsage", "type": "int"},
+        "maximum_limit": {"key": "maximumLimit", "type": "int"},
+    }
+
+    def __init__(self, *, current_usage: int, maximum_limit: int, **kwargs: Any) -> None:
+        """
+        :keyword current_usage: Indicates the current count of profiles accessible to the user, always
+         a non-negative value. Required.
+        :paramtype current_usage: int
+        :keyword maximum_limit: Indicates the maximum permitted profile count for the user, with null
+         implying no limit. Required.
+        :paramtype maximum_limit: int
+        """
+        super().__init__(**kwargs)
+        self.current_usage = current_usage
+        self.maximum_limit = maximum_limit
+
+
 class ScreenSpoofingTypeScreenSizeMultiLevelChoice(_serialization.Model):
     """ScreenSpoofingTypeScreenSizeMultiLevelChoice.
 
     All required parameters must be populated in order to send to Azure.
 
-    :ivar value: Tells the mode how the screen will be spoofed. Possible values:
+    :ivar value: Specifies how the screen will be spoofed. Possible values:
      'automatic': Automatically override the screen resolution based on the Base Profile.
      'manual': Manually override the screen resolution.
      'off': Turn off the spoofing, use the original settings. Required. Known values are:
@@ -1618,7 +1737,7 @@ class ScreenSpoofingTypeScreenSizeMultiLevelChoice(_serialization.Model):
         self, *, value: Union[str, "_models.ScreenSpoofingType"], extra: Optional[str] = None, **kwargs: Any
     ) -> None:
         """
-        :keyword value: Tells the mode how the screen will be spoofed. Possible values:
+        :keyword value: Specifies how the screen will be spoofed. Possible values:
          'automatic': Automatically override the screen resolution based on the Base Profile.
          'manual': Manually override the screen resolution.
          'off': Turn off the spoofing, use the original settings. Required. Known values are:
@@ -1696,9 +1815,12 @@ class StatusResponse(_serialization.Model):
 
     All required parameters must be populated in order to send to Azure.
 
-    :ivar persistence_state: Tells if the profile is saved or not. Possible values:
-     'unsaved': Profile is not saved
-     'saved': Profile is saved and up-to-date. Required. Known values are: "unsaved" and "saved".
+    :ivar persistence_state: Indicates the current save state of a profile, including cloud sync
+     status. Possible values:
+     'unsaved': The profile is not saved
+     'saved': The profile is saved and current
+     'syncing': The profile is currently synchronizing with the cloud. Required. Known values are:
+     "unsaved", "saved", and "syncing".
     :vartype persistence_state: str or ~kameleo.local_api_client.models.ProfilePersistenceState
     :ivar lifetime_state: Represents the lifetime states of a profile, indicating which actions
      can be performed with the associated browser engine at each state. Possible values are:
@@ -1710,8 +1832,8 @@ class StatusResponse(_serialization.Model):
      * Running: The associated browser engine is currently running.
      * Terminating: The associated browser engine is in the process of terminating.
      * Terminated: The associated browser engine is not running but has been started at least once.
-     Required. Known values are: "created", "starting", "running", "terminating", "terminated", and
-     "unknown".
+     Required. Known values are: "created", "starting", "running", "terminating", "terminated",
+     "locked", and "unknown".
     :vartype lifetime_state: str or ~kameleo.local_api_client.models.ProfileLifetimeState
     :ivar external_spoofing_engine_port: In case of running profiles which use an external browser
      this shows the connection port (for mobile profiles as well).
@@ -1738,9 +1860,12 @@ class StatusResponse(_serialization.Model):
         **kwargs: Any
     ) -> None:
         """
-        :keyword persistence_state: Tells if the profile is saved or not. Possible values:
-         'unsaved': Profile is not saved
-         'saved': Profile is saved and up-to-date. Required. Known values are: "unsaved" and "saved".
+        :keyword persistence_state: Indicates the current save state of a profile, including cloud sync
+         status. Possible values:
+         'unsaved': The profile is not saved
+         'saved': The profile is saved and current
+         'syncing': The profile is currently synchronizing with the cloud. Required. Known values are:
+         "unsaved", "saved", and "syncing".
         :paramtype persistence_state: str or ~kameleo.local_api_client.models.ProfilePersistenceState
         :keyword lifetime_state: Represents the lifetime states of a profile, indicating which actions
          can be performed with the associated browser engine at each state. Possible values are:
@@ -1752,8 +1877,8 @@ class StatusResponse(_serialization.Model):
          * Running: The associated browser engine is currently running.
          * Terminating: The associated browser engine is in the process of terminating.
          * Terminated: The associated browser engine is not running but has been started at least once.
-         Required. Known values are: "created", "starting", "running", "terminating", "terminated", and
-         "unknown".
+         Required. Known values are: "created", "starting", "running", "terminating", "terminated",
+         "locked", and "unknown".
         :paramtype lifetime_state: str or ~kameleo.local_api_client.models.ProfileLifetimeState
         :keyword external_spoofing_engine_port: In case of running profiles which use an external
          browser this shows the connection port (for mobile profiles as well).
@@ -1770,7 +1895,7 @@ class TimezoneSpoofingTypeTimezoneMultiLevelChoice(_serialization.Model):
 
     All required parameters must be populated in order to send to Azure.
 
-    :ivar value: Tells the mode how the Timezone will be spoofed. Possble values:
+    :ivar value: Specifies how the timezone will be spoofed. Possble values:
      'automatic': Timezone is automatically set by the IP
      'manual': Timezone is manually overridden in the profile
      'off': Turn off the spoofing, use the original settings. Required. Known values are:
@@ -1794,7 +1919,7 @@ class TimezoneSpoofingTypeTimezoneMultiLevelChoice(_serialization.Model):
         self, *, value: Union[str, "_models.TimezoneSpoofingType"], extra: Optional[str] = None, **kwargs: Any
     ) -> None:
         """
-        :keyword value: Tells the mode how the Timezone will be spoofed. Possble values:
+        :keyword value: Specifies how the timezone will be spoofed. Possble values:
          'automatic': Timezone is automatically set by the IP
          'manual': Timezone is manually overridden in the profile
          'off': Turn off the spoofing, use the original settings. Required. Known values are:
@@ -1814,15 +1939,15 @@ class UpdateProfileRequest(_serialization.Model):  # pylint: disable=too-many-in
 
     All required parameters must be populated in order to send to Azure.
 
-    :ivar canvas: Tells the mode how the canvas will be spoofed. Possible values:
-     'intelligent': Use some noise and in specific cases use the intelligent canvas spoofing. This
-     will result non unique canvas fingerprints.
-     'noise': Add some noise to the Canvas generation.
+    :ivar canvas: Specifies how the canvas will be spoofed. Possible values:
+     'intelligent': Use intelligent canvas spoofing. This will result non-unique canvas
+     fingerprints.
+     'noise': Add some noise to canvas generation.
      'block': Completely block the 2D API.
      'off': Turn off the spoofing, use the original settings. Required. Known values are:
      "intelligent", "noise", "block", and "off".
     :vartype canvas: str or ~kameleo.local_api_client.models.CanvasSpoofingType
-    :ivar webgl: Tells the mode how the WebGL will be spoofed. Possible values:
+    :ivar webgl: Specifies how the WebGL will be spoofed. Possible values:
      'noise': Add some noise to the WebGL generation
      'block': Completely block the 3D API
      'off': Turn off the spoofing, use the original settings. Required. Known values are: "noise",
@@ -1831,7 +1956,7 @@ class UpdateProfileRequest(_serialization.Model):  # pylint: disable=too-many-in
     :ivar webgl_meta: Required.
     :vartype webgl_meta:
      ~kameleo.local_api_client.models.WebglMetaSpoofingTypeWebglMetaSpoofingOptionsMultiLevelChoice
-    :ivar audio: Tells the mode how the Audio will be spoofed. Possible values:
+    :ivar audio: Specifies how the audio will be spoofed. Possible values:
      'noise': Add some noise to the Audio generation
      'block': Completely block the Audio API
      'off': Turn off the spoofing, use the original settings. Required. Known values are: "off",
@@ -1855,12 +1980,15 @@ class UpdateProfileRequest(_serialization.Model):  # pylint: disable=too-many-in
     :ivar hardware_concurrency: Required.
     :vartype hardware_concurrency:
      ~kameleo.local_api_client.models.HardwareConcurrencySpoofingTypeInt32NullableMultiLevelChoice
+    :ivar device_memory:
+    :vartype device_memory:
+     ~kameleo.local_api_client.models.DeviceMemorySpoofingTypeDoubleNullableMultiLevelChoice
     :ivar start_page: This website will be opened in the browser when the profile launches.
     :vartype start_page: str
-    :ivar password_manager: Tells if the browser should support credential saving. Possible values
+    :ivar password_manager: Defines whether the browser can save login credentials. Possible values
      are:
-     'enabled': Credential saving is enabled.
-     'disabled': Credential saving is disabled. Required. Known values are: "enabled" and
+     'enabled': Credential saving is allowed.
+     'disabled': Credential saving is blocked. Required. Known values are: "enabled" and
      "disabled".
     :vartype password_manager: str or ~kameleo.local_api_client.models.PasswordManagerType
     :ivar extensions: A list of extensions or addons should be loaded to the browser when starting
@@ -1875,6 +2003,8 @@ class UpdateProfileRequest(_serialization.Model):  # pylint: disable=too-many-in
     :vartype name: str
     :ivar tags: Profile tags.
     :vartype tags: list[str]
+    :ivar storage: Known values are: "local" and "cloud".
+    :vartype storage: str or ~kameleo.local_api_client.models.ProfileStorageLocation
     :ivar launcher: This setting determines which browser engine is launched when a profile is
      started. This can be modified only before the first start. Possible values for Desktop
      profiles: 'automatic'. Possible values for Mobile profiles: 'chromium', 'external'.
@@ -1915,12 +2045,14 @@ class UpdateProfileRequest(_serialization.Model):  # pylint: disable=too-many-in
             "key": "hardwareConcurrency",
             "type": "HardwareConcurrencySpoofingTypeInt32NullableMultiLevelChoice",
         },
+        "device_memory": {"key": "deviceMemory", "type": "DeviceMemorySpoofingTypeDoubleNullableMultiLevelChoice"},
         "start_page": {"key": "startPage", "type": "str"},
         "password_manager": {"key": "passwordManager", "type": "str"},
         "extensions": {"key": "extensions", "type": "[str]"},
         "notes": {"key": "notes", "type": "str"},
         "name": {"key": "name", "type": "str"},
         "tags": {"key": "tags", "type": "[str]"},
+        "storage": {"key": "storage", "type": "str"},
         "launcher": {"key": "launcher", "type": "str"},
     }
 
@@ -1940,23 +2072,25 @@ class UpdateProfileRequest(_serialization.Model):  # pylint: disable=too-many-in
         hardware_concurrency: "_models.HardwareConcurrencySpoofingTypeInt32NullableMultiLevelChoice",
         password_manager: Union[str, "_models.PasswordManagerType"],
         name: str,
+        device_memory: Optional["_models.DeviceMemorySpoofingTypeDoubleNullableMultiLevelChoice"] = None,
         start_page: Optional[str] = None,
         extensions: Optional[List[str]] = None,
         notes: Optional[str] = None,
         tags: Optional[List[str]] = None,
+        storage: Optional[Union[str, "_models.ProfileStorageLocation"]] = None,
         launcher: Optional[str] = None,
         **kwargs: Any
     ) -> None:
         """
-        :keyword canvas: Tells the mode how the canvas will be spoofed. Possible values:
-         'intelligent': Use some noise and in specific cases use the intelligent canvas spoofing. This
-         will result non unique canvas fingerprints.
-         'noise': Add some noise to the Canvas generation.
+        :keyword canvas: Specifies how the canvas will be spoofed. Possible values:
+         'intelligent': Use intelligent canvas spoofing. This will result non-unique canvas
+         fingerprints.
+         'noise': Add some noise to canvas generation.
          'block': Completely block the 2D API.
          'off': Turn off the spoofing, use the original settings. Required. Known values are:
          "intelligent", "noise", "block", and "off".
         :paramtype canvas: str or ~kameleo.local_api_client.models.CanvasSpoofingType
-        :keyword webgl: Tells the mode how the WebGL will be spoofed. Possible values:
+        :keyword webgl: Specifies how the WebGL will be spoofed. Possible values:
          'noise': Add some noise to the WebGL generation
          'block': Completely block the 3D API
          'off': Turn off the spoofing, use the original settings. Required. Known values are: "noise",
@@ -1965,7 +2099,7 @@ class UpdateProfileRequest(_serialization.Model):  # pylint: disable=too-many-in
         :keyword webgl_meta: Required.
         :paramtype webgl_meta:
          ~kameleo.local_api_client.models.WebglMetaSpoofingTypeWebglMetaSpoofingOptionsMultiLevelChoice
-        :keyword audio: Tells the mode how the Audio will be spoofed. Possible values:
+        :keyword audio: Specifies how the audio will be spoofed. Possible values:
          'noise': Add some noise to the Audio generation
          'block': Completely block the Audio API
          'off': Turn off the spoofing, use the original settings. Required. Known values are: "off",
@@ -1990,12 +2124,15 @@ class UpdateProfileRequest(_serialization.Model):  # pylint: disable=too-many-in
         :keyword hardware_concurrency: Required.
         :paramtype hardware_concurrency:
          ~kameleo.local_api_client.models.HardwareConcurrencySpoofingTypeInt32NullableMultiLevelChoice
+        :keyword device_memory:
+        :paramtype device_memory:
+         ~kameleo.local_api_client.models.DeviceMemorySpoofingTypeDoubleNullableMultiLevelChoice
         :keyword start_page: This website will be opened in the browser when the profile launches.
         :paramtype start_page: str
-        :keyword password_manager: Tells if the browser should support credential saving. Possible
+        :keyword password_manager: Defines whether the browser can save login credentials. Possible
          values are:
-         'enabled': Credential saving is enabled.
-         'disabled': Credential saving is disabled. Required. Known values are: "enabled" and
+         'enabled': Credential saving is allowed.
+         'disabled': Credential saving is blocked. Required. Known values are: "enabled" and
          "disabled".
         :paramtype password_manager: str or ~kameleo.local_api_client.models.PasswordManagerType
         :keyword extensions: A list of extensions or addons should be loaded to the browser when
@@ -2010,6 +2147,8 @@ class UpdateProfileRequest(_serialization.Model):  # pylint: disable=too-many-in
         :paramtype name: str
         :keyword tags: Profile tags.
         :paramtype tags: list[str]
+        :keyword storage: Known values are: "local" and "cloud".
+        :paramtype storage: str or ~kameleo.local_api_client.models.ProfileStorageLocation
         :keyword launcher: This setting determines which browser engine is launched when a profile is
          started. This can be modified only before the first start. Possible values for Desktop
          profiles: 'automatic'. Possible values for Mobile profiles: 'chromium', 'external'.
@@ -2027,12 +2166,14 @@ class UpdateProfileRequest(_serialization.Model):  # pylint: disable=too-many-in
         self.fonts = fonts
         self.screen = screen
         self.hardware_concurrency = hardware_concurrency
+        self.device_memory = device_memory
         self.start_page = start_page
         self.password_manager = password_manager
         self.extensions = extensions
         self.notes = notes
         self.name = name
         self.tags = tags
+        self.storage = storage
         self.launcher = launcher
 
 
@@ -2057,10 +2198,15 @@ class UserInfoResponse(_serialization.Model):
     :ivar grace_period: A boolean value indicates whether the subscription is in a grace period and
      should be renewed immediately. Required.
     :vartype grace_period: bool
-    :ivar last_app_login: The last date when the user authenticated by the app.
+    :ivar last_app_login: The last date when the user authenticated by the app. Required.
     :vartype last_app_login: ~datetime.datetime
     :ivar workspace_folder: The user's workspace folder path where the profiles are stored.
+     Required.
     :vartype workspace_folder: str
+    :ivar local_storage: Required.
+    :vartype local_storage: ~kameleo.local_api_client.models.QuotaStatistics
+    :ivar cloud_storage: Required.
+    :vartype cloud_storage: ~kameleo.local_api_client.models.QuotaStatistics
     """
 
     _validation = {
@@ -2070,6 +2216,10 @@ class UserInfoResponse(_serialization.Model):
         "subscription_end": {"required": True},
         "capabilities": {"required": True},
         "grace_period": {"required": True},
+        "last_app_login": {"required": True},
+        "workspace_folder": {"required": True},
+        "local_storage": {"required": True},
+        "cloud_storage": {"required": True},
     }
 
     _attribute_map = {
@@ -2081,6 +2231,8 @@ class UserInfoResponse(_serialization.Model):
         "grace_period": {"key": "gracePeriod", "type": "bool"},
         "last_app_login": {"key": "lastAppLogin", "type": "iso-8601"},
         "workspace_folder": {"key": "workspaceFolder", "type": "str"},
+        "local_storage": {"key": "localStorage", "type": "QuotaStatistics"},
+        "cloud_storage": {"key": "cloudStorage", "type": "QuotaStatistics"},
     }
 
     def __init__(
@@ -2092,8 +2244,10 @@ class UserInfoResponse(_serialization.Model):
         subscription_end: datetime.datetime,
         capabilities: List[str],
         grace_period: bool,
-        last_app_login: Optional[datetime.datetime] = None,
-        workspace_folder: Optional[str] = None,
+        last_app_login: datetime.datetime,
+        workspace_folder: str,
+        local_storage: "_models.QuotaStatistics",
+        cloud_storage: "_models.QuotaStatistics",
         **kwargs: Any
     ) -> None:
         """
@@ -2113,10 +2267,15 @@ class UserInfoResponse(_serialization.Model):
         :keyword grace_period: A boolean value indicates whether the subscription is in a grace period
          and should be renewed immediately. Required.
         :paramtype grace_period: bool
-        :keyword last_app_login: The last date when the user authenticated by the app.
+        :keyword last_app_login: The last date when the user authenticated by the app. Required.
         :paramtype last_app_login: ~datetime.datetime
         :keyword workspace_folder: The user's workspace folder path where the profiles are stored.
+         Required.
         :paramtype workspace_folder: str
+        :keyword local_storage: Required.
+        :paramtype local_storage: ~kameleo.local_api_client.models.QuotaStatistics
+        :keyword cloud_storage: Required.
+        :paramtype cloud_storage: ~kameleo.local_api_client.models.QuotaStatistics
         """
         super().__init__(**kwargs)
         self.user_id = user_id
@@ -2127,6 +2286,8 @@ class UserInfoResponse(_serialization.Model):
         self.grace_period = grace_period
         self.last_app_login = last_app_login
         self.workspace_folder = workspace_folder
+        self.local_storage = local_storage
+        self.cloud_storage = cloud_storage
 
 
 class WebDriverSettings(_serialization.Model):
@@ -2241,7 +2402,7 @@ class WebglMetaSpoofingTypeWebglMetaSpoofingOptionsMultiLevelChoice(_serializati
 
     All required parameters must be populated in order to send to Azure.
 
-    :ivar value: Tells the mode how the WebGL vendor and renderer will be spoofed. Possible values:
+    :ivar value: Specifies how the WebGL vendor and renderer will be spoofed. Possible values:
      'automatic': The vendor and renderer values comes from the base profile.
      'manual': Manually set the vendor and renderer values.
      'off': Turn off the spoofing, use the original settings. Required. Known values are:
@@ -2269,8 +2430,7 @@ class WebglMetaSpoofingTypeWebglMetaSpoofingOptionsMultiLevelChoice(_serializati
         **kwargs: Any
     ) -> None:
         """
-        :keyword value: Tells the mode how the WebGL vendor and renderer will be spoofed. Possible
-         values:
+        :keyword value: Specifies how the WebGL vendor and renderer will be spoofed. Possible values:
          'automatic': The vendor and renderer values comes from the base profile.
          'manual': Manually set the vendor and renderer values.
          'off': Turn off the spoofing, use the original settings. Required. Known values are:
@@ -2325,7 +2485,7 @@ class WebRtcSpoofingTypeWebRtcSpoofingOptionsMultiLevelChoice(_serialization.Mod
 
     All required parameters must be populated in order to send to Azure.
 
-    :ivar value: Tells the mode how the WebRTC will be spoofed. Possible values:
+    :ivar value: Specifies how the WebRTC will be spoofed. Possible values:
      'automatic': Automatically set the webRTC public IP by the IP, and generates a random private
      IP like '2d2f78e7-1b1e-4345-a21b-07c904c98394.local'
      'manual': Manually override the webRTC public IP and private IP in the profile
@@ -2355,7 +2515,7 @@ class WebRtcSpoofingTypeWebRtcSpoofingOptionsMultiLevelChoice(_serialization.Mod
         **kwargs: Any
     ) -> None:
         """
-        :keyword value: Tells the mode how the WebRTC will be spoofed. Possible values:
+        :keyword value: Specifies how the WebRTC will be spoofed. Possible values:
          'automatic': Automatically set the webRTC public IP by the IP, and generates a random private
          IP like '2d2f78e7-1b1e-4345-a21b-07c904c98394.local'
          'manual': Manually override the webRTC public IP and private IP in the profile

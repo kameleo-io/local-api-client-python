@@ -186,7 +186,7 @@ base_profile_list = client.search_base_profiles(
 
 # Create a new profile with recommended settings
 # Choose one of the Base Profiles
-# Set the launcher to 'chromium' so the mobile profile will be started in Chromium by Kameleo
+# Set the launcher to 'chromium' so the mobile profile will be started in Chroma browser
 create_profile_request = BuilderForCreateProfile \
     .for_base_profile(base_profile_list[0].id) \
     .set_recommended_defaults() \
