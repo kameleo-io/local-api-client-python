@@ -116,16 +116,13 @@ class BuilderForCreateProfile:
         self.profile_request['webRtc']['extra'] = options
         return self
 
-    def set_fonts(self, value, options):
+    def set_fonts(self, value):
         """Specifies how the fonts will be spoofed. Possible values:
-            'enabled': Enable fonts spoofing. A list can be provided to override the fonts coming from the base profile.
+            'enabled': Enable fonts spoofing.
             'disable': Disable fonts spoofing.
         :param string value: Fonts spoofing type. Possible values: 'enabled', 'disabled'
-        :param options: When the Font spoofing is set to enabled, a list can be provided to overrider the fonts coming from the base profile.
-        :type options: list[str]
         """
-        self.profile_request['fonts']['value'] = value
-        self.profile_request['fonts']['extra'] = options
+        self.profile_request['fonts'] = value
         return self
 
     def set_start_page(self, value):
@@ -221,7 +218,6 @@ class BuilderForCreateProfile:
     def set_recommended_defaults(self):
         """This sets all the profile options to the defaults recommended by Kameleo Team. Please consider providing Proxy settings to your profile.
         """
-        self.profile_request['name'] = ""
         self.profile_request['canvas'] = "intelligent"
         self.profile_request['webgl'] = "off"
         self.profile_request['webglMeta']['value'] = "automatic"
@@ -229,7 +225,7 @@ class BuilderForCreateProfile:
         self.profile_request['timezone']['value'] = "automatic"
         self.profile_request['geolocation']['value'] = "automatic"
         self.profile_request['webRtc']['value'] = "automatic"
-        self.profile_request['fonts']['value'] = "enabled"
+        self.profile_request['fonts'] = "enabled"
         self.profile_request['screen']['value'] = "automatic"
         self.profile_request['hardwareConcurrency']['value'] = "automatic"
         self.profile_request['deviceMemory']['value'] = "automatic"
@@ -263,10 +259,7 @@ class BuilderForCreateProfile:
                 "value": "off",
                 "extra": None
             },
-            "fonts": {
-                "value": "disabled",
-                "extra": None
-            },
+            "fonts": "disabled",
             "screen": {
                 "value": "off",
                 "extra": None
