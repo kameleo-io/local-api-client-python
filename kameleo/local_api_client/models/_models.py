@@ -34,12 +34,12 @@ class BaseProfile(_serialization.Model):
     :vartype browser: ~kameleo.local_api_client.models.Browser
     :ivar language: Language of the base profile. Using ISO 639-1 language codes. Required.
     :vartype language: str
+    :ivar webgl_meta: Required.
+    :vartype webgl_meta: ~kameleo.local_api_client.models.WebglMeta
     :ivar resolution: The screen size of the device in pixels. Required.
     :vartype resolution: str
     :ivar fonts: A list of font types included in the profile. Required.
     :vartype fonts: list[str]
-    :ivar webgl_meta: Required.
-    :vartype webgl_meta: ~kameleo.local_api_client.models.WebglMeta
     """
 
     _validation = {
@@ -49,9 +49,9 @@ class BaseProfile(_serialization.Model):
         "os": {"required": True},
         "browser": {"required": True},
         "language": {"required": True},
+        "webgl_meta": {"required": True},
         "resolution": {"required": True},
         "fonts": {"required": True},
-        "webgl_meta": {"required": True},
     }
 
     _attribute_map = {
@@ -61,9 +61,9 @@ class BaseProfile(_serialization.Model):
         "os": {"key": "os", "type": "Os"},
         "browser": {"key": "browser", "type": "Browser"},
         "language": {"key": "language", "type": "str"},
+        "webgl_meta": {"key": "webglMeta", "type": "WebglMeta"},
         "resolution": {"key": "resolution", "type": "str"},
         "fonts": {"key": "fonts", "type": "[str]"},
-        "webgl_meta": {"key": "webglMeta", "type": "WebglMeta"},
     }
 
     def __init__(
@@ -75,9 +75,9 @@ class BaseProfile(_serialization.Model):
         os: "_models.Os",
         browser: "_models.Browser",
         language: str,
+        webgl_meta: "_models.WebglMeta",
         resolution: str,
         fonts: List[str],
-        webgl_meta: "_models.WebglMeta",
         **kwargs: Any
     ) -> None:
         """
@@ -95,12 +95,12 @@ class BaseProfile(_serialization.Model):
         :paramtype browser: ~kameleo.local_api_client.models.Browser
         :keyword language: Language of the base profile. Using ISO 639-1 language codes. Required.
         :paramtype language: str
+        :keyword webgl_meta: Required.
+        :paramtype webgl_meta: ~kameleo.local_api_client.models.WebglMeta
         :keyword resolution: The screen size of the device in pixels. Required.
         :paramtype resolution: str
         :keyword fonts: A list of font types included in the profile. Required.
         :paramtype fonts: list[str]
-        :keyword webgl_meta: Required.
-        :paramtype webgl_meta: ~kameleo.local_api_client.models.WebglMeta
         """
         super().__init__(**kwargs)
         self.version = version
@@ -109,9 +109,9 @@ class BaseProfile(_serialization.Model):
         self.os = os
         self.browser = browser
         self.language = language
+        self.webgl_meta = webgl_meta
         self.resolution = resolution
         self.fonts = fonts
-        self.webgl_meta = webgl_meta
 
 
 class BaseProfilePreview(_serialization.Model):
@@ -131,6 +131,8 @@ class BaseProfilePreview(_serialization.Model):
     :vartype browser: ~kameleo.local_api_client.models.Browser
     :ivar language: Language of the base profile. Using ISO 639-1 language codes. Required.
     :vartype language: str
+    :ivar webgl_meta: Required.
+    :vartype webgl_meta: ~kameleo.local_api_client.models.WebglMeta
     """
 
     _validation = {
@@ -139,6 +141,7 @@ class BaseProfilePreview(_serialization.Model):
         "os": {"required": True},
         "browser": {"required": True},
         "language": {"required": True},
+        "webgl_meta": {"required": True},
     }
 
     _attribute_map = {
@@ -147,6 +150,7 @@ class BaseProfilePreview(_serialization.Model):
         "os": {"key": "os", "type": "Os"},
         "browser": {"key": "browser", "type": "Browser"},
         "language": {"key": "language", "type": "str"},
+        "webgl_meta": {"key": "webglMeta", "type": "WebglMeta"},
     }
 
     def __init__(
@@ -157,6 +161,7 @@ class BaseProfilePreview(_serialization.Model):
         os: "_models.Os",
         browser: "_models.Browser",
         language: str,
+        webgl_meta: "_models.WebglMeta",
         **kwargs: Any
     ) -> None:
         """
@@ -171,6 +176,8 @@ class BaseProfilePreview(_serialization.Model):
         :paramtype browser: ~kameleo.local_api_client.models.Browser
         :keyword language: Language of the base profile. Using ISO 639-1 language codes. Required.
         :paramtype language: str
+        :keyword webgl_meta: Required.
+        :paramtype webgl_meta: ~kameleo.local_api_client.models.WebglMeta
         """
         super().__init__(**kwargs)
         self.id = id
@@ -178,6 +185,7 @@ class BaseProfilePreview(_serialization.Model):
         self.os = os
         self.browser = browser
         self.language = language
+        self.webgl_meta = webgl_meta
 
 
 class BaseProfileSearchParameters(_serialization.Model):
@@ -570,8 +578,8 @@ class CreateProfileRequest(_serialization.Model):  # pylint: disable=too-many-in
     :ivar base_profile_id: The unique identifier of the base profile. This references the base
      profile which should be used to build the new profile. Required.
     :vartype base_profile_id: str
-    :ivar name: Sets a human readable name for the profile. The value obtained by file name for
-     existing profiles. For new profiles the value is generated by random.
+    :ivar name: Sets a human-readable name for the profile, which is modifiable at any time.
+     Required.
     :vartype name: str
     :ivar tags: Use tags to categorize profiles by labeling them accordingly.
     :vartype tags: list[str]
@@ -609,8 +617,10 @@ class CreateProfileRequest(_serialization.Model):  # pylint: disable=too-many-in
     :ivar web_rtc: Required.
     :vartype web_rtc:
      ~kameleo.local_api_client.models.WebRtcSpoofingTypeWebRtcSpoofingOptionsMultiLevelChoice
-    :ivar fonts: Required.
-    :vartype fonts: ~kameleo.local_api_client.models.FontSpoofingTypeFontIListMultiLevelChoice
+    :ivar fonts: Specifies how the fonts will be spoofed. Possible values:
+     'enabled': Enable fonts spoofing.
+     'disable': Disable fonts spoofing. Required. Known values are: "enabled" and "disabled".
+    :vartype fonts: str or ~kameleo.local_api_client.models.FontSpoofingType
     :ivar screen: Required.
     :vartype screen: ~kameleo.local_api_client.models.ScreenSpoofingTypeScreenSizeMultiLevelChoice
     :ivar hardware_concurrency:
@@ -643,6 +653,7 @@ class CreateProfileRequest(_serialization.Model):  # pylint: disable=too-many-in
 
     _validation = {
         "base_profile_id": {"required": True, "min_length": 1},
+        "name": {"required": True, "min_length": 1},
         "canvas": {"required": True},
         "webgl": {"required": True},
         "webgl_meta": {"required": True},
@@ -671,7 +682,7 @@ class CreateProfileRequest(_serialization.Model):  # pylint: disable=too-many-in
         },
         "proxy": {"key": "proxy", "type": "ProxyConnectionTypeServerMultiLevelChoice"},
         "web_rtc": {"key": "webRtc", "type": "WebRtcSpoofingTypeWebRtcSpoofingOptionsMultiLevelChoice"},
-        "fonts": {"key": "fonts", "type": "FontSpoofingTypeFontIListMultiLevelChoice"},
+        "fonts": {"key": "fonts", "type": "str"},
         "screen": {"key": "screen", "type": "ScreenSpoofingTypeScreenSizeMultiLevelChoice"},
         "hardware_concurrency": {
             "key": "hardwareConcurrency",
@@ -690,6 +701,7 @@ class CreateProfileRequest(_serialization.Model):  # pylint: disable=too-many-in
         self,
         *,
         base_profile_id: str,
+        name: str,
         canvas: Union[str, "_models.CanvasSpoofingType"],
         webgl: Union[str, "_models.WebglSpoofingType"],
         webgl_meta: "_models.WebglMetaSpoofingTypeWebglMetaSpoofingOptionsMultiLevelChoice",
@@ -698,10 +710,9 @@ class CreateProfileRequest(_serialization.Model):  # pylint: disable=too-many-in
         geolocation: "_models.GeolocationSpoofingTypeGeolocationSpoofingOptionsMultiLevelChoice",
         proxy: "_models.ProxyConnectionTypeServerMultiLevelChoice",
         web_rtc: "_models.WebRtcSpoofingTypeWebRtcSpoofingOptionsMultiLevelChoice",
-        fonts: "_models.FontSpoofingTypeFontIListMultiLevelChoice",
+        fonts: Union[str, "_models.FontSpoofingType"],
         screen: "_models.ScreenSpoofingTypeScreenSizeMultiLevelChoice",
         password_manager: Union[str, "_models.PasswordManagerType"],
-        name: Optional[str] = None,
         tags: Optional[List[str]] = None,
         hardware_concurrency: Optional["_models.HardwareConcurrencySpoofingTypeInt32NullableMultiLevelChoice"] = None,
         device_memory: Optional["_models.DeviceMemorySpoofingTypeDoubleNullableMultiLevelChoice"] = None,
@@ -716,8 +727,8 @@ class CreateProfileRequest(_serialization.Model):  # pylint: disable=too-many-in
         :keyword base_profile_id: The unique identifier of the base profile. This references the base
          profile which should be used to build the new profile. Required.
         :paramtype base_profile_id: str
-        :keyword name: Sets a human readable name for the profile. The value obtained by file name for
-         existing profiles. For new profiles the value is generated by random.
+        :keyword name: Sets a human-readable name for the profile, which is modifiable at any time.
+         Required.
         :paramtype name: str
         :keyword tags: Use tags to categorize profiles by labeling them accordingly.
         :paramtype tags: list[str]
@@ -755,8 +766,10 @@ class CreateProfileRequest(_serialization.Model):  # pylint: disable=too-many-in
         :keyword web_rtc: Required.
         :paramtype web_rtc:
          ~kameleo.local_api_client.models.WebRtcSpoofingTypeWebRtcSpoofingOptionsMultiLevelChoice
-        :keyword fonts: Required.
-        :paramtype fonts: ~kameleo.local_api_client.models.FontSpoofingTypeFontIListMultiLevelChoice
+        :keyword fonts: Specifies how the fonts will be spoofed. Possible values:
+         'enabled': Enable fonts spoofing.
+         'disable': Disable fonts spoofing. Required. Known values are: "enabled" and "disabled".
+        :paramtype fonts: str or ~kameleo.local_api_client.models.FontSpoofingType
         :keyword screen: Required.
         :paramtype screen:
          ~kameleo.local_api_client.models.ScreenSpoofingTypeScreenSizeMultiLevelChoice
@@ -909,46 +922,6 @@ class ExportProfileRequest(_serialization.Model):
         """
         super().__init__(**kwargs)
         self.path = path
-
-
-class FontSpoofingTypeFontIListMultiLevelChoice(_serialization.Model):
-    """FontSpoofingTypeFontIListMultiLevelChoice.
-
-    All required parameters must be populated in order to send to Azure.
-
-    :ivar value: Specifies how the fonts will be spoofed. Possible values:
-     'enabled': Enable fonts spoofing. A list can be provided to override the fonts coming from the
-     base profile.
-     'disable': Disable fonts spoofing. Required. Known values are: "enabled" and "disabled".
-    :vartype value: str or ~kameleo.local_api_client.models.FontSpoofingType
-    :ivar extra:
-    :vartype extra: list[str]
-    """
-
-    _validation = {
-        "value": {"required": True},
-    }
-
-    _attribute_map = {
-        "value": {"key": "value", "type": "str"},
-        "extra": {"key": "extra", "type": "[str]"},
-    }
-
-    def __init__(
-        self, *, value: Union[str, "_models.FontSpoofingType"], extra: Optional[List[str]] = None, **kwargs: Any
-    ) -> None:
-        """
-        :keyword value: Specifies how the fonts will be spoofed. Possible values:
-         'enabled': Enable fonts spoofing. A list can be provided to override the fonts coming from the
-         base profile.
-         'disable': Disable fonts spoofing. Required. Known values are: "enabled" and "disabled".
-        :paramtype value: str or ~kameleo.local_api_client.models.FontSpoofingType
-        :keyword extra:
-        :paramtype extra: list[str]
-        """
-        super().__init__(**kwargs)
-        self.value = value
-        self.extra = extra
 
 
 class GeolocationSpoofingOptions(_serialization.Model):
@@ -1390,8 +1363,10 @@ class ProfileResponse(_serialization.Model):  # pylint: disable=too-many-instanc
     :ivar web_rtc: Required.
     :vartype web_rtc:
      ~kameleo.local_api_client.models.WebRtcSpoofingTypeWebRtcSpoofingOptionsMultiLevelChoice
-    :ivar fonts: Required.
-    :vartype fonts: ~kameleo.local_api_client.models.FontSpoofingTypeFontIListMultiLevelChoice
+    :ivar fonts: Specifies how the fonts will be spoofed. Possible values:
+     'enabled': Enable fonts spoofing.
+     'disable': Disable fonts spoofing. Required. Known values are: "enabled" and "disabled".
+    :vartype fonts: str or ~kameleo.local_api_client.models.FontSpoofingType
     :ivar screen: Required.
     :vartype screen: ~kameleo.local_api_client.models.ScreenSpoofingTypeScreenSizeMultiLevelChoice
     :ivar hardware_concurrency: Required.
@@ -1468,7 +1443,7 @@ class ProfileResponse(_serialization.Model):  # pylint: disable=too-many-instanc
         },
         "proxy": {"key": "proxy", "type": "ProxyConnectionTypeServerMultiLevelChoice"},
         "web_rtc": {"key": "webRtc", "type": "WebRtcSpoofingTypeWebRtcSpoofingOptionsMultiLevelChoice"},
-        "fonts": {"key": "fonts", "type": "FontSpoofingTypeFontIListMultiLevelChoice"},
+        "fonts": {"key": "fonts", "type": "str"},
         "screen": {"key": "screen", "type": "ScreenSpoofingTypeScreenSizeMultiLevelChoice"},
         "hardware_concurrency": {
             "key": "hardwareConcurrency",
@@ -1500,7 +1475,7 @@ class ProfileResponse(_serialization.Model):  # pylint: disable=too-many-instanc
         geolocation: "_models.GeolocationSpoofingTypeGeolocationSpoofingOptionsMultiLevelChoice",
         proxy: "_models.ProxyConnectionTypeServerMultiLevelChoice",
         web_rtc: "_models.WebRtcSpoofingTypeWebRtcSpoofingOptionsMultiLevelChoice",
-        fonts: "_models.FontSpoofingTypeFontIListMultiLevelChoice",
+        fonts: Union[str, "_models.FontSpoofingType"],
         screen: "_models.ScreenSpoofingTypeScreenSizeMultiLevelChoice",
         hardware_concurrency: "_models.HardwareConcurrencySpoofingTypeInt32NullableMultiLevelChoice",
         device_memory: "_models.DeviceMemorySpoofingTypeDoubleNullableMultiLevelChoice",
@@ -1560,8 +1535,10 @@ class ProfileResponse(_serialization.Model):  # pylint: disable=too-many-instanc
         :keyword web_rtc: Required.
         :paramtype web_rtc:
          ~kameleo.local_api_client.models.WebRtcSpoofingTypeWebRtcSpoofingOptionsMultiLevelChoice
-        :keyword fonts: Required.
-        :paramtype fonts: ~kameleo.local_api_client.models.FontSpoofingTypeFontIListMultiLevelChoice
+        :keyword fonts: Specifies how the fonts will be spoofed. Possible values:
+         'enabled': Enable fonts spoofing.
+         'disable': Disable fonts spoofing. Required. Known values are: "enabled" and "disabled".
+        :paramtype fonts: str or ~kameleo.local_api_client.models.FontSpoofingType
         :keyword screen: Required.
         :paramtype screen:
          ~kameleo.local_api_client.models.ScreenSpoofingTypeScreenSizeMultiLevelChoice
@@ -1973,8 +1950,10 @@ class UpdateProfileRequest(_serialization.Model):  # pylint: disable=too-many-in
     :ivar web_rtc: Required.
     :vartype web_rtc:
      ~kameleo.local_api_client.models.WebRtcSpoofingTypeWebRtcSpoofingOptionsMultiLevelChoice
-    :ivar fonts: Required.
-    :vartype fonts: ~kameleo.local_api_client.models.FontSpoofingTypeFontIListMultiLevelChoice
+    :ivar fonts: Specifies how the fonts will be spoofed. Possible values:
+     'enabled': Enable fonts spoofing.
+     'disable': Disable fonts spoofing. Required. Known values are: "enabled" and "disabled".
+    :vartype fonts: str or ~kameleo.local_api_client.models.FontSpoofingType
     :ivar screen: Required.
     :vartype screen: ~kameleo.local_api_client.models.ScreenSpoofingTypeScreenSizeMultiLevelChoice
     :ivar hardware_concurrency: Required.
@@ -2039,7 +2018,7 @@ class UpdateProfileRequest(_serialization.Model):  # pylint: disable=too-many-in
         },
         "proxy": {"key": "proxy", "type": "ProxyConnectionTypeServerMultiLevelChoice"},
         "web_rtc": {"key": "webRtc", "type": "WebRtcSpoofingTypeWebRtcSpoofingOptionsMultiLevelChoice"},
-        "fonts": {"key": "fonts", "type": "FontSpoofingTypeFontIListMultiLevelChoice"},
+        "fonts": {"key": "fonts", "type": "str"},
         "screen": {"key": "screen", "type": "ScreenSpoofingTypeScreenSizeMultiLevelChoice"},
         "hardware_concurrency": {
             "key": "hardwareConcurrency",
@@ -2067,7 +2046,7 @@ class UpdateProfileRequest(_serialization.Model):  # pylint: disable=too-many-in
         geolocation: "_models.GeolocationSpoofingTypeGeolocationSpoofingOptionsMultiLevelChoice",
         proxy: "_models.ProxyConnectionTypeServerMultiLevelChoice",
         web_rtc: "_models.WebRtcSpoofingTypeWebRtcSpoofingOptionsMultiLevelChoice",
-        fonts: "_models.FontSpoofingTypeFontIListMultiLevelChoice",
+        fonts: Union[str, "_models.FontSpoofingType"],
         screen: "_models.ScreenSpoofingTypeScreenSizeMultiLevelChoice",
         hardware_concurrency: "_models.HardwareConcurrencySpoofingTypeInt32NullableMultiLevelChoice",
         password_manager: Union[str, "_models.PasswordManagerType"],
@@ -2116,8 +2095,10 @@ class UpdateProfileRequest(_serialization.Model):  # pylint: disable=too-many-in
         :keyword web_rtc: Required.
         :paramtype web_rtc:
          ~kameleo.local_api_client.models.WebRtcSpoofingTypeWebRtcSpoofingOptionsMultiLevelChoice
-        :keyword fonts: Required.
-        :paramtype fonts: ~kameleo.local_api_client.models.FontSpoofingTypeFontIListMultiLevelChoice
+        :keyword fonts: Specifies how the fonts will be spoofed. Possible values:
+         'enabled': Enable fonts spoofing.
+         'disable': Disable fonts spoofing. Required. Known values are: "enabled" and "disabled".
+        :paramtype fonts: str or ~kameleo.local_api_client.models.FontSpoofingType
         :keyword screen: Required.
         :paramtype screen:
          ~kameleo.local_api_client.models.ScreenSpoofingTypeScreenSizeMultiLevelChoice
