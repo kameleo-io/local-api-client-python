@@ -14,7 +14,6 @@ from ._models import CreateProfileRequest
 from ._models import Device
 from ._models import DeviceMemorySpoofingTypeDoubleNullableMultiLevelChoice
 from ._models import ExportProfileRequest
-from ._models import FontSpoofingTypeFontIListMultiLevelChoice
 from ._models import GeolocationSpoofingOptions
 from ._models import GeolocationSpoofingTypeGeolocationSpoofingOptionsMultiLevelChoice
 from ._models import HardwareConcurrencySpoofingTypeInt32NullableMultiLevelChoice
@@ -70,7 +69,6 @@ __all__ = [
     "Device",
     "DeviceMemorySpoofingTypeDoubleNullableMultiLevelChoice",
     "ExportProfileRequest",
-    "FontSpoofingTypeFontIListMultiLevelChoice",
     "GeolocationSpoofingOptions",
     "GeolocationSpoofingTypeGeolocationSpoofingOptionsMultiLevelChoice",
     "HardwareConcurrencySpoofingTypeInt32NullableMultiLevelChoice",

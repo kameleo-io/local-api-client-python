@@ -49,8 +49,7 @@ class DeviceMemorySpoofingType(str, Enum, metaclass=CaseInsensitiveEnumMeta):
 
 class FontSpoofingType(str, Enum, metaclass=CaseInsensitiveEnumMeta):
     """Specifies how the fonts will be spoofed. Possible values:
-    'enabled': Enable fonts spoofing. A list can be provided to override the fonts coming from the
-    base profile.
+    'enabled': Enable fonts spoofing.
     'disable': Disable fonts spoofing.
     """
 
