@@ -230,6 +230,7 @@ class BuilderForCreateProfile:
         self.profile_request['hardwareConcurrency']['value'] = "automatic"
         self.profile_request['deviceMemory']['value'] = "automatic"
         self.profile_request['launcher'] = "automatic"
+        self.profile_request['startPage'] = "about:newtab"
 
         return self
 

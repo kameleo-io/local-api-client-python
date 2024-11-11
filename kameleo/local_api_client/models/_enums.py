@@ -176,7 +176,8 @@ class TimezoneSpoofingType(str, Enum, metaclass=CaseInsensitiveEnumMeta):
 class WebglMetaSpoofingType(str, Enum, metaclass=CaseInsensitiveEnumMeta):
     """Specifies how the WebGL vendor and renderer will be spoofed. Possible values:
     'automatic': The vendor and renderer values comes from the base profile.
-    'manual': Manually set the vendor and renderer values.
+    'manual': Manually configure WebGL metadata. For optimal results, choose a video card model
+    similar to your device's to ensure realistic profile masking.
     'off': Turn off the spoofing, use the original settings.
     """
 
@@ -199,8 +200,7 @@ class WebglSpoofingType(str, Enum, metaclass=CaseInsensitiveEnumMeta):
 
 class WebRtcSpoofingType(str, Enum, metaclass=CaseInsensitiveEnumMeta):
     """Specifies how the WebRTC will be spoofed. Possible values:
-    'automatic': Automatically set the webRTC public IP by the IP, and generates a random private
-    IP like '2d2f78e7-1b1e-4345-a21b-07c904c98394.local'
+    'automatic': Automatically set the webRTC public IP by the IP
     'manual': Manually override the webRTC public IP and private IP in the profile
     'block': Block the WebRTC functionality
     'off': Turn off the spoofing, use the original settings.
