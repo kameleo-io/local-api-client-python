@@ -15,8 +15,30 @@ if TYPE_CHECKING:
     from .. import models as _models
 
 
+class AddProfileToFolderRequest(_serialization.Model):
+    """AddProfileToFolderRequest.
+
+    :ivar profile_id:
+    :vartype profile_id: str
+    """
+
+    _attribute_map = {
+        "profile_id": {"key": "profileId", "type": "str"},
+    }
+
+    def __init__(self, *, profile_id: Optional[str] = None, **kwargs: Any) -> None:
+        """
+        :keyword profile_id:
+        :paramtype profile_id: str
+        """
+        super().__init__(**kwargs)
+        self.profile_id = profile_id
+
+
 class BaseProfile(_serialization.Model):
-    """Representation of a base profile which is used to build profiles from.
+    """Provides a full view of a base profile, which encapsulates real-world browser fingerprint
+    configurations used to
+    instantiate virtual browser profiles.
 
     All required parameters must be populated in order to send to Azure.
 
@@ -115,8 +137,10 @@ class BaseProfile(_serialization.Model):
 
 
 class BaseProfilePreview(_serialization.Model):
-    """A preview object of a searched base profile. This contains some information about the base
-    profile that will help you choose the right one.
+    """Provides a summarized view of a base profile, which encapsulates real-world browser fingerprint
+    configurations used to
+    instantiate virtual browser profiles. This preview aids in selecting the appropriate base
+    profile from hundreds of thousands available.
 
     All required parameters must be populated in order to send to Azure.
 
@@ -570,6 +594,32 @@ class CookieRequest(_serialization.Model):
         self.expiration_date = expiration_date
 
 
+class CreateFolderRequest(_serialization.Model):
+    """CreateFolderRequest.
+
+    All required parameters must be populated in order to send to Azure.
+
+    :ivar name: Human readable name of the new folder. Required.
+    :vartype name: str
+    """
+
+    _validation = {
+        "name": {"required": True, "max_length": 100, "min_length": 1},
+    }
+
+    _attribute_map = {
+        "name": {"key": "name", "type": "str"},
+    }
+
+    def __init__(self, *, name: str, **kwargs: Any) -> None:
+        """
+        :keyword name: Human readable name of the new folder. Required.
+        :paramtype name: str
+        """
+        super().__init__(**kwargs)
+        self.name = name
+
+
 class CreateProfileRequest(_serialization.Model):  # pylint: disable=too-many-instance-attributes
     """CreateProfileRequest.
 
@@ -581,6 +631,8 @@ class CreateProfileRequest(_serialization.Model):  # pylint: disable=too-many-in
     :ivar name: Sets a human-readable name for the profile, which is modifiable at any time.
      Required.
     :vartype name: str
+    :ivar folder_id: Id of the folder the profile should created in.
+    :vartype folder_id: str
     :ivar tags: Use tags to categorize profiles by labeling them accordingly.
     :vartype tags: list[str]
     :ivar canvas: Specifies how the canvas will be spoofed. Possible values:
@@ -670,6 +722,7 @@ class CreateProfileRequest(_serialization.Model):  # pylint: disable=too-many-in
     _attribute_map = {
         "base_profile_id": {"key": "baseProfileId", "type": "str"},
         "name": {"key": "name", "type": "str"},
+        "folder_id": {"key": "folderId", "type": "str"},
         "tags": {"key": "tags", "type": "[str]"},
         "canvas": {"key": "canvas", "type": "str"},
         "webgl": {"key": "webgl", "type": "str"},
@@ -713,6 +766,7 @@ class CreateProfileRequest(_serialization.Model):  # pylint: disable=too-many-in
         fonts: Union[str, "_models.FontSpoofingType"],
         screen: "_models.ScreenSpoofingTypeScreenSizeMultiLevelChoice",
         password_manager: Union[str, "_models.PasswordManagerType"],
+        folder_id: Optional[str] = None,
         tags: Optional[List[str]] = None,
         hardware_concurrency: Optional["_models.HardwareConcurrencySpoofingTypeInt32NullableMultiLevelChoice"] = None,
         device_memory: Optional["_models.DeviceMemorySpoofingTypeDoubleNullableMultiLevelChoice"] = None,
@@ -730,6 +784,8 @@ class CreateProfileRequest(_serialization.Model):  # pylint: disable=too-many-in
         :keyword name: Sets a human-readable name for the profile, which is modifiable at any time.
          Required.
         :paramtype name: str
+        :keyword folder_id: Id of the folder the profile should created in.
+        :paramtype folder_id: str
         :keyword tags: Use tags to categorize profiles by labeling them accordingly.
         :paramtype tags: list[str]
         :keyword canvas: Specifies how the canvas will be spoofed. Possible values:
@@ -803,6 +859,7 @@ class CreateProfileRequest(_serialization.Model):  # pylint: disable=too-many-in
         super().__init__(**kwargs)
         self.base_profile_id = base_profile_id
         self.name = name
+        self.folder_id = folder_id
         self.tags = tags
         self.canvas = canvas
         self.webgl = webgl
@@ -822,6 +879,53 @@ class CreateProfileRequest(_serialization.Model):  # pylint: disable=too-many-in
         self.notes = notes
         self.storage = storage
         self.launcher = launcher
+
+
+class DeleteFolderResponse(_serialization.Model):
+    """DeleteFolderResponse.
+
+    All required parameters must be populated in order to send to Azure.
+
+    :ivar deleted_folders: Required.
+    :vartype deleted_folders: list[str]
+    :ivar deleted_profiles: Required.
+    :vartype deleted_profiles: list[str]
+    :ivar moved_profiles: Required.
+    :vartype moved_profiles: list[~kameleo.local_api_client.models.ProfilePreview]
+    """
+
+    _validation = {
+        "deleted_folders": {"required": True},
+        "deleted_profiles": {"required": True},
+        "moved_profiles": {"required": True},
+    }
+
+    _attribute_map = {
+        "deleted_folders": {"key": "deletedFolders", "type": "[str]"},
+        "deleted_profiles": {"key": "deletedProfiles", "type": "[str]"},
+        "moved_profiles": {"key": "movedProfiles", "type": "[ProfilePreview]"},
+    }
+
+    def __init__(
+        self,
+        *,
+        deleted_folders: List[str],
+        deleted_profiles: List[str],
+        moved_profiles: List["_models.ProfilePreview"],
+        **kwargs: Any
+    ) -> None:
+        """
+        :keyword deleted_folders: Required.
+        :paramtype deleted_folders: list[str]
+        :keyword deleted_profiles: Required.
+        :paramtype deleted_profiles: list[str]
+        :keyword moved_profiles: Required.
+        :paramtype moved_profiles: list[~kameleo.local_api_client.models.ProfilePreview]
+        """
+        super().__init__(**kwargs)
+        self.deleted_folders = deleted_folders
+        self.deleted_profiles = deleted_profiles
+        self.moved_profiles = moved_profiles
 
 
 class Device(_serialization.Model):
@@ -924,6 +1028,93 @@ class ExportProfileRequest(_serialization.Model):
         self.path = path
 
 
+class FolderResponse(_serialization.Model):
+    """FolderResponse.
+
+    All required parameters must be populated in order to send to Azure.
+
+    :ivar id: A unique identifier of the folder. Required.
+    :vartype id: str
+    :ivar name: The name of the folder. Required.
+    :vartype name: str
+    :ivar last_modified_at: Timestamp of the last modification. Required.
+    :vartype last_modified_at: ~datetime.datetime
+    :ivar last_modified_by: Name of the user who last modified the folder. Required.
+    :vartype last_modified_by: str
+    :ivar created_at: Timestamp of the creation. Required.
+    :vartype created_at: ~datetime.datetime
+    :ivar created_by: Name of the user who created the folder. Required.
+    :vartype created_by: str
+    :ivar profiles: List of profiles in the current folder. Required.
+    :vartype profiles: list[~kameleo.local_api_client.models.ProfilePreview]
+    :ivar share_accesses: List of users accessing this folder. Required.
+    :vartype share_accesses: list[~kameleo.local_api_client.models.ShareAccess]
+    """
+
+    _validation = {
+        "id": {"required": True},
+        "name": {"required": True},
+        "last_modified_at": {"required": True},
+        "last_modified_by": {"required": True},
+        "created_at": {"required": True},
+        "created_by": {"required": True},
+        "profiles": {"required": True},
+        "share_accesses": {"required": True},
+    }
+
+    _attribute_map = {
+        "id": {"key": "id", "type": "str"},
+        "name": {"key": "name", "type": "str"},
+        "last_modified_at": {"key": "lastModifiedAt", "type": "iso-8601"},
+        "last_modified_by": {"key": "lastModifiedBy", "type": "str"},
+        "created_at": {"key": "createdAt", "type": "iso-8601"},
+        "created_by": {"key": "createdBy", "type": "str"},
+        "profiles": {"key": "profiles", "type": "[ProfilePreview]"},
+        "share_accesses": {"key": "shareAccesses", "type": "[ShareAccess]"},
+    }
+
+    def __init__(
+        self,
+        *,
+        id: str,  # pylint: disable=redefined-builtin
+        name: str,
+        last_modified_at: datetime.datetime,
+        last_modified_by: str,
+        created_at: datetime.datetime,
+        created_by: str,
+        profiles: List["_models.ProfilePreview"],
+        share_accesses: List["_models.ShareAccess"],
+        **kwargs: Any
+    ) -> None:
+        """
+        :keyword id: A unique identifier of the folder. Required.
+        :paramtype id: str
+        :keyword name: The name of the folder. Required.
+        :paramtype name: str
+        :keyword last_modified_at: Timestamp of the last modification. Required.
+        :paramtype last_modified_at: ~datetime.datetime
+        :keyword last_modified_by: Name of the user who last modified the folder. Required.
+        :paramtype last_modified_by: str
+        :keyword created_at: Timestamp of the creation. Required.
+        :paramtype created_at: ~datetime.datetime
+        :keyword created_by: Name of the user who created the folder. Required.
+        :paramtype created_by: str
+        :keyword profiles: List of profiles in the current folder. Required.
+        :paramtype profiles: list[~kameleo.local_api_client.models.ProfilePreview]
+        :keyword share_accesses: List of users accessing this folder. Required.
+        :paramtype share_accesses: list[~kameleo.local_api_client.models.ShareAccess]
+        """
+        super().__init__(**kwargs)
+        self.id = id
+        self.name = name
+        self.last_modified_at = last_modified_at
+        self.last_modified_by = last_modified_by
+        self.created_at = created_at
+        self.created_by = created_by
+        self.profiles = profiles
+        self.share_accesses = share_accesses
+
+
 class GeolocationSpoofingOptions(_serialization.Model):
     """When the Geolocation spoofing is set to manual these extra settings will be used as well.
 
@@ -1007,6 +1198,48 @@ class GeolocationSpoofingTypeGeolocationSpoofingOptionsMultiLevelChoice(_seriali
         self.extra = extra
 
 
+class GroupRole(_serialization.Model):
+    """GroupRole.
+
+    All required parameters must be populated in order to send to Azure.
+
+    :ivar id: Unique identifier of the role. Required.
+    :vartype id: str
+    :ivar name: Name of the role. Required.
+    :vartype name: str
+    :ivar description: Description of the role. Required.
+    :vartype description: str
+    """
+
+    _validation = {
+        "id": {"required": True},
+        "name": {"required": True},
+        "description": {"required": True},
+    }
+
+    _attribute_map = {
+        "id": {"key": "id", "type": "str"},
+        "name": {"key": "name", "type": "str"},
+        "description": {"key": "description", "type": "str"},
+    }
+
+    def __init__(
+        self, *, id: str, name: str, description: str, **kwargs: Any  # pylint: disable=redefined-builtin
+    ) -> None:
+        """
+        :keyword id: Unique identifier of the role. Required.
+        :paramtype id: str
+        :keyword name: Name of the role. Required.
+        :paramtype name: str
+        :keyword description: Description of the role. Required.
+        :paramtype description: str
+        """
+        super().__init__(**kwargs)
+        self.id = id
+        self.name = name
+        self.description = description
+
+
 class HardwareConcurrencySpoofingTypeInt32NullableMultiLevelChoice(_serialization.Model):
     """HardwareConcurrencySpoofingTypeInt32NullableMultiLevelChoice.
 
@@ -1077,6 +1310,45 @@ class ImportProfileRequest(_serialization.Model):
         """
         super().__init__(**kwargs)
         self.path = path
+
+
+class ListFoldersResponse(_serialization.Model):
+    """ListFoldersResponse.
+
+    All required parameters must be populated in order to send to Azure.
+
+    :ivar folders: List of top-level folders, each folder may contain nested folders and cloud
+     profiles. Required.
+    :vartype folders: list[~kameleo.local_api_client.models.FolderResponse]
+    :ivar profiles: List of profiles not associated with any folder. This includes both cloud and
+     local profiles. Required.
+    :vartype profiles: list[~kameleo.local_api_client.models.ProfilePreview]
+    """
+
+    _validation = {
+        "folders": {"required": True},
+        "profiles": {"required": True},
+    }
+
+    _attribute_map = {
+        "folders": {"key": "folders", "type": "[FolderResponse]"},
+        "profiles": {"key": "profiles", "type": "[ProfilePreview]"},
+    }
+
+    def __init__(
+        self, *, folders: List["_models.FolderResponse"], profiles: List["_models.ProfilePreview"], **kwargs: Any
+    ) -> None:
+        """
+        :keyword folders: List of top-level folders, each folder may contain nested folders and cloud
+         profiles. Required.
+        :paramtype folders: list[~kameleo.local_api_client.models.FolderResponse]
+        :keyword profiles: List of profiles not associated with any folder. This includes both cloud
+         and local profiles. Required.
+        :paramtype profiles: list[~kameleo.local_api_client.models.ProfilePreview]
+        """
+        super().__init__(**kwargs)
+        self.folders = folders
+        self.profiles = profiles
 
 
 class Os(_serialization.Model):
@@ -1220,6 +1492,10 @@ class ProfilePreview(_serialization.Model):  # pylint: disable=too-many-instance
     :vartype status: ~kameleo.local_api_client.models.StatusResponse
     :ivar storage: Known values are: "local" and "cloud".
     :vartype storage: str or ~kameleo.local_api_client.models.ProfileStorageLocation
+    :ivar folder_id: A unique identifier of the containing folder, or null if not in a folder. This
+     will always be null for locally stored profiles, as only cloud profiles can be added to
+     folders. Required.
+    :vartype folder_id: str
     """
 
     _validation = {
@@ -1234,6 +1510,7 @@ class ProfilePreview(_serialization.Model):  # pylint: disable=too-many-instance
         "language": {"required": True},
         "launcher": {"required": True},
         "status": {"required": True},
+        "folder_id": {"required": True},
     }
 
     _attribute_map = {
@@ -1249,6 +1526,7 @@ class ProfilePreview(_serialization.Model):  # pylint: disable=too-many-instance
         "launcher": {"key": "launcher", "type": "str"},
         "status": {"key": "status", "type": "StatusResponse"},
         "storage": {"key": "storage", "type": "str"},
+        "folder_id": {"key": "folderId", "type": "str"},
     }
 
     def __init__(
@@ -1265,6 +1543,7 @@ class ProfilePreview(_serialization.Model):  # pylint: disable=too-many-instance
         language: str,
         launcher: str,
         status: "_models.StatusResponse",
+        folder_id: str,
         storage: Optional[Union[str, "_models.ProfileStorageLocation"]] = None,
         **kwargs: Any
     ) -> None:
@@ -1296,6 +1575,10 @@ class ProfilePreview(_serialization.Model):  # pylint: disable=too-many-instance
         :paramtype status: ~kameleo.local_api_client.models.StatusResponse
         :keyword storage: Known values are: "local" and "cloud".
         :paramtype storage: str or ~kameleo.local_api_client.models.ProfileStorageLocation
+        :keyword folder_id: A unique identifier of the containing folder, or null if not in a folder.
+         This will always be null for locally stored profiles, as only cloud profiles can be added to
+         folders. Required.
+        :paramtype folder_id: str
         """
         super().__init__(**kwargs)
         self.id = id
@@ -1310,6 +1593,7 @@ class ProfilePreview(_serialization.Model):  # pylint: disable=too-many-instance
         self.launcher = launcher
         self.status = status
         self.storage = storage
+        self.folder_id = folder_id
 
 
 class ProfileResponse(_serialization.Model):  # pylint: disable=too-many-instance-attributes
@@ -1326,8 +1610,9 @@ class ProfileResponse(_serialization.Model):  # pylint: disable=too-many-instanc
     :vartype tags: list[str]
     :ivar created_at: Date when the profile was created. Required.
     :vartype created_at: ~datetime.datetime
-    :ivar base_profile: Representation of a base profile which is used to build profiles from.
-     Required.
+    :ivar base_profile: Provides a full view of a base profile, which encapsulates real-world
+     browser fingerprint configurations used to
+     instantiate virtual browser profiles. Required.
     :vartype base_profile: ~kameleo.local_api_client.models.BaseProfile
     :ivar canvas: Specifies how the canvas will be spoofed. Possible values:
      'intelligent': Use intelligent canvas spoofing. This will result non-unique canvas
@@ -1398,6 +1683,9 @@ class ProfileResponse(_serialization.Model):  # pylint: disable=too-many-instanc
     :vartype status: ~kameleo.local_api_client.models.StatusResponse
     :ivar storage: Known values are: "local" and "cloud".
     :vartype storage: str or ~kameleo.local_api_client.models.ProfileStorageLocation
+    :ivar folder_id: A unique identifier of the containing folder or null if it is not in folder.
+     Required.
+    :vartype folder_id: str
     """
 
     _validation = {
@@ -1424,6 +1712,7 @@ class ProfileResponse(_serialization.Model):  # pylint: disable=too-many-instanc
         "notes": {"required": True},
         "launcher": {"required": True},
         "status": {"required": True},
+        "folder_id": {"required": True},
     }
 
     _attribute_map = {
@@ -1457,6 +1746,7 @@ class ProfileResponse(_serialization.Model):  # pylint: disable=too-many-instanc
         "launcher": {"key": "launcher", "type": "str"},
         "status": {"key": "status", "type": "StatusResponse"},
         "storage": {"key": "storage", "type": "str"},
+        "folder_id": {"key": "folderId", "type": "str"},
     }
 
     def __init__(  # pylint: disable=too-many-locals
@@ -1485,6 +1775,7 @@ class ProfileResponse(_serialization.Model):  # pylint: disable=too-many-instanc
         notes: str,
         launcher: str,
         status: "_models.StatusResponse",
+        folder_id: str,
         storage: Optional[Union[str, "_models.ProfileStorageLocation"]] = None,
         **kwargs: Any
     ) -> None:
@@ -1498,8 +1789,9 @@ class ProfileResponse(_serialization.Model):  # pylint: disable=too-many-instanc
         :paramtype tags: list[str]
         :keyword created_at: Date when the profile was created. Required.
         :paramtype created_at: ~datetime.datetime
-        :keyword base_profile: Representation of a base profile which is used to build profiles from.
-         Required.
+        :keyword base_profile: Provides a full view of a base profile, which encapsulates real-world
+         browser fingerprint configurations used to
+         instantiate virtual browser profiles. Required.
         :paramtype base_profile: ~kameleo.local_api_client.models.BaseProfile
         :keyword canvas: Specifies how the canvas will be spoofed. Possible values:
          'intelligent': Use intelligent canvas spoofing. This will result non-unique canvas
@@ -1571,6 +1863,9 @@ class ProfileResponse(_serialization.Model):  # pylint: disable=too-many-instanc
         :paramtype status: ~kameleo.local_api_client.models.StatusResponse
         :keyword storage: Known values are: "local" and "cloud".
         :paramtype storage: str or ~kameleo.local_api_client.models.ProfileStorageLocation
+        :keyword folder_id: A unique identifier of the containing folder or null if it is not in
+         folder. Required.
+        :paramtype folder_id: str
         """
         super().__init__(**kwargs)
         self.id = id
@@ -1597,6 +1892,7 @@ class ProfileResponse(_serialization.Model):  # pylint: disable=too-many-instanc
         self.launcher = launcher
         self.status = status
         self.storage = storage
+        self.folder_id = folder_id
 
 
 class ProxyConnectionTypeServerMultiLevelChoice(_serialization.Model):
@@ -1657,7 +1953,7 @@ class QuotaStatistics(_serialization.Model):
     :ivar current_usage: Indicates the current count of profiles accessible to the user, always a
      non-negative value. Required.
     :vartype current_usage: int
-    :ivar maximum_limit: Indicates the maximum permitted profile count for the user, with null
+    :ivar maximum_limit: Indicates the maximum permitted profile count for the user, with -1
      implying no limit. Required.
     :vartype maximum_limit: int
     """
@@ -1677,7 +1973,7 @@ class QuotaStatistics(_serialization.Model):
         :keyword current_usage: Indicates the current count of profiles accessible to the user, always
          a non-negative value. Required.
         :paramtype current_usage: int
-        :keyword maximum_limit: Indicates the maximum permitted profile count for the user, with null
+        :keyword maximum_limit: Indicates the maximum permitted profile count for the user, with -1
          implying no limit. Required.
         :paramtype maximum_limit: int
         """
@@ -1785,6 +2081,139 @@ class Server(_serialization.Model):
         self.port = port
         self.id = id
         self.secret = secret
+
+
+class ShareAccess(_serialization.Model):
+    """ShareAccess.
+
+    All required parameters must be populated in order to send to Azure.
+
+    :ivar user: Required.
+    :vartype user: ~kameleo.local_api_client.models.User
+    :ivar role: Required.
+    :vartype role: ~kameleo.local_api_client.models.GroupRole
+    :ivar shared_at: Timestamp when the acess was granted to the user. Required.
+    :vartype shared_at: ~datetime.datetime
+    """
+
+    _validation = {
+        "user": {"required": True},
+        "role": {"required": True},
+        "shared_at": {"required": True},
+    }
+
+    _attribute_map = {
+        "user": {"key": "user", "type": "User"},
+        "role": {"key": "role", "type": "GroupRole"},
+        "shared_at": {"key": "sharedAt", "type": "iso-8601"},
+    }
+
+    def __init__(
+        self, *, user: "_models.User", role: "_models.GroupRole", shared_at: datetime.datetime, **kwargs: Any
+    ) -> None:
+        """
+        :keyword user: Required.
+        :paramtype user: ~kameleo.local_api_client.models.User
+        :keyword role: Required.
+        :paramtype role: ~kameleo.local_api_client.models.GroupRole
+        :keyword shared_at: Timestamp when the acess was granted to the user. Required.
+        :paramtype shared_at: ~datetime.datetime
+        """
+        super().__init__(**kwargs)
+        self.user = user
+        self.role = role
+        self.shared_at = shared_at
+
+
+class ShareAccessRequest(_serialization.Model):
+    """ShareAccessRequest.
+
+    All required parameters must be populated in order to send to Azure.
+
+    :ivar role_id: Id of the selected role. Required.
+    :vartype role_id: str
+    :ivar user_id: Id of the selected user. Required.
+    :vartype user_id: str
+    """
+
+    _validation = {
+        "role_id": {"required": True},
+        "user_id": {"required": True},
+    }
+
+    _attribute_map = {
+        "role_id": {"key": "roleId", "type": "str"},
+        "user_id": {"key": "userId", "type": "str"},
+    }
+
+    def __init__(self, *, role_id: str, user_id: str, **kwargs: Any) -> None:
+        """
+        :keyword role_id: Id of the selected role. Required.
+        :paramtype role_id: str
+        :keyword user_id: Id of the selected user. Required.
+        :paramtype user_id: str
+        """
+        super().__init__(**kwargs)
+        self.role_id = role_id
+        self.user_id = user_id
+
+
+class ShareGroupRequest(_serialization.Model):
+    """ShareGroupRequest.
+
+    All required parameters must be populated in order to send to Azure.
+
+    :ivar share_accesses: List of share accesses to the folder. Required.
+    :vartype share_accesses: list[~kameleo.local_api_client.models.ShareAccessRequest]
+    """
+
+    _validation = {
+        "share_accesses": {"required": True},
+    }
+
+    _attribute_map = {
+        "share_accesses": {"key": "shareAccesses", "type": "[ShareAccessRequest]"},
+    }
+
+    def __init__(self, *, share_accesses: List["_models.ShareAccessRequest"], **kwargs: Any) -> None:
+        """
+        :keyword share_accesses: List of share accesses to the folder. Required.
+        :paramtype share_accesses: list[~kameleo.local_api_client.models.ShareAccessRequest]
+        """
+        super().__init__(**kwargs)
+        self.share_accesses = share_accesses
+
+
+class SharingOptionsResponse(_serialization.Model):
+    """SharingOptionsResponse.
+
+    :ivar users: List of users in your team.
+    :vartype users: list[~kameleo.local_api_client.models.User]
+    :ivar roles: List of roles you can give the users.
+    :vartype roles: list[~kameleo.local_api_client.models.GroupRole]
+    """
+
+    _attribute_map = {
+        "users": {"key": "users", "type": "[User]"},
+        "roles": {"key": "roles", "type": "[GroupRole]"},
+    }
+
+    def __init__(
+        self,
+        *,
+        users: Optional[List["_models.User"]] = None,
+        roles: Optional[List["_models.GroupRole"]] = None,
+        **kwargs: Any
+    ) -> None:
+        """
+        :keyword users: List of users in your team.
+        :paramtype users: list[~kameleo.local_api_client.models.User]
+        :keyword roles: List of roles you can give the users.
+        :paramtype roles: list[~kameleo.local_api_client.models.GroupRole]
+        """
+        super().__init__(**kwargs)
+        self.users = users
+        self.roles = roles
 
 
 class StatusResponse(_serialization.Model):
@@ -1911,6 +2340,32 @@ class TimezoneSpoofingTypeTimezoneMultiLevelChoice(_serialization.Model):
         self.extra = extra
 
 
+class UpdateFolderRequest(_serialization.Model):
+    """UpdateFolderRequest.
+
+    All required parameters must be populated in order to send to Azure.
+
+    :ivar name: Human readable name of the new folder. Required.
+    :vartype name: str
+    """
+
+    _validation = {
+        "name": {"required": True, "max_length": 100, "min_length": 1},
+    }
+
+    _attribute_map = {
+        "name": {"key": "name", "type": "str"},
+    }
+
+    def __init__(self, *, name: str, **kwargs: Any) -> None:
+        """
+        :keyword name: Human readable name of the new folder. Required.
+        :paramtype name: str
+        """
+        super().__init__(**kwargs)
+        self.name = name
+
+
 class UpdateProfileRequest(_serialization.Model):  # pylint: disable=too-many-instance-attributes
     """UpdateProfileRequest.
 
@@ -1980,6 +2435,8 @@ class UpdateProfileRequest(_serialization.Model):  # pylint: disable=too-many-in
     :ivar name: Profile name property. The value obtained by file name for existing profiles. For
      new profiles the value is generated by a random name generator. Required.
     :vartype name: str
+    :ivar folder_id: Id of the folder the profile should be moved to.
+    :vartype folder_id: str
     :ivar tags: Profile tags.
     :vartype tags: list[str]
     :ivar storage: Known values are: "local" and "cloud".
@@ -2030,6 +2487,7 @@ class UpdateProfileRequest(_serialization.Model):  # pylint: disable=too-many-in
         "extensions": {"key": "extensions", "type": "[str]"},
         "notes": {"key": "notes", "type": "str"},
         "name": {"key": "name", "type": "str"},
+        "folder_id": {"key": "folderId", "type": "str"},
         "tags": {"key": "tags", "type": "[str]"},
         "storage": {"key": "storage", "type": "str"},
         "launcher": {"key": "launcher", "type": "str"},
@@ -2055,6 +2513,7 @@ class UpdateProfileRequest(_serialization.Model):  # pylint: disable=too-many-in
         start_page: Optional[str] = None,
         extensions: Optional[List[str]] = None,
         notes: Optional[str] = None,
+        folder_id: Optional[str] = None,
         tags: Optional[List[str]] = None,
         storage: Optional[Union[str, "_models.ProfileStorageLocation"]] = None,
         launcher: Optional[str] = None,
@@ -2126,6 +2585,8 @@ class UpdateProfileRequest(_serialization.Model):  # pylint: disable=too-many-in
         :keyword name: Profile name property. The value obtained by file name for existing profiles.
          For new profiles the value is generated by a random name generator. Required.
         :paramtype name: str
+        :keyword folder_id: Id of the folder the profile should be moved to.
+        :paramtype folder_id: str
         :keyword tags: Profile tags.
         :paramtype tags: list[str]
         :keyword storage: Known values are: "local" and "cloud".
@@ -2153,9 +2614,50 @@ class UpdateProfileRequest(_serialization.Model):  # pylint: disable=too-many-in
         self.extensions = extensions
         self.notes = notes
         self.name = name
+        self.folder_id = folder_id
         self.tags = tags
         self.storage = storage
         self.launcher = launcher
+
+
+class User(_serialization.Model):
+    """User.
+
+    All required parameters must be populated in order to send to Azure.
+
+    :ivar id: Unique identifier of the user. Required.
+    :vartype id: str
+    :ivar name: Dispaly name of the user. Required.
+    :vartype name: str
+    :ivar email: Email address of the user. Required.
+    :vartype email: str
+    """
+
+    _validation = {
+        "id": {"required": True},
+        "name": {"required": True},
+        "email": {"required": True},
+    }
+
+    _attribute_map = {
+        "id": {"key": "id", "type": "str"},
+        "name": {"key": "name", "type": "str"},
+        "email": {"key": "email", "type": "str"},
+    }
+
+    def __init__(self, *, id: str, name: str, email: str, **kwargs: Any) -> None:  # pylint: disable=redefined-builtin
+        """
+        :keyword id: Unique identifier of the user. Required.
+        :paramtype id: str
+        :keyword name: Dispaly name of the user. Required.
+        :paramtype name: str
+        :keyword email: Email address of the user. Required.
+        :paramtype email: str
+        """
+        super().__init__(**kwargs)
+        self.id = id
+        self.name = name
+        self.email = email
 
 
 class UserInfoResponse(_serialization.Model):
@@ -2385,7 +2887,8 @@ class WebglMetaSpoofingTypeWebglMetaSpoofingOptionsMultiLevelChoice(_serializati
 
     :ivar value: Specifies how the WebGL vendor and renderer will be spoofed. Possible values:
      'automatic': The vendor and renderer values comes from the base profile.
-     'manual': Manually set the vendor and renderer values.
+     'manual': Manually configure WebGL metadata. For optimal results, choose a video card model
+     similar to your device's to ensure realistic profile masking.
      'off': Turn off the spoofing, use the original settings. Required. Known values are:
      "automatic", "manual", and "off".
     :vartype value: str or ~kameleo.local_api_client.models.WebglMetaSpoofingType
@@ -2413,7 +2916,8 @@ class WebglMetaSpoofingTypeWebglMetaSpoofingOptionsMultiLevelChoice(_serializati
         """
         :keyword value: Specifies how the WebGL vendor and renderer will be spoofed. Possible values:
          'automatic': The vendor and renderer values comes from the base profile.
-         'manual': Manually set the vendor and renderer values.
+         'manual': Manually configure WebGL metadata. For optimal results, choose a video card model
+         similar to your device's to ensure realistic profile masking.
          'off': Turn off the spoofing, use the original settings. Required. Known values are:
          "automatic", "manual", and "off".
         :paramtype value: str or ~kameleo.local_api_client.models.WebglMetaSpoofingType
@@ -2432,14 +2936,13 @@ class WebRtcSpoofingOptions(_serialization.Model):
     All required parameters must be populated in order to send to Azure.
 
     :ivar private_ip: The WebRTC local IP address of the machine. It can be an obfuscated value as
-     well. Required.
+     well.
     :vartype private_ip: str
     :ivar public_ip: The WebRTC public IP address of the machine. Required.
     :vartype public_ip: str
     """
 
     _validation = {
-        "private_ip": {"required": True},
         "public_ip": {"required": True},
     }
 
@@ -2448,10 +2951,10 @@ class WebRtcSpoofingOptions(_serialization.Model):
         "public_ip": {"key": "publicIp", "type": "str"},
     }
 
-    def __init__(self, *, private_ip: str, public_ip: str, **kwargs: Any) -> None:
+    def __init__(self, *, public_ip: str, private_ip: Optional[str] = None, **kwargs: Any) -> None:
         """
         :keyword private_ip: The WebRTC local IP address of the machine. It can be an obfuscated value
-         as well. Required.
+         as well.
         :paramtype private_ip: str
         :keyword public_ip: The WebRTC public IP address of the machine. Required.
         :paramtype public_ip: str
@@ -2467,8 +2970,7 @@ class WebRtcSpoofingTypeWebRtcSpoofingOptionsMultiLevelChoice(_serialization.Mod
     All required parameters must be populated in order to send to Azure.
 
     :ivar value: Specifies how the WebRTC will be spoofed. Possible values:
-     'automatic': Automatically set the webRTC public IP by the IP, and generates a random private
-     IP like '2d2f78e7-1b1e-4345-a21b-07c904c98394.local'
+     'automatic': Automatically set the webRTC public IP by the IP
      'manual': Manually override the webRTC public IP and private IP in the profile
      'block': Block the WebRTC functionality
      'off': Turn off the spoofing, use the original settings. Required. Known values are:
@@ -2497,8 +2999,7 @@ class WebRtcSpoofingTypeWebRtcSpoofingOptionsMultiLevelChoice(_serialization.Mod
     ) -> None:
         """
         :keyword value: Specifies how the WebRTC will be spoofed. Possible values:
-         'automatic': Automatically set the webRTC public IP by the IP, and generates a random private
-         IP like '2d2f78e7-1b1e-4345-a21b-07c904c98394.local'
+         'automatic': Automatically set the webRTC public IP by the IP
          'manual': Manually override the webRTC public IP and private IP in the profile
          'block': Block the WebRTC functionality
          'off': Turn off the spoofing, use the original settings. Required. Known values are:
