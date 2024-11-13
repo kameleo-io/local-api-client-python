@@ -24,8 +24,11 @@ from azure.core.utils import case_insensitive_dict
 from ... import models as _models
 from ..._operations._operations import (
     build_kameleo_local_api_add_cookies_request,
+    build_kameleo_local_api_add_profile_to_folder_request,
+    build_kameleo_local_api_create_folder_request,
     build_kameleo_local_api_create_profile_request,
     build_kameleo_local_api_delete_cookies_request,
+    build_kameleo_local_api_delete_folder_request,
     build_kameleo_local_api_delete_profile_request,
     build_kameleo_local_api_duplicate_profile_request,
     build_kameleo_local_api_export_profile_request,
@@ -35,13 +38,19 @@ from ..._operations._operations import (
     build_kameleo_local_api_healthcheck_request,
     build_kameleo_local_api_import_profile_request,
     build_kameleo_local_api_list_cookies_request,
+    build_kameleo_local_api_list_folders_request,
     build_kameleo_local_api_list_profiles_request,
+    build_kameleo_local_api_read_folder_request,
     build_kameleo_local_api_read_profile_request,
+    build_kameleo_local_api_read_sharing_options_request,
+    build_kameleo_local_api_remove_profile_from_folder_request,
     build_kameleo_local_api_search_base_profiles_request,
+    build_kameleo_local_api_share_group_request,
     build_kameleo_local_api_start_profile_request,
     build_kameleo_local_api_start_profile_with_options_request,
     build_kameleo_local_api_stop_profile_request,
     build_kameleo_local_api_terminate_application_request,
+    build_kameleo_local_api_update_folder_request,
     build_kameleo_local_api_update_profile_request,
     build_kameleo_local_api_upgrade_profile_request,
 )
@@ -439,6 +448,732 @@ class KameleoLocalApiClientOperationsMixin(KameleoLocalApiClientMixinABC):  # py
 
         if cls:
             return cls(pipeline_response, None, {})
+
+    @distributed_trace_async
+    async def list_folders(self, **kwargs: Any) -> _models.ListFoldersResponse:
+        """Gets the list of folders including subfolders and profiles that are loaded in the current
+        workspace.
+
+        Gets the list of folders including subfolders and profiles that are loaded in the current
+        workspace.
+
+        :return: ListFoldersResponse
+        :rtype: ~kameleo.local_api_client.models.ListFoldersResponse
+        :raises ~azure.core.exceptions.HttpResponseError:
+        """
+        error_map = {
+            401: ClientAuthenticationError,
+            404: ResourceNotFoundError,
+            409: ResourceExistsError,
+            304: ResourceNotModifiedError,
+        }
+        error_map.update(kwargs.pop("error_map", {}) or {})
+
+        _headers = kwargs.pop("headers", {}) or {}
+        _params = kwargs.pop("params", {}) or {}
+
+        cls: ClsType[_models.ListFoldersResponse] = kwargs.pop("cls", None)
+
+        request = build_kameleo_local_api_list_folders_request(
+            headers=_headers,
+            params=_params,
+        )
+        request.url = self._client.format_url(request.url)
+
+        _stream = False
+        pipeline_response: PipelineResponse = await self._client._pipeline.run(  # type: ignore # pylint: disable=protected-access
+            request, stream=_stream, **kwargs
+        )
+
+        response = pipeline_response.http_response
+
+        if response.status_code not in [200]:
+            map_error(status_code=response.status_code, response=response, error_map=error_map)
+            error = self._deserialize.failsafe_deserialize(_models.ProblemResponse, pipeline_response)
+            raise HttpResponseError(response=response, model=error)
+
+        deserialized = self._deserialize("ListFoldersResponse", pipeline_response)
+
+        if cls:
+            return cls(pipeline_response, deserialized, {})
+
+        return deserialized
+
+    @distributed_trace_async
+    async def read_folder(self, guid: str, **kwargs: Any) -> _models.FolderResponse:
+        """Gets the folder with the sepcified Id from the current workspace.
+
+        Gets the folder with the sepcified Id from the current workspace.
+
+        :param guid: The unique identifier of the folder. Required.
+        :type guid: str
+        :return: FolderResponse
+        :rtype: ~kameleo.local_api_client.models.FolderResponse
+        :raises ~azure.core.exceptions.HttpResponseError:
+        """
+        error_map = {
+            401: ClientAuthenticationError,
+            404: ResourceNotFoundError,
+            409: ResourceExistsError,
+            304: ResourceNotModifiedError,
+        }
+        error_map.update(kwargs.pop("error_map", {}) or {})
+
+        _headers = kwargs.pop("headers", {}) or {}
+        _params = kwargs.pop("params", {}) or {}
+
+        cls: ClsType[_models.FolderResponse] = kwargs.pop("cls", None)
+
+        request = build_kameleo_local_api_read_folder_request(
+            guid=guid,
+            headers=_headers,
+            params=_params,
+        )
+        request.url = self._client.format_url(request.url)
+
+        _stream = False
+        pipeline_response: PipelineResponse = await self._client._pipeline.run(  # type: ignore # pylint: disable=protected-access
+            request, stream=_stream, **kwargs
+        )
+
+        response = pipeline_response.http_response
+
+        if response.status_code not in [200]:
+            map_error(status_code=response.status_code, response=response, error_map=error_map)
+            error = self._deserialize.failsafe_deserialize(_models.ProblemResponse, pipeline_response)
+            raise HttpResponseError(response=response, model=error)
+
+        deserialized = self._deserialize("FolderResponse", pipeline_response)
+
+        if cls:
+            return cls(pipeline_response, deserialized, {})
+
+        return deserialized
+
+    @overload
+    async def update_folder(
+        self,
+        guid: str,
+        body: Optional[_models.UpdateFolderRequest] = None,
+        *,
+        content_type: str = "application/json",
+        **kwargs: Any
+    ) -> _models.FolderResponse:
+        """Updates the details of an existing folder, not including its content.
+
+        Updates the details of an existing folder, not including its content.
+
+        :param guid: The unique identifier of the folder. Required.
+        :type guid: str
+        :param body: Default value is None.
+        :type body: ~kameleo.local_api_client.models.UpdateFolderRequest
+        :keyword content_type: Body Parameter content-type. Content type parameter for JSON body.
+         Default value is "application/json".
+        :paramtype content_type: str
+        :return: FolderResponse
+        :rtype: ~kameleo.local_api_client.models.FolderResponse
+        :raises ~azure.core.exceptions.HttpResponseError:
+        """
+
+    @overload
+    async def update_folder(
+        self, guid: str, body: Optional[IO] = None, *, content_type: str = "application/json", **kwargs: Any
+    ) -> _models.FolderResponse:
+        """Updates the details of an existing folder, not including its content.
+
+        Updates the details of an existing folder, not including its content.
+
+        :param guid: The unique identifier of the folder. Required.
+        :type guid: str
+        :param body: Default value is None.
+        :type body: IO
+        :keyword content_type: Body Parameter content-type. Content type parameter for binary body.
+         Default value is "application/json".
+        :paramtype content_type: str
+        :return: FolderResponse
+        :rtype: ~kameleo.local_api_client.models.FolderResponse
+        :raises ~azure.core.exceptions.HttpResponseError:
+        """
+
+    @distributed_trace_async
+    async def update_folder(
+        self, guid: str, body: Optional[Union[_models.UpdateFolderRequest, IO]] = None, **kwargs: Any
+    ) -> _models.FolderResponse:
+        """Updates the details of an existing folder, not including its content.
+
+        Updates the details of an existing folder, not including its content.
+
+        :param guid: The unique identifier of the folder. Required.
+        :type guid: str
+        :param body: Is either a UpdateFolderRequest type or a IO type. Default value is None.
+        :type body: ~kameleo.local_api_client.models.UpdateFolderRequest or IO
+        :keyword content_type: Body Parameter content-type. Known values are: 'application/json'.
+         Default value is None.
+        :paramtype content_type: str
+        :return: FolderResponse
+        :rtype: ~kameleo.local_api_client.models.FolderResponse
+        :raises ~azure.core.exceptions.HttpResponseError:
+        """
+        error_map = {
+            401: ClientAuthenticationError,
+            404: ResourceNotFoundError,
+            409: ResourceExistsError,
+            304: ResourceNotModifiedError,
+        }
+        error_map.update(kwargs.pop("error_map", {}) or {})
+
+        _headers = case_insensitive_dict(kwargs.pop("headers", {}) or {})
+        _params = kwargs.pop("params", {}) or {}
+
+        content_type: Optional[str] = kwargs.pop("content_type", _headers.pop("Content-Type", None))
+        cls: ClsType[_models.FolderResponse] = kwargs.pop("cls", None)
+
+        content_type = content_type or "application/json"
+        _json = None
+        _content = None
+        if isinstance(body, (IOBase, bytes)):
+            _content = body
+        else:
+            if body is not None:
+                _json = self._serialize.body(body, "UpdateFolderRequest")
+            else:
+                _json = None
+
+        request = build_kameleo_local_api_update_folder_request(
+            guid=guid,
+            content_type=content_type,
+            json=_json,
+            content=_content,
+            headers=_headers,
+            params=_params,
+        )
+        request.url = self._client.format_url(request.url)
+
+        _stream = False
+        pipeline_response: PipelineResponse = await self._client._pipeline.run(  # type: ignore # pylint: disable=protected-access
+            request, stream=_stream, **kwargs
+        )
+
+        response = pipeline_response.http_response
+
+        if response.status_code not in [200]:
+            map_error(status_code=response.status_code, response=response, error_map=error_map)
+            error = self._deserialize.failsafe_deserialize(_models.ProblemResponse, pipeline_response)
+            raise HttpResponseError(response=response, model=error)
+
+        deserialized = self._deserialize("FolderResponse", pipeline_response)
+
+        if cls:
+            return cls(pipeline_response, deserialized, {})
+
+        return deserialized
+
+    @distributed_trace_async
+    async def delete_folder(
+        self, guid: str, *, include_profiles: bool = False, **kwargs: Any
+    ) -> _models.DeleteFolderResponse:
+        """Deletes a folder along with all its subfolders. Profiles within the folder will either be
+        deleted or moved to the top-level based on the query parameters.
+
+        Deletes a folder along with all its subfolders. Profiles within the folder will either be
+        deleted or moved to the top-level based on the query parameters.
+
+        :param guid: The unique identifier of the folder. Required.
+        :type guid: str
+        :keyword include_profiles: Flag to indicate if the contained profiles should be deleted (true)
+         or moved to the top-level (false). Default value is False.
+        :paramtype include_profiles: bool
+        :return: DeleteFolderResponse
+        :rtype: ~kameleo.local_api_client.models.DeleteFolderResponse
+        :raises ~azure.core.exceptions.HttpResponseError:
+        """
+        error_map = {
+            401: ClientAuthenticationError,
+            404: ResourceNotFoundError,
+            409: ResourceExistsError,
+            304: ResourceNotModifiedError,
+        }
+        error_map.update(kwargs.pop("error_map", {}) or {})
+
+        _headers = kwargs.pop("headers", {}) or {}
+        _params = kwargs.pop("params", {}) or {}
+
+        cls: ClsType[_models.DeleteFolderResponse] = kwargs.pop("cls", None)
+
+        request = build_kameleo_local_api_delete_folder_request(
+            guid=guid,
+            include_profiles=include_profiles,
+            headers=_headers,
+            params=_params,
+        )
+        request.url = self._client.format_url(request.url)
+
+        _stream = False
+        pipeline_response: PipelineResponse = await self._client._pipeline.run(  # type: ignore # pylint: disable=protected-access
+            request, stream=_stream, **kwargs
+        )
+
+        response = pipeline_response.http_response
+
+        if response.status_code not in [200]:
+            map_error(status_code=response.status_code, response=response, error_map=error_map)
+            error = self._deserialize.failsafe_deserialize(_models.ProblemResponse, pipeline_response)
+            raise HttpResponseError(response=response, model=error)
+
+        deserialized = self._deserialize("DeleteFolderResponse", pipeline_response)
+
+        if cls:
+            return cls(pipeline_response, deserialized, {})
+
+        return deserialized
+
+    @overload
+    async def create_folder(
+        self,
+        body: Optional[_models.CreateFolderRequest] = None,
+        *,
+        content_type: str = "application/json",
+        **kwargs: Any
+    ) -> _models.FolderResponse:
+        """Creates a new folder.
+
+        Creates a new folder.
+
+        :param body: Default value is None.
+        :type body: ~kameleo.local_api_client.models.CreateFolderRequest
+        :keyword content_type: Body Parameter content-type. Content type parameter for JSON body.
+         Default value is "application/json".
+        :paramtype content_type: str
+        :return: FolderResponse
+        :rtype: ~kameleo.local_api_client.models.FolderResponse
+        :raises ~azure.core.exceptions.HttpResponseError:
+        """
+
+    @overload
+    async def create_folder(
+        self, body: Optional[IO] = None, *, content_type: str = "application/json", **kwargs: Any
+    ) -> _models.FolderResponse:
+        """Creates a new folder.
+
+        Creates a new folder.
+
+        :param body: Default value is None.
+        :type body: IO
+        :keyword content_type: Body Parameter content-type. Content type parameter for binary body.
+         Default value is "application/json".
+        :paramtype content_type: str
+        :return: FolderResponse
+        :rtype: ~kameleo.local_api_client.models.FolderResponse
+        :raises ~azure.core.exceptions.HttpResponseError:
+        """
+
+    @distributed_trace_async
+    async def create_folder(
+        self, body: Optional[Union[_models.CreateFolderRequest, IO]] = None, **kwargs: Any
+    ) -> _models.FolderResponse:
+        """Creates a new folder.
+
+        Creates a new folder.
+
+        :param body: Is either a CreateFolderRequest type or a IO type. Default value is None.
+        :type body: ~kameleo.local_api_client.models.CreateFolderRequest or IO
+        :keyword content_type: Body Parameter content-type. Known values are: 'application/json'.
+         Default value is None.
+        :paramtype content_type: str
+        :return: FolderResponse
+        :rtype: ~kameleo.local_api_client.models.FolderResponse
+        :raises ~azure.core.exceptions.HttpResponseError:
+        """
+        error_map = {
+            401: ClientAuthenticationError,
+            404: ResourceNotFoundError,
+            409: ResourceExistsError,
+            304: ResourceNotModifiedError,
+        }
+        error_map.update(kwargs.pop("error_map", {}) or {})
+
+        _headers = case_insensitive_dict(kwargs.pop("headers", {}) or {})
+        _params = kwargs.pop("params", {}) or {}
+
+        content_type: Optional[str] = kwargs.pop("content_type", _headers.pop("Content-Type", None))
+        cls: ClsType[_models.FolderResponse] = kwargs.pop("cls", None)
+
+        content_type = content_type or "application/json"
+        _json = None
+        _content = None
+        if isinstance(body, (IOBase, bytes)):
+            _content = body
+        else:
+            if body is not None:
+                _json = self._serialize.body(body, "CreateFolderRequest")
+            else:
+                _json = None
+
+        request = build_kameleo_local_api_create_folder_request(
+            content_type=content_type,
+            json=_json,
+            content=_content,
+            headers=_headers,
+            params=_params,
+        )
+        request.url = self._client.format_url(request.url)
+
+        _stream = False
+        pipeline_response: PipelineResponse = await self._client._pipeline.run(  # type: ignore # pylint: disable=protected-access
+            request, stream=_stream, **kwargs
+        )
+
+        response = pipeline_response.http_response
+
+        if response.status_code not in [200]:
+            map_error(status_code=response.status_code, response=response, error_map=error_map)
+            error = self._deserialize.failsafe_deserialize(_models.ProblemResponse, pipeline_response)
+            raise HttpResponseError(response=response, model=error)
+
+        deserialized = self._deserialize("FolderResponse", pipeline_response)
+
+        if cls:
+            return cls(pipeline_response, deserialized, {})
+
+        return deserialized
+
+    @overload
+    async def add_profile_to_folder(
+        self,
+        guid: str,
+        body: Optional[_models.AddProfileToFolderRequest] = None,
+        *,
+        content_type: str = "application/json",
+        **kwargs: Any
+    ) -> _models.ProfileResponse:
+        """Adds the given profile to the specified folder.
+
+        Adds the given profile to the specified folder.
+
+        :param guid: The unique identifier of the folder. Required.
+        :type guid: str
+        :param body: Default value is None.
+        :type body: ~kameleo.local_api_client.models.AddProfileToFolderRequest
+        :keyword content_type: Body Parameter content-type. Content type parameter for JSON body.
+         Default value is "application/json".
+        :paramtype content_type: str
+        :return: ProfileResponse
+        :rtype: ~kameleo.local_api_client.models.ProfileResponse
+        :raises ~azure.core.exceptions.HttpResponseError:
+        """
+
+    @overload
+    async def add_profile_to_folder(
+        self, guid: str, body: Optional[IO] = None, *, content_type: str = "application/json", **kwargs: Any
+    ) -> _models.ProfileResponse:
+        """Adds the given profile to the specified folder.
+
+        Adds the given profile to the specified folder.
+
+        :param guid: The unique identifier of the folder. Required.
+        :type guid: str
+        :param body: Default value is None.
+        :type body: IO
+        :keyword content_type: Body Parameter content-type. Content type parameter for binary body.
+         Default value is "application/json".
+        :paramtype content_type: str
+        :return: ProfileResponse
+        :rtype: ~kameleo.local_api_client.models.ProfileResponse
+        :raises ~azure.core.exceptions.HttpResponseError:
+        """
+
+    @distributed_trace_async
+    async def add_profile_to_folder(
+        self, guid: str, body: Optional[Union[_models.AddProfileToFolderRequest, IO]] = None, **kwargs: Any
+    ) -> _models.ProfileResponse:
+        """Adds the given profile to the specified folder.
+
+        Adds the given profile to the specified folder.
+
+        :param guid: The unique identifier of the folder. Required.
+        :type guid: str
+        :param body: Is either a AddProfileToFolderRequest type or a IO type. Default value is None.
+        :type body: ~kameleo.local_api_client.models.AddProfileToFolderRequest or IO
+        :keyword content_type: Body Parameter content-type. Known values are: 'application/json'.
+         Default value is None.
+        :paramtype content_type: str
+        :return: ProfileResponse
+        :rtype: ~kameleo.local_api_client.models.ProfileResponse
+        :raises ~azure.core.exceptions.HttpResponseError:
+        """
+        error_map = {
+            401: ClientAuthenticationError,
+            404: ResourceNotFoundError,
+            409: ResourceExistsError,
+            304: ResourceNotModifiedError,
+        }
+        error_map.update(kwargs.pop("error_map", {}) or {})
+
+        _headers = case_insensitive_dict(kwargs.pop("headers", {}) or {})
+        _params = kwargs.pop("params", {}) or {}
+
+        content_type: Optional[str] = kwargs.pop("content_type", _headers.pop("Content-Type", None))
+        cls: ClsType[_models.ProfileResponse] = kwargs.pop("cls", None)
+
+        content_type = content_type or "application/json"
+        _json = None
+        _content = None
+        if isinstance(body, (IOBase, bytes)):
+            _content = body
+        else:
+            if body is not None:
+                _json = self._serialize.body(body, "AddProfileToFolderRequest")
+            else:
+                _json = None
+
+        request = build_kameleo_local_api_add_profile_to_folder_request(
+            guid=guid,
+            content_type=content_type,
+            json=_json,
+            content=_content,
+            headers=_headers,
+            params=_params,
+        )
+        request.url = self._client.format_url(request.url)
+
+        _stream = False
+        pipeline_response: PipelineResponse = await self._client._pipeline.run(  # type: ignore # pylint: disable=protected-access
+            request, stream=_stream, **kwargs
+        )
+
+        response = pipeline_response.http_response
+
+        if response.status_code not in [200]:
+            map_error(status_code=response.status_code, response=response, error_map=error_map)
+            error = self._deserialize.failsafe_deserialize(_models.ProblemResponse, pipeline_response)
+            raise HttpResponseError(response=response, model=error)
+
+        deserialized = self._deserialize("ProfileResponse", pipeline_response)
+
+        if cls:
+            return cls(pipeline_response, deserialized, {})
+
+        return deserialized
+
+    @distributed_trace_async
+    async def remove_profile_from_folder(self, guid: str, profile_id: str, **kwargs: Any) -> _models.ProfileResponse:
+        """Removes the given profile from the specified folder.
+
+        Removes the given profile from the specified folder.
+
+        :param guid: The unique identifier of the folder. Required.
+        :type guid: str
+        :param profile_id: The unique identifier of the profile. Required.
+        :type profile_id: str
+        :return: ProfileResponse
+        :rtype: ~kameleo.local_api_client.models.ProfileResponse
+        :raises ~azure.core.exceptions.HttpResponseError:
+        """
+        error_map = {
+            401: ClientAuthenticationError,
+            404: ResourceNotFoundError,
+            409: ResourceExistsError,
+            304: ResourceNotModifiedError,
+        }
+        error_map.update(kwargs.pop("error_map", {}) or {})
+
+        _headers = kwargs.pop("headers", {}) or {}
+        _params = kwargs.pop("params", {}) or {}
+
+        cls: ClsType[_models.ProfileResponse] = kwargs.pop("cls", None)
+
+        request = build_kameleo_local_api_remove_profile_from_folder_request(
+            guid=guid,
+            profile_id=profile_id,
+            headers=_headers,
+            params=_params,
+        )
+        request.url = self._client.format_url(request.url)
+
+        _stream = False
+        pipeline_response: PipelineResponse = await self._client._pipeline.run(  # type: ignore # pylint: disable=protected-access
+            request, stream=_stream, **kwargs
+        )
+
+        response = pipeline_response.http_response
+
+        if response.status_code not in [200]:
+            map_error(status_code=response.status_code, response=response, error_map=error_map)
+            error = self._deserialize.failsafe_deserialize(_models.ProblemResponse, pipeline_response)
+            raise HttpResponseError(response=response, model=error)
+
+        deserialized = self._deserialize("ProfileResponse", pipeline_response)
+
+        if cls:
+            return cls(pipeline_response, deserialized, {})
+
+        return deserialized
+
+    @distributed_trace_async
+    async def read_sharing_options(self, **kwargs: Any) -> _models.SharingOptionsResponse:
+        """Reads the sharing options (list of users and roles).
+
+        Reads the sharing options (list of users and roles).
+
+        :return: SharingOptionsResponse
+        :rtype: ~kameleo.local_api_client.models.SharingOptionsResponse
+        :raises ~azure.core.exceptions.HttpResponseError:
+        """
+        error_map = {
+            401: ClientAuthenticationError,
+            404: ResourceNotFoundError,
+            409: ResourceExistsError,
+            304: ResourceNotModifiedError,
+        }
+        error_map.update(kwargs.pop("error_map", {}) or {})
+
+        _headers = kwargs.pop("headers", {}) or {}
+        _params = kwargs.pop("params", {}) or {}
+
+        cls: ClsType[_models.SharingOptionsResponse] = kwargs.pop("cls", None)
+
+        request = build_kameleo_local_api_read_sharing_options_request(
+            headers=_headers,
+            params=_params,
+        )
+        request.url = self._client.format_url(request.url)
+
+        _stream = False
+        pipeline_response: PipelineResponse = await self._client._pipeline.run(  # type: ignore # pylint: disable=protected-access
+            request, stream=_stream, **kwargs
+        )
+
+        response = pipeline_response.http_response
+
+        if response.status_code not in [200]:
+            map_error(status_code=response.status_code, response=response, error_map=error_map)
+            error = self._deserialize.failsafe_deserialize(_models.ProblemResponse, pipeline_response)
+            raise HttpResponseError(response=response, model=error)
+
+        deserialized = self._deserialize("SharingOptionsResponse", pipeline_response)
+
+        if cls:
+            return cls(pipeline_response, deserialized, {})
+
+        return deserialized
+
+    @overload
+    async def share_group(
+        self,
+        guid: str,
+        body: Optional[_models.ShareGroupRequest] = None,
+        *,
+        content_type: str = "application/json",
+        **kwargs: Any
+    ) -> _models.FolderResponse:
+        """Updates the share access of the specified folder.
+
+        Updates the share access of the specified folder.
+
+        :param guid: Required.
+        :type guid: str
+        :param body: Default value is None.
+        :type body: ~kameleo.local_api_client.models.ShareGroupRequest
+        :keyword content_type: Body Parameter content-type. Content type parameter for JSON body.
+         Default value is "application/json".
+        :paramtype content_type: str
+        :return: FolderResponse
+        :rtype: ~kameleo.local_api_client.models.FolderResponse
+        :raises ~azure.core.exceptions.HttpResponseError:
+        """
+
+    @overload
+    async def share_group(
+        self, guid: str, body: Optional[IO] = None, *, content_type: str = "application/json", **kwargs: Any
+    ) -> _models.FolderResponse:
+        """Updates the share access of the specified folder.
+
+        Updates the share access of the specified folder.
+
+        :param guid: Required.
+        :type guid: str
+        :param body: Default value is None.
+        :type body: IO
+        :keyword content_type: Body Parameter content-type. Content type parameter for binary body.
+         Default value is "application/json".
+        :paramtype content_type: str
+        :return: FolderResponse
+        :rtype: ~kameleo.local_api_client.models.FolderResponse
+        :raises ~azure.core.exceptions.HttpResponseError:
+        """
+
+    @distributed_trace_async
+    async def share_group(
+        self, guid: str, body: Optional[Union[_models.ShareGroupRequest, IO]] = None, **kwargs: Any
+    ) -> _models.FolderResponse:
+        """Updates the share access of the specified folder.
+
+        Updates the share access of the specified folder.
+
+        :param guid: Required.
+        :type guid: str
+        :param body: Is either a ShareGroupRequest type or a IO type. Default value is None.
+        :type body: ~kameleo.local_api_client.models.ShareGroupRequest or IO
+        :keyword content_type: Body Parameter content-type. Known values are: 'application/json'.
+         Default value is None.
+        :paramtype content_type: str
+        :return: FolderResponse
+        :rtype: ~kameleo.local_api_client.models.FolderResponse
+        :raises ~azure.core.exceptions.HttpResponseError:
+        """
+        error_map = {
+            401: ClientAuthenticationError,
+            404: ResourceNotFoundError,
+            409: ResourceExistsError,
+            304: ResourceNotModifiedError,
+        }
+        error_map.update(kwargs.pop("error_map", {}) or {})
+
+        _headers = case_insensitive_dict(kwargs.pop("headers", {}) or {})
+        _params = kwargs.pop("params", {}) or {}
+
+        content_type: Optional[str] = kwargs.pop("content_type", _headers.pop("Content-Type", None))
+        cls: ClsType[_models.FolderResponse] = kwargs.pop("cls", None)
+
+        content_type = content_type or "application/json"
+        _json = None
+        _content = None
+        if isinstance(body, (IOBase, bytes)):
+            _content = body
+        else:
+            if body is not None:
+                _json = self._serialize.body(body, "ShareGroupRequest")
+            else:
+                _json = None
+
+        request = build_kameleo_local_api_share_group_request(
+            guid=guid,
+            content_type=content_type,
+            json=_json,
+            content=_content,
+            headers=_headers,
+            params=_params,
+        )
+        request.url = self._client.format_url(request.url)
+
+        _stream = False
+        pipeline_response: PipelineResponse = await self._client._pipeline.run(  # type: ignore # pylint: disable=protected-access
+            request, stream=_stream, **kwargs
+        )
+
+        response = pipeline_response.http_response
+
+        if response.status_code not in [200]:
+            map_error(status_code=response.status_code, response=response, error_map=error_map)
+            error = self._deserialize.failsafe_deserialize(_models.ProblemResponse, pipeline_response)
+            raise HttpResponseError(response=response, model=error)
+
+        deserialized = self._deserialize("FolderResponse", pipeline_response)
+
+        if cls:
+            return cls(pipeline_response, deserialized, {})
+
+        return deserialized
 
     @distributed_trace_async
     async def healthcheck(self, **kwargs: Any) -> None:  # pylint: disable=inconsistent-return-statements

@@ -4,20 +4,26 @@
 # Changes may cause incorrect behavior and will be lost if the code is regenerated.
 # --------------------------------------------------------------------------
 
+from ._models import AddProfileToFolderRequest
 from ._models import BaseProfile
 from ._models import BaseProfilePreview
 from ._models import BaseProfileSearchParameters
 from ._models import Browser
 from ._models import BrowserCookie
 from ._models import CookieRequest
+from ._models import CreateFolderRequest
 from ._models import CreateProfileRequest
+from ._models import DeleteFolderResponse
 from ._models import Device
 from ._models import DeviceMemorySpoofingTypeDoubleNullableMultiLevelChoice
 from ._models import ExportProfileRequest
+from ._models import FolderResponse
 from ._models import GeolocationSpoofingOptions
 from ._models import GeolocationSpoofingTypeGeolocationSpoofingOptionsMultiLevelChoice
+from ._models import GroupRole
 from ._models import HardwareConcurrencySpoofingTypeInt32NullableMultiLevelChoice
 from ._models import ImportProfileRequest
+from ._models import ListFoldersResponse
 from ._models import Os
 from ._models import Preference
 from ._models import ProblemResponse
@@ -27,9 +33,15 @@ from ._models import ProxyConnectionTypeServerMultiLevelChoice
 from ._models import QuotaStatistics
 from ._models import ScreenSpoofingTypeScreenSizeMultiLevelChoice
 from ._models import Server
+from ._models import ShareAccess
+from ._models import ShareAccessRequest
+from ._models import ShareGroupRequest
+from ._models import SharingOptionsResponse
 from ._models import StatusResponse
 from ._models import TimezoneSpoofingTypeTimezoneMultiLevelChoice
+from ._models import UpdateFolderRequest
 from ._models import UpdateProfileRequest
+from ._models import User
 from ._models import UserInfoResponse
 from ._models import WebDriverSettings
 from ._models import WebRtcSpoofingOptions
@@ -59,20 +71,26 @@ from ._patch import *  # pylint: disable=unused-wildcard-import
 from ._patch import patch_sdk as _patch_sdk
 
 __all__ = [
+    "AddProfileToFolderRequest",
     "BaseProfile",
     "BaseProfilePreview",
     "BaseProfileSearchParameters",
     "Browser",
     "BrowserCookie",
     "CookieRequest",
+    "CreateFolderRequest",
     "CreateProfileRequest",
+    "DeleteFolderResponse",
     "Device",
     "DeviceMemorySpoofingTypeDoubleNullableMultiLevelChoice",
     "ExportProfileRequest",
+    "FolderResponse",
     "GeolocationSpoofingOptions",
     "GeolocationSpoofingTypeGeolocationSpoofingOptionsMultiLevelChoice",
+    "GroupRole",
     "HardwareConcurrencySpoofingTypeInt32NullableMultiLevelChoice",
     "ImportProfileRequest",
+    "ListFoldersResponse",
     "Os",
     "Preference",
     "ProblemResponse",
@@ -82,9 +100,15 @@ __all__ = [
     "QuotaStatistics",
     "ScreenSpoofingTypeScreenSizeMultiLevelChoice",
     "Server",
+    "ShareAccess",
+    "ShareAccessRequest",
+    "ShareGroupRequest",
+    "SharingOptionsResponse",
     "StatusResponse",
     "TimezoneSpoofingTypeTimezoneMultiLevelChoice",
+    "UpdateFolderRequest",
     "UpdateProfileRequest",
+    "User",
     "UserInfoResponse",
     "WebDriverSettings",
     "WebRtcSpoofingOptions",
