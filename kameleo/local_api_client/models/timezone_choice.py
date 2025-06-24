@@ -27,7 +27,7 @@ class TimezoneChoice(BaseModel):
     """
     TimezoneChoice
     """ # noqa: E501
-    value: TimezoneSpoofingType
+    value: TimezoneSpoofingType = Field(description="Specifies how the timezone will be spoofed. Possble values:  'automatic': Timezone is automatically set by the IP  'manual': Timezone is manually overridden in the profile  'off': Turn off the spoofing, use the original settings")
     extra: Optional[StrictStr] = Field(default=None, description="When the Timezone spoofing is set to manual the timezone in Iana format is required. For example: America/Grenada")
     __properties: ClassVar[List[str]] = ["value", "extra"]
 

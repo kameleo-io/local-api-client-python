@@ -27,7 +27,7 @@ class ScreenChoice(BaseModel):
     """
     ScreenChoice
     """ # noqa: E501
-    value: ScreenSpoofingType
+    value: ScreenSpoofingType = Field(description="Specifies how the screen will be spoofed. Possible values:  'automatic': Automatically override the screen resolution based on the fingerprint.  'manual': Manually override the screen resolution.  'off': Turn off the spoofing, use the original settings.")
     extra: Optional[StrictStr] = Field(default=None, description="The screen size of the device in pixels. For example: 1920x1080")
     __properties: ClassVar[List[str]] = ["value", "extra"]
 

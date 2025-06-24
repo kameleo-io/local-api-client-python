@@ -36,15 +36,15 @@ class ProfilePreview(BaseModel):
     id: StrictStr = Field(description="A unique identifier of the profile")
     name: Optional[StrictStr] = Field(description="The name of the profile")
     tags: Optional[List[StrictStr]] = Field(description="Profile tags")
-    proxy: ProxyChoice
+    proxy: Optional[ProxyChoice] = Field(description="Proxy connection settings of the profiles. Values can be 'none', 'http', 'socks5', 'ssh'. When it is not set to none, a server is provided.")
     created_at: datetime = Field(description="Date when the profile was created.", alias="createdAt")
-    device: Device
-    os: Os
-    browser: Browser
+    device: Optional[Device] = Field(description="Device information about the profile. This is derived from the fingerprint.")
+    os: Optional[Os] = Field(description="Information about the OS of the profile. This is derived from the fingerprint.")
+    browser: Optional[Browser] = Field(description="Information about the browser of the profile. This is derived from the fingerprint.")
     language: Optional[StrictStr] = Field(description="Language of the profile as ISO 639-1 language and optionally ISO 3166-1 region code.")
-    status: StatusResponse
-    storage: Optional[ProfileStorageLocation] = None
-    folder_id: Optional[StrictStr] = Field(default=None, description="A unique identifier of the containing folder, or null if not in a folder. This will always be null for locally stored profiles, as only  cloud profiles can be added to folders.", alias="folderId")
+    status: Optional[StatusResponse] = Field(description="Status information about the profile.")
+    storage: Optional[ProfileStorageLocation] = Field(default=None, description="Profile storage property which determines where the profile is stored. The default value is 'local'. When the value is changed the profile  will be migrated.")
+    folder_id: Optional[StrictStr] = Field(default=None, description="A unique identifier of the containing folder, or empty (00000000-0000-0000-0000-000000000000) if not in a folder.  This will always be empty for locally stored profiles, as only cloud profiles can be added to folders.", alias="folderId")
     __properties: ClassVar[List[str]] = ["id", "name", "tags", "proxy", "createdAt", "device", "os", "browser", "language", "status", "storage", "folderId"]
 
     model_config = ConfigDict(
@@ -111,10 +111,35 @@ class ProfilePreview(BaseModel):
         if self.tags is None and "tags" in self.model_fields_set:
             _dict['tags'] = None
 
+        # set to None if proxy (nullable) is None
+        # and model_fields_set contains the field
+        if self.proxy is None and "proxy" in self.model_fields_set:
+            _dict['proxy'] = None
+
+        # set to None if device (nullable) is None
+        # and model_fields_set contains the field
+        if self.device is None and "device" in self.model_fields_set:
+            _dict['device'] = None
+
+        # set to None if os (nullable) is None
+        # and model_fields_set contains the field
+        if self.os is None and "os" in self.model_fields_set:
+            _dict['os'] = None
+
+        # set to None if browser (nullable) is None
+        # and model_fields_set contains the field
+        if self.browser is None and "browser" in self.model_fields_set:
+            _dict['browser'] = None
+
         # set to None if language (nullable) is None
         # and model_fields_set contains the field
         if self.language is None and "language" in self.model_fields_set:
             _dict['language'] = None
+
+        # set to None if status (nullable) is None
+        # and model_fields_set contains the field
+        if self.status is None and "status" in self.model_fields_set:
+            _dict['status'] = None
 
         # set to None if folder_id (nullable) is None
         # and model_fields_set contains the field

@@ -17,7 +17,7 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field
 from typing import Any, ClassVar, Dict, List, Optional
 from kameleo.local_api_client.models.geolocation_spoofing_options import GeolocationSpoofingOptions
 from kameleo.local_api_client.models.geolocation_spoofing_type import GeolocationSpoofingType
@@ -28,8 +28,8 @@ class GeolocationChoice(BaseModel):
     """
     GeolocationChoice
     """ # noqa: E501
-    value: GeolocationSpoofingType
-    extra: Optional[GeolocationSpoofingOptions] = None
+    value: GeolocationSpoofingType = Field(description="Specifies how the geolocation will be spoofed. Possible values:  'automatic': Automatically set the values based on the IP address  'manual': Manually set the longitude and latitude in the profile  'block': Completely block the Geolocation API  'off': Turn off the spoofing, use the original settings")
+    extra: Optional[GeolocationSpoofingOptions] = Field(default=None, description="When the Geolocation spoofing is set to manual these extra settings will be used as well.")
     __properties: ClassVar[List[str]] = ["value", "extra"]
 
     model_config = ConfigDict(
@@ -74,6 +74,11 @@ class GeolocationChoice(BaseModel):
         # override the default output from pydantic by calling `to_dict()` of extra
         if self.extra:
             _dict['extra'] = self.extra.to_dict()
+        # set to None if extra (nullable) is None
+        # and model_fields_set contains the field
+        if self.extra is None and "extra" in self.model_fields_set:
+            _dict['extra'] = None
+
         return _dict
 
     @classmethod

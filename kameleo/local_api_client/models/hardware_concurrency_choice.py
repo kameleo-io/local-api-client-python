@@ -17,7 +17,7 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, StrictInt
+from pydantic import BaseModel, ConfigDict, Field, StrictInt
 from typing import Any, ClassVar, Dict, List, Optional
 from kameleo.local_api_client.models.hardware_concurrency_spoofing_type import HardwareConcurrencySpoofingType
 from typing import Optional, Set
@@ -27,7 +27,7 @@ class HardwareConcurrencyChoice(BaseModel):
     """
     HardwareConcurrencyChoice
     """ # noqa: E501
-    value: HardwareConcurrencySpoofingType
+    value: HardwareConcurrencySpoofingType = Field(description="Specifies how the hardwareConcurrency will be spoofed. Possible values:  'automatic': Automatically set the values based on the fingerprint.  'manual': Manually set the value in the profile. Valid values: 1, 2, 4, 8, 12, 16.  'off': Turn off the spoofing, use the original settings.")
     extra: Optional[StrictInt] = None
     __properties: ClassVar[List[str]] = ["value", "extra"]
 
