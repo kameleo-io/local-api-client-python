@@ -45,6 +45,7 @@ kameleo/local_api_client/models/preference.py
 kameleo/local_api_client/models/problem_details.py
 kameleo/local_api_client/models/problem_response.py
 kameleo/local_api_client/models/profile_lifetime_state.py
+kameleo/local_api_client/models/profile_minutes_quota.py
 kameleo/local_api_client/models/profile_preview.py
 kameleo/local_api_client/models/profile_response.py
 kameleo/local_api_client/models/profile_storage_location.py

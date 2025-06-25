@@ -20,6 +20,7 @@ import json
 from datetime import datetime
 from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
+from kameleo.local_api_client.models.profile_minutes_quota import ProfileMinutesQuota
 from kameleo.local_api_client.models.quota_statistics import QuotaStatistics
 from kameleo.local_api_client.models.running_profiles_statistics import RunningProfilesStatistics
 from typing import Optional, Set
@@ -38,14 +39,16 @@ class UserInfoResponse(BaseModel):
     grace_period: StrictBool = Field(description="Indicates if the user's subscription is currently in a grace period and requires instant renewal.", alias="gracePeriod")
     last_app_login: datetime = Field(description="The date and time of the user's last login via the app.", alias="lastAppLogin")
     workspace_folder: Optional[StrictStr] = Field(description="Path to the user's workspace folder where profiles are stored. Modifying these files outside of Kameleo is strictly prohibited.", alias="workspaceFolder")
-    local_storage: QuotaStatistics = Field(alias="localStorage")
-    cloud_storage: QuotaStatistics = Field(alias="cloudStorage")
+    local_storage: Optional[QuotaStatistics] = Field(description="Current usage and maximum limit for local profiles.", alias="localStorage")
+    cloud_storage: Optional[QuotaStatistics] = Field(description="Current usage and maximum limit for cloud profiles.", alias="cloudStorage")
     has_team_subscription: StrictBool = Field(description="Indicates if the user has a team subscription. This can also be true if the user does not have any team members yet.", alias="hasTeamSubscription")
     team_id: Optional[StrictStr] = Field(description="The team ID if the user is part of a team.", alias="teamId")
     team_role: Optional[StrictStr] = Field(description="The user's role within the team, such as 'owner' or 'member'.", alias="teamRole")
-    user_profiles: Optional[RunningProfilesStatistics] = Field(default=None, alias="userProfiles")
-    team_profiles: Optional[RunningProfilesStatistics] = Field(default=None, alias="teamProfiles")
-    __properties: ClassVar[List[str]] = ["userId", "displayName", "email", "emailConfirmed", "subscriptionEnd", "capabilities", "gracePeriod", "lastAppLogin", "workspaceFolder", "localStorage", "cloudStorage", "hasTeamSubscription", "teamId", "teamRole", "userProfiles", "teamProfiles"]
+    running_user_profiles: Optional[RunningProfilesStatistics] = Field(default=None, description="Current usage and maximum limit of running manual and automated profiles for the logged-in user.", alias="runningUserProfiles")
+    running_team_profiles: Optional[RunningProfilesStatistics] = Field(default=None, description="Current usage and maximum limit of running manual and automated profiles across the user's team.", alias="runningTeamProfiles")
+    running_tenant_profiles: Optional[RunningProfilesStatistics] = Field(default=None, description="Current usage and maximum limit of running manual and automated profiles across the tenant.", alias="runningTenantProfiles")
+    profile_minutes: Optional[ProfileMinutesQuota] = Field(default=None, description="Current usage and maximum limit of profile minutes across the tenant.", alias="profileMinutes")
+    __properties: ClassVar[List[str]] = ["userId", "displayName", "email", "emailConfirmed", "subscriptionEnd", "capabilities", "gracePeriod", "lastAppLogin", "workspaceFolder", "localStorage", "cloudStorage", "hasTeamSubscription", "teamId", "teamRole", "runningUserProfiles", "runningTeamProfiles", "runningTenantProfiles", "profileMinutes"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -92,12 +95,18 @@ class UserInfoResponse(BaseModel):
         # override the default output from pydantic by calling `to_dict()` of cloud_storage
         if self.cloud_storage:
             _dict['cloudStorage'] = self.cloud_storage.to_dict()
-        # override the default output from pydantic by calling `to_dict()` of user_profiles
-        if self.user_profiles:
-            _dict['userProfiles'] = self.user_profiles.to_dict()
-        # override the default output from pydantic by calling `to_dict()` of team_profiles
-        if self.team_profiles:
-            _dict['teamProfiles'] = self.team_profiles.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of running_user_profiles
+        if self.running_user_profiles:
+            _dict['runningUserProfiles'] = self.running_user_profiles.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of running_team_profiles
+        if self.running_team_profiles:
+            _dict['runningTeamProfiles'] = self.running_team_profiles.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of running_tenant_profiles
+        if self.running_tenant_profiles:
+            _dict['runningTenantProfiles'] = self.running_tenant_profiles.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of profile_minutes
+        if self.profile_minutes:
+            _dict['profileMinutes'] = self.profile_minutes.to_dict()
         # set to None if display_name (nullable) is None
         # and model_fields_set contains the field
         if self.display_name is None and "display_name" in self.model_fields_set:
@@ -118,6 +127,16 @@ class UserInfoResponse(BaseModel):
         if self.workspace_folder is None and "workspace_folder" in self.model_fields_set:
             _dict['workspaceFolder'] = None
 
+        # set to None if local_storage (nullable) is None
+        # and model_fields_set contains the field
+        if self.local_storage is None and "local_storage" in self.model_fields_set:
+            _dict['localStorage'] = None
+
+        # set to None if cloud_storage (nullable) is None
+        # and model_fields_set contains the field
+        if self.cloud_storage is None and "cloud_storage" in self.model_fields_set:
+            _dict['cloudStorage'] = None
+
         # set to None if team_id (nullable) is None
         # and model_fields_set contains the field
         if self.team_id is None and "team_id" in self.model_fields_set:
@@ -127,6 +146,26 @@ class UserInfoResponse(BaseModel):
         # and model_fields_set contains the field
         if self.team_role is None and "team_role" in self.model_fields_set:
             _dict['teamRole'] = None
+
+        # set to None if running_user_profiles (nullable) is None
+        # and model_fields_set contains the field
+        if self.running_user_profiles is None and "running_user_profiles" in self.model_fields_set:
+            _dict['runningUserProfiles'] = None
+
+        # set to None if running_team_profiles (nullable) is None
+        # and model_fields_set contains the field
+        if self.running_team_profiles is None and "running_team_profiles" in self.model_fields_set:
+            _dict['runningTeamProfiles'] = None
+
+        # set to None if running_tenant_profiles (nullable) is None
+        # and model_fields_set contains the field
+        if self.running_tenant_profiles is None and "running_tenant_profiles" in self.model_fields_set:
+            _dict['runningTenantProfiles'] = None
+
+        # set to None if profile_minutes (nullable) is None
+        # and model_fields_set contains the field
+        if self.profile_minutes is None and "profile_minutes" in self.model_fields_set:
+            _dict['profileMinutes'] = None
 
         return _dict
 
@@ -154,8 +193,10 @@ class UserInfoResponse(BaseModel):
             "hasTeamSubscription": obj.get("hasTeamSubscription"),
             "teamId": obj.get("teamId"),
             "teamRole": obj.get("teamRole"),
-            "userProfiles": RunningProfilesStatistics.from_dict(obj["userProfiles"]) if obj.get("userProfiles") is not None else None,
-            "teamProfiles": RunningProfilesStatistics.from_dict(obj["teamProfiles"]) if obj.get("teamProfiles") is not None else None
+            "runningUserProfiles": RunningProfilesStatistics.from_dict(obj["runningUserProfiles"]) if obj.get("runningUserProfiles") is not None else None,
+            "runningTeamProfiles": RunningProfilesStatistics.from_dict(obj["runningTeamProfiles"]) if obj.get("runningTeamProfiles") is not None else None,
+            "runningTenantProfiles": RunningProfilesStatistics.from_dict(obj["runningTenantProfiles"]) if obj.get("runningTenantProfiles") is not None else None,
+            "profileMinutes": ProfileMinutesQuota.from_dict(obj["profileMinutes"]) if obj.get("profileMinutes") is not None else None
         })
         return _obj
 

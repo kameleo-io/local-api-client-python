@@ -19,7 +19,7 @@ import json
 
 from datetime import datetime
 from pydantic import BaseModel, ConfigDict, Field
-from typing import Any, ClassVar, Dict, List
+from typing import Any, ClassVar, Dict, List, Optional
 from kameleo.local_api_client.models.group_role import GroupRole
 from kameleo.local_api_client.models.user import User
 from typing import Optional, Set
@@ -29,8 +29,8 @@ class ShareAccess(BaseModel):
     """
     ShareAccess
     """ # noqa: E501
-    user: User
-    role: GroupRole
+    user: Optional[User] = Field(description="User accessing this folder.")
+    role: Optional[GroupRole] = Field(description="Level of access to the folder.")
     shared_at: datetime = Field(description="Timestamp when the acess was granted to the user.", alias="sharedAt")
     __properties: ClassVar[List[str]] = ["user", "role", "sharedAt"]
 
@@ -79,6 +79,16 @@ class ShareAccess(BaseModel):
         # override the default output from pydantic by calling `to_dict()` of role
         if self.role:
             _dict['role'] = self.role.to_dict()
+        # set to None if user (nullable) is None
+        # and model_fields_set contains the field
+        if self.user is None and "user" in self.model_fields_set:
+            _dict['user'] = None
+
+        # set to None if role (nullable) is None
+        # and model_fields_set contains the field
+        if self.role is None and "role" in self.model_fields_set:
+            _dict['role'] = None
+
         return _dict
 
     @classmethod

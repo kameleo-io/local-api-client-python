@@ -17,20 +17,20 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field
+from datetime import datetime
+from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
-from kameleo.local_api_client.models.webgl_meta_spoofing_options import WebglMetaSpoofingOptions
-from kameleo.local_api_client.models.webgl_meta_spoofing_type import WebglMetaSpoofingType
 from typing import Optional, Set
 from typing_extensions import Self
 
-class WebglMetaChoice(BaseModel):
+class ProfileMinutesQuota(BaseModel):
     """
-    WebglMetaChoice
+    ProfileMinutesQuota
     """ # noqa: E501
-    value: WebglMetaSpoofingType = Field(description="Specifies how the WebGL vendor and renderer will be spoofed. Possible values:  'automatic': The vendor and renderer values comes from the fingerprint.  'manual': Manually configure WebGL metadata. For optimal results, choose a video card model similar to your device's to ensure realistic  profile masking.  'off': Turn off the spoofing, use the original settings")
-    extra: Optional[WebglMetaSpoofingOptions] = Field(default=None, description="When the WebGL Meta spoofing is used, these settings can override the values in the fingerprint.")
-    __properties: ClassVar[List[str]] = ["value", "extra"]
+    current_usage: Optional[StrictStr] = Field(default=None, alias="currentUsage")
+    maximum_limit: Optional[StrictStr] = Field(default=None, alias="maximumLimit")
+    next_reset_at: Optional[datetime] = Field(default=None, alias="nextResetAt")
+    __properties: ClassVar[List[str]] = ["currentUsage", "maximumLimit", "nextResetAt"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -50,7 +50,7 @@ class WebglMetaChoice(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of WebglMetaChoice from a JSON string"""
+        """Create an instance of ProfileMinutesQuota from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -71,19 +71,16 @@ class WebglMetaChoice(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of extra
-        if self.extra:
-            _dict['extra'] = self.extra.to_dict()
-        # set to None if extra (nullable) is None
+        # set to None if maximum_limit (nullable) is None
         # and model_fields_set contains the field
-        if self.extra is None and "extra" in self.model_fields_set:
-            _dict['extra'] = None
+        if self.maximum_limit is None and "maximum_limit" in self.model_fields_set:
+            _dict['maximumLimit'] = None
 
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of WebglMetaChoice from a dict"""
+        """Create an instance of ProfileMinutesQuota from a dict"""
         if obj is None:
             return None
 
@@ -91,8 +88,9 @@ class WebglMetaChoice(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "value": obj.get("value"),
-            "extra": WebglMetaSpoofingOptions.from_dict(obj["extra"]) if obj.get("extra") is not None else None
+            "currentUsage": obj.get("currentUsage"),
+            "maximumLimit": obj.get("maximumLimit"),
+            "nextResetAt": obj.get("nextResetAt")
         })
         return _obj
 

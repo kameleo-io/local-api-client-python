@@ -17,7 +17,7 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, StrictFloat, StrictInt
+from pydantic import BaseModel, ConfigDict, Field, StrictFloat, StrictInt
 from typing import Any, ClassVar, Dict, List, Optional, Union
 from kameleo.local_api_client.models.device_memory_spoofing_type import DeviceMemorySpoofingType
 from typing import Optional, Set
@@ -27,7 +27,7 @@ class DeviceMemoryChoice(BaseModel):
     """
     DeviceMemoryChoice
     """ # noqa: E501
-    value: DeviceMemorySpoofingType
+    value: DeviceMemorySpoofingType = Field(description="Specifies how the deviceMemory will be spoofed. Possible values:  'automatic': Automatically set the values based on the fingerprint.  'manual': Manually set the value in the profile. Valid values: 0.25, 0.5, 1, 2, 4, 8.  'off': Turn off the spoofing, use the original settings.")
     extra: Optional[Union[StrictFloat, StrictInt]] = None
     __properties: ClassVar[List[str]] = ["value", "extra"]
 

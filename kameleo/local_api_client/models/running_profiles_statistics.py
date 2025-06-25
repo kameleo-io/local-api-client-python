@@ -17,7 +17,7 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field
 from typing import Any, ClassVar, Dict, List, Optional
 from kameleo.local_api_client.models.quota_statistics import QuotaStatistics
 from typing import Optional, Set
@@ -27,9 +27,10 @@ class RunningProfilesStatistics(BaseModel):
     """
     RunningProfilesStatistics
     """ # noqa: E501
-    automated: Optional[QuotaStatistics] = None
-    manual: Optional[QuotaStatistics] = None
-    __properties: ClassVar[List[str]] = ["automated", "manual"]
+    automated: Optional[QuotaStatistics] = Field(default=None, description="Quota usage of the profiles that are running with an automation framework.")
+    manual: Optional[QuotaStatistics] = Field(default=None, description="Quota usage of the profiles that are running manually (were started from GUI or API).")
+    total: Optional[QuotaStatistics] = Field(default=None, description="Quota usage of the profiles that are running either manually or with an automation framework.")
+    __properties: ClassVar[List[str]] = ["automated", "manual", "total"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -76,6 +77,24 @@ class RunningProfilesStatistics(BaseModel):
         # override the default output from pydantic by calling `to_dict()` of manual
         if self.manual:
             _dict['manual'] = self.manual.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of total
+        if self.total:
+            _dict['total'] = self.total.to_dict()
+        # set to None if automated (nullable) is None
+        # and model_fields_set contains the field
+        if self.automated is None and "automated" in self.model_fields_set:
+            _dict['automated'] = None
+
+        # set to None if manual (nullable) is None
+        # and model_fields_set contains the field
+        if self.manual is None and "manual" in self.model_fields_set:
+            _dict['manual'] = None
+
+        # set to None if total (nullable) is None
+        # and model_fields_set contains the field
+        if self.total is None and "total" in self.model_fields_set:
+            _dict['total'] = None
+
         return _dict
 
     @classmethod
@@ -89,7 +108,8 @@ class RunningProfilesStatistics(BaseModel):
 
         _obj = cls.model_validate({
             "automated": QuotaStatistics.from_dict(obj["automated"]) if obj.get("automated") is not None else None,
-            "manual": QuotaStatistics.from_dict(obj["manual"]) if obj.get("manual") is not None else None
+            "manual": QuotaStatistics.from_dict(obj["manual"]) if obj.get("manual") is not None else None,
+            "total": QuotaStatistics.from_dict(obj["total"]) if obj.get("total") is not None else None
         })
         return _obj
 

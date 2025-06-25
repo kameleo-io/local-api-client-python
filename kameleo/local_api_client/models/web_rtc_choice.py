@@ -17,7 +17,7 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field
 from typing import Any, ClassVar, Dict, List, Optional
 from kameleo.local_api_client.models.web_rtc_spoofing_options import WebRtcSpoofingOptions
 from kameleo.local_api_client.models.web_rtc_spoofing_type import WebRtcSpoofingType
@@ -28,8 +28,8 @@ class WebRtcChoice(BaseModel):
     """
     WebRtcChoice
     """ # noqa: E501
-    value: WebRtcSpoofingType
-    extra: Optional[WebRtcSpoofingOptions] = None
+    value: WebRtcSpoofingType = Field(description="Specifies how the WebRTC will be spoofed. Possible values:  'automatic': Automatically set the webRTC public IP by the IP  'manual': Manually override the webRTC public IP and private IP in the profile  'block': Block the WebRTC functionality  'off': Turn off the spoofing, use the original settings")
+    extra: Optional[WebRtcSpoofingOptions] = Field(default=None, description="When the WebRTC spoofing is set to manual these extra settings will be used as well.")
     __properties: ClassVar[List[str]] = ["value", "extra"]
 
     model_config = ConfigDict(
@@ -74,6 +74,11 @@ class WebRtcChoice(BaseModel):
         # override the default output from pydantic by calling `to_dict()` of extra
         if self.extra:
             _dict['extra'] = self.extra.to_dict()
+        # set to None if extra (nullable) is None
+        # and model_fields_set contains the field
+        if self.extra is None and "extra" in self.model_fields_set:
+            _dict['extra'] = None
+
         return _dict
 
     @classmethod

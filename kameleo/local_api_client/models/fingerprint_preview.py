@@ -17,7 +17,7 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictStr
+from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
 from kameleo.local_api_client.models.browser import Browser
 from kameleo.local_api_client.models.device import Device
@@ -31,11 +31,13 @@ class FingerprintPreview(BaseModel):
     Provides a summarized view of a fingerprint, which encapsulates real-world browser fingerprint configurations used to  instantiate virtual browser profiles. This preview aids in selecting the appropriate fingerprint from hundreds of thousands available.
     """ # noqa: E501
     id: Optional[StrictStr] = Field(description="The unique identifier of the fingerprint. You can use this as a reference to create a new profile from this fingerprint.")
-    device: Device
-    os: Os
-    browser: Browser
-    webgl_meta: WebglMeta = Field(alias="webglMeta")
-    __properties: ClassVar[List[str]] = ["id", "device", "os", "browser", "webglMeta"]
+    device: Optional[Device] = Field(description="Information about the device of the fingerprint.")
+    os: Optional[Os] = Field(description="Information about the OS of the fingerprint.")
+    browser: Optional[Browser] = Field(description="Information about the browser of the fingerprint.")
+    webgl_meta: Optional[WebglMeta] = Field(description="The GPU details of the fingerprint extracted from WebGL parameters.", alias="webglMeta")
+    user_agent: Optional[StrictStr] = Field(description="The user agent of the fingerprint.", alias="userAgent")
+    fonts_count: StrictInt = Field(description="The number of fonts in the fingerprint.", alias="fontsCount")
+    __properties: ClassVar[List[str]] = ["id", "device", "os", "browser", "webglMeta", "userAgent", "fontsCount"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -93,6 +95,31 @@ class FingerprintPreview(BaseModel):
         if self.id is None and "id" in self.model_fields_set:
             _dict['id'] = None
 
+        # set to None if device (nullable) is None
+        # and model_fields_set contains the field
+        if self.device is None and "device" in self.model_fields_set:
+            _dict['device'] = None
+
+        # set to None if os (nullable) is None
+        # and model_fields_set contains the field
+        if self.os is None and "os" in self.model_fields_set:
+            _dict['os'] = None
+
+        # set to None if browser (nullable) is None
+        # and model_fields_set contains the field
+        if self.browser is None and "browser" in self.model_fields_set:
+            _dict['browser'] = None
+
+        # set to None if webgl_meta (nullable) is None
+        # and model_fields_set contains the field
+        if self.webgl_meta is None and "webgl_meta" in self.model_fields_set:
+            _dict['webglMeta'] = None
+
+        # set to None if user_agent (nullable) is None
+        # and model_fields_set contains the field
+        if self.user_agent is None and "user_agent" in self.model_fields_set:
+            _dict['userAgent'] = None
+
         return _dict
 
     @classmethod
@@ -109,7 +136,9 @@ class FingerprintPreview(BaseModel):
             "device": Device.from_dict(obj["device"]) if obj.get("device") is not None else None,
             "os": Os.from_dict(obj["os"]) if obj.get("os") is not None else None,
             "browser": Browser.from_dict(obj["browser"]) if obj.get("browser") is not None else None,
-            "webglMeta": WebglMeta.from_dict(obj["webglMeta"]) if obj.get("webglMeta") is not None else None
+            "webglMeta": WebglMeta.from_dict(obj["webglMeta"]) if obj.get("webglMeta") is not None else None,
+            "userAgent": obj.get("userAgent"),
+            "fontsCount": obj.get("fontsCount")
         })
         return _obj
 

@@ -17,7 +17,7 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field
 from typing import Any, ClassVar, Dict, List, Optional
 from kameleo.local_api_client.models.proxy_connection_type import ProxyConnectionType
 from kameleo.local_api_client.models.server import Server
@@ -28,8 +28,8 @@ class ProxyChoice(BaseModel):
     """
     ProxyChoice
     """ # noqa: E501
-    value: ProxyConnectionType
-    extra: Optional[Server] = None
+    value: ProxyConnectionType = Field(description="Proxy connection settings of the profiles. Possible values:  'none': Direct connection without any proxy.  'http': Use a HTTP proxy for upstream communication.  'socks5': Use a SOCKS5 proxy for upstream communication.  'ssh': Use an SSH connection for upstream communication. Basically a SOCKS5 proxy created at the given SSH host.")
+    extra: Optional[Server] = Field(default=None, description="Represents a server connection. It can be used as a proxy server connection as well.")
     __properties: ClassVar[List[str]] = ["value", "extra"]
 
     model_config = ConfigDict(
@@ -74,6 +74,11 @@ class ProxyChoice(BaseModel):
         # override the default output from pydantic by calling `to_dict()` of extra
         if self.extra:
             _dict['extra'] = self.extra.to_dict()
+        # set to None if extra (nullable) is None
+        # and model_fields_set contains the field
+        if self.extra is None and "extra" in self.model_fields_set:
+            _dict['extra'] = None
+
         return _dict
 
     @classmethod
