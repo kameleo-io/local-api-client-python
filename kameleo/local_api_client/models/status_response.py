@@ -27,7 +27,7 @@ class StatusResponse(BaseModel):
     """
     Status information about the profile
     """ # noqa: E501
-    lifetime_state: ProfileLifetimeState = Field(alias="lifetimeState")
+    lifetime_state: ProfileLifetimeState = Field(description="Represents the lifetime states of a profile, indicating which actions  can be performed with the associated browser engine at each state. Possible values are:  - Created: Profile is created; the associated browser engine is not started.  - Starting: The associated browser engine is starting.  - Running: The associated browser engine is currently running.  - Terminating: The associated browser engine is in the process of terminating.  - Terminated: The associated browser engine is not running but has been started at least once.  - Locked: The profile is currently being used by another user.  - Loading: The profile data or the browser engine is syncing with the cloud storage.  - Unknown: State of the profile is undefined.", alias="lifetimeState")
     __properties: ClassVar[List[str]] = ["lifetimeState"]
 
     model_config = ConfigDict(

@@ -32,13 +32,14 @@ class Fingerprint(BaseModel):
     """ # noqa: E501
     version: Optional[StrictStr] = Field(description="The version of the fingerprint. As time passes new fingerprint versions will be introduced. It is recommended to use the latest one.")
     id: Optional[StrictStr] = Field(description="The unique identifier of the fingerprint. You can use this as a reference to create a new profile from this fingerprint.")
-    device: Device
-    os: Os
-    browser: Browser
-    webgl_meta: WebglMeta = Field(alias="webglMeta")
-    resolution: Optional[StrictStr] = Field(description="The screen size of the device in pixels")
-    fonts: Optional[List[StrictStr]] = Field(description="A list of font types included in the profile")
-    __properties: ClassVar[List[str]] = ["version", "id", "device", "os", "browser", "webglMeta", "resolution", "fonts"]
+    user_agent: Optional[StrictStr] = Field(description="The user agent of the browser fingerprint.", alias="userAgent")
+    device: Optional[Device] = Field(description="Information about the device of the fingerprint.")
+    os: Optional[Os] = Field(description="Information about the OS of the fingerprint.")
+    browser: Optional[Browser] = Field(description="Information about the browser of the fingerprint.")
+    webgl_meta: Optional[WebglMeta] = Field(description="The GPU details extracted from WebGL parameters.", alias="webglMeta")
+    resolution: Optional[StrictStr] = Field(description="The screen size of the device in pixels.")
+    fonts: Optional[List[StrictStr]] = Field(description="A list of font types included in the profile.")
+    __properties: ClassVar[List[str]] = ["version", "id", "userAgent", "device", "os", "browser", "webglMeta", "resolution", "fonts"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -101,6 +102,31 @@ class Fingerprint(BaseModel):
         if self.id is None and "id" in self.model_fields_set:
             _dict['id'] = None
 
+        # set to None if user_agent (nullable) is None
+        # and model_fields_set contains the field
+        if self.user_agent is None and "user_agent" in self.model_fields_set:
+            _dict['userAgent'] = None
+
+        # set to None if device (nullable) is None
+        # and model_fields_set contains the field
+        if self.device is None and "device" in self.model_fields_set:
+            _dict['device'] = None
+
+        # set to None if os (nullable) is None
+        # and model_fields_set contains the field
+        if self.os is None and "os" in self.model_fields_set:
+            _dict['os'] = None
+
+        # set to None if browser (nullable) is None
+        # and model_fields_set contains the field
+        if self.browser is None and "browser" in self.model_fields_set:
+            _dict['browser'] = None
+
+        # set to None if webgl_meta (nullable) is None
+        # and model_fields_set contains the field
+        if self.webgl_meta is None and "webgl_meta" in self.model_fields_set:
+            _dict['webglMeta'] = None
+
         # set to None if resolution (nullable) is None
         # and model_fields_set contains the field
         if self.resolution is None and "resolution" in self.model_fields_set:
@@ -125,6 +151,7 @@ class Fingerprint(BaseModel):
         _obj = cls.model_validate({
             "version": obj.get("version"),
             "id": obj.get("id"),
+            "userAgent": obj.get("userAgent"),
             "device": Device.from_dict(obj["device"]) if obj.get("device") is not None else None,
             "os": Os.from_dict(obj["os"]) if obj.get("os") is not None else None,
             "browser": Browser.from_dict(obj["browser"]) if obj.get("browser") is not None else None,

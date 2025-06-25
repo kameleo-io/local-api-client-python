@@ -14,7 +14,7 @@
 """  # noqa: E501
 
 
-__version__ = "4.0.0"
+__version__ = "4.1.0"
 
 # import KameleoLocalApiClient into sdk package
 from kameleo.local_api_client.kameleo_local_api_client import KameleoLocalApiClient
@@ -72,6 +72,7 @@ from kameleo.local_api_client.models.preference import Preference
 from kameleo.local_api_client.models.problem_details import ProblemDetails
 from kameleo.local_api_client.models.problem_response import ProblemResponse
 from kameleo.local_api_client.models.profile_lifetime_state import ProfileLifetimeState
+from kameleo.local_api_client.models.profile_minutes_quota import ProfileMinutesQuota
 from kameleo.local_api_client.models.profile_preview import ProfilePreview
 from kameleo.local_api_client.models.profile_response import ProfileResponse
 from kameleo.local_api_client.models.profile_storage_location import ProfileStorageLocation

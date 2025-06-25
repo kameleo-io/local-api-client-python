@@ -43,26 +43,26 @@ class CreateProfileRequest(BaseModel):
     """ # noqa: E501
     fingerprint_id: Annotated[str, Field(min_length=1, strict=True)] = Field(description="The unique identifier of the fingerprint. This references the fingerprint which should be used to build the new profile.", alias="fingerprintId")
     name: Optional[StrictStr] = Field(default=None, description="Sets a human-readable name for the profile, which is modifiable at any time.")
-    folder_id: Optional[StrictStr] = Field(default=None, description="Id of the folder the profile should be created in.", alias="folderId")
+    folder_id: Optional[StrictStr] = Field(default=None, description="Id of the folder the profile should be created in. If null or empty (00000000-0000-0000-0000-000000000000) the profile will be created in root.", alias="folderId")
     tags: Optional[List[StrictStr]] = Field(default=None, description="Use tags to categorize profiles by labeling them accordingly.")
-    canvas: Optional[CanvasSpoofingType] = None
-    webgl: Optional[WebglSpoofingType] = None
-    webgl_meta: Optional[WebglMetaChoice] = Field(default=None, alias="webglMeta")
-    audio: Optional[AudioSpoofingType] = None
-    timezone: Optional[TimezoneChoice] = None
-    geolocation: Optional[GeolocationChoice] = None
-    proxy: Optional[ProxyChoice] = None
-    web_rtc: Optional[WebRtcChoice] = Field(default=None, alias="webRtc")
-    fonts: Optional[FontSpoofingType] = None
-    screen: Optional[ScreenChoice] = None
-    hardware_concurrency: Optional[HardwareConcurrencyChoice] = Field(default=None, alias="hardwareConcurrency")
-    device_memory: Optional[DeviceMemoryChoice] = Field(default=None, alias="deviceMemory")
+    canvas: Optional[CanvasSpoofingType] = Field(default=None, description="Specifies how the canvas will be spoofed. Possible values:  'intelligent': Use intelligent canvas spoofing. This will result non-unique canvas fingerprints.  'noise': Add some noise to canvas generation.  'block': Completely block the 2D API.  'off': Turn off the spoofing, use the original settings.")
+    webgl: Optional[WebglSpoofingType] = Field(default=None, description="Specifies how the WebGL will be spoofed. Possible values:  'noise': Add some noise to the WebGL generation  'block': Completely block the 3D API  'off': Turn off the spoofing, use the original settings")
+    webgl_meta: Optional[WebglMetaChoice] = Field(default=None, description="Sets how the WebGL Vendor and Renderer will be spoofed. Values can be 'automatic', 'manual', 'off'.", alias="webglMeta")
+    audio: Optional[AudioSpoofingType] = Field(default=None, description="Specifies how the audio will be spoofed. Possible values:  'noise': Add some noise to the Audio generation  'block': Completely block the Audio API  'off': Turn off the spoofing, use the original settings")
+    timezone: Optional[TimezoneChoice] = Field(default=None, description="Sets how the Timezone will be spoofed. Values can be 'automatic', 'manual', 'off'.")
+    geolocation: Optional[GeolocationChoice] = Field(default=None, description="Sets how the Geolocation will be spoofed. Values can be 'automatic', 'manual', 'block', 'off'.")
+    proxy: Optional[ProxyChoice] = Field(default=None, description="Sets the Proxy connection settings of the profile. Values can be 'none', 'http', 'socks5', 'ssh'. When it is not set to none, a server must  be provided.")
+    web_rtc: Optional[WebRtcChoice] = Field(default=None, description="Sets how the WebRTC will be spoofed. Values can be 'automatic', 'manual', 'block', 'off'.", alias="webRtc")
+    fonts: Optional[FontSpoofingType] = Field(default=None, description="Specifies how the fonts will be spoofed. Possible values:  'automatic': Spoof fonts based on the browser fingerpint.  'off': Don't spoof fonts, use the real fonts of your machine.")
+    screen: Optional[ScreenChoice] = Field(default=None, description="Sets how the Screen will be spoofed. Values can be 'automatic', 'manual', 'off'. When value is set to manual, a ScreenSize must be  provided.")
+    hardware_concurrency: Optional[HardwareConcurrencyChoice] = Field(default=None, description="Sets how the Hardware Concurrency will be spoofed. Values can be 'automatic', 'manual', 'off'. When value is set to manual, a numeric value  (1, 2, 4, 8, 12 or 16) must be provided.", alias="hardwareConcurrency")
+    device_memory: Optional[DeviceMemoryChoice] = Field(default=None, description="Sets how the Device Memory will be spoofed. Values can be 'automatic', 'manual', 'off'. When value is set to manual, a numeric value (0.25,  0.5, 1, 2, 4, 8) must be provided.", alias="deviceMemory")
     language: Optional[StrictStr] = Field(default=None, description="Language of the profile as ISO 639-1 language and optionally ISO 3166-1 region code.")
     start_page: Optional[StrictStr] = Field(default=None, description="This website will be opened in the browser when the profile launches.", alias="startPage")
-    password_manager: Optional[PasswordManagerType] = Field(default=None, alias="passwordManager")
+    password_manager: Optional[PasswordManagerType] = Field(default=None, description="Defines whether the browser can save login credentials. Possible values are:  'enabled': Credential saving is allowed.  'disabled': Credential saving is blocked.", alias="passwordManager")
     extensions: Optional[List[StrictStr]] = Field(default=None, description="A list of abolute paths from where the profile should load extensions or addons when starting the browser. For chrome and edge use CRX3  format extensions. For firefox use signed xpi format addons.")
     notes: Optional[StrictStr] = Field(default=None, description="A free text including any notes written by the user.")
-    storage: Optional[ProfileStorageLocation] = None
+    storage: Optional[ProfileStorageLocation] = Field(default=None, description="Profile storage property which determines where the profile is stored. The default value is 'local'. When the value is changed the profile  will be migrated.")
     __properties: ClassVar[List[str]] = ["fingerprintId", "name", "folderId", "tags", "canvas", "webgl", "webglMeta", "audio", "timezone", "geolocation", "proxy", "webRtc", "fonts", "screen", "hardwareConcurrency", "deviceMemory", "language", "startPage", "passwordManager", "extensions", "notes", "storage"]
 
     model_config = ConfigDict(
@@ -142,6 +142,46 @@ class CreateProfileRequest(BaseModel):
         # and model_fields_set contains the field
         if self.tags is None and "tags" in self.model_fields_set:
             _dict['tags'] = None
+
+        # set to None if webgl_meta (nullable) is None
+        # and model_fields_set contains the field
+        if self.webgl_meta is None and "webgl_meta" in self.model_fields_set:
+            _dict['webglMeta'] = None
+
+        # set to None if timezone (nullable) is None
+        # and model_fields_set contains the field
+        if self.timezone is None and "timezone" in self.model_fields_set:
+            _dict['timezone'] = None
+
+        # set to None if geolocation (nullable) is None
+        # and model_fields_set contains the field
+        if self.geolocation is None and "geolocation" in self.model_fields_set:
+            _dict['geolocation'] = None
+
+        # set to None if proxy (nullable) is None
+        # and model_fields_set contains the field
+        if self.proxy is None and "proxy" in self.model_fields_set:
+            _dict['proxy'] = None
+
+        # set to None if web_rtc (nullable) is None
+        # and model_fields_set contains the field
+        if self.web_rtc is None and "web_rtc" in self.model_fields_set:
+            _dict['webRtc'] = None
+
+        # set to None if screen (nullable) is None
+        # and model_fields_set contains the field
+        if self.screen is None and "screen" in self.model_fields_set:
+            _dict['screen'] = None
+
+        # set to None if hardware_concurrency (nullable) is None
+        # and model_fields_set contains the field
+        if self.hardware_concurrency is None and "hardware_concurrency" in self.model_fields_set:
+            _dict['hardwareConcurrency'] = None
+
+        # set to None if device_memory (nullable) is None
+        # and model_fields_set contains the field
+        if self.device_memory is None and "device_memory" in self.model_fields_set:
+            _dict['deviceMemory'] = None
 
         # set to None if language (nullable) is None
         # and model_fields_set contains the field

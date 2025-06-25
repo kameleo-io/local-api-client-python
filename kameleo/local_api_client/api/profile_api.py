@@ -49,7 +49,7 @@ class ProfileApi:
     @validate_call
     def create_profile(
         self,
-        create_profile_request: Optional[CreateProfileRequest] = None,
+        create_profile_request: CreateProfileRequest,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -66,7 +66,7 @@ class ProfileApi:
         """Create a new profile based on a selected fingerprint. Supply the required configuration in the request body, then receive the newly  created profile’s full details.
 
 
-        :param create_profile_request:
+        :param create_profile_request: (required)
         :type create_profile_request: CreateProfileRequest
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -116,7 +116,7 @@ class ProfileApi:
     @validate_call
     def create_profile_with_http_info(
         self,
-        create_profile_request: Optional[CreateProfileRequest] = None,
+        create_profile_request: CreateProfileRequest,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -133,7 +133,7 @@ class ProfileApi:
         """Create a new profile based on a selected fingerprint. Supply the required configuration in the request body, then receive the newly  created profile’s full details.
 
 
-        :param create_profile_request:
+        :param create_profile_request: (required)
         :type create_profile_request: CreateProfileRequest
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -183,7 +183,7 @@ class ProfileApi:
     @validate_call
     def create_profile_without_preload_content(
         self,
-        create_profile_request: Optional[CreateProfileRequest] = None,
+        create_profile_request: CreateProfileRequest,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -200,7 +200,7 @@ class ProfileApi:
         """Create a new profile based on a selected fingerprint. Supply the required configuration in the request body, then receive the newly  created profile’s full details.
 
 
-        :param create_profile_request:
+        :param create_profile_request: (required)
         :type create_profile_request: CreateProfileRequest
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -852,7 +852,7 @@ class ProfileApi:
     def export_profile(
         self,
         profile_id: Annotated[StrictStr, Field(description="The unique identifier of the profile")],
-        export_profile_request: Optional[ExportProfileRequest] = None,
+        export_profile_request: ExportProfileRequest,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -871,7 +871,7 @@ class ProfileApi:
 
         :param profile_id: The unique identifier of the profile (required)
         :type profile_id: str
-        :param export_profile_request:
+        :param export_profile_request: (required)
         :type export_profile_request: ExportProfileRequest
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -924,7 +924,7 @@ class ProfileApi:
     def export_profile_with_http_info(
         self,
         profile_id: Annotated[StrictStr, Field(description="The unique identifier of the profile")],
-        export_profile_request: Optional[ExportProfileRequest] = None,
+        export_profile_request: ExportProfileRequest,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -943,7 +943,7 @@ class ProfileApi:
 
         :param profile_id: The unique identifier of the profile (required)
         :type profile_id: str
-        :param export_profile_request:
+        :param export_profile_request: (required)
         :type export_profile_request: ExportProfileRequest
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -996,7 +996,7 @@ class ProfileApi:
     def export_profile_without_preload_content(
         self,
         profile_id: Annotated[StrictStr, Field(description="The unique identifier of the profile")],
-        export_profile_request: Optional[ExportProfileRequest] = None,
+        export_profile_request: ExportProfileRequest,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1015,7 +1015,7 @@ class ProfileApi:
 
         :param profile_id: The unique identifier of the profile (required)
         :type profile_id: str
-        :param export_profile_request:
+        :param export_profile_request: (required)
         :type export_profile_request: ExportProfileRequest
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -2744,7 +2744,7 @@ class ProfileApi:
     def update_profile(
         self,
         profile_id: Annotated[StrictStr, Field(description="The unique identifier of the profile")],
-        update_profile_request: Optional[UpdateProfileRequest] = None,
+        update_profile_request: UpdateProfileRequest,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -2763,7 +2763,7 @@ class ProfileApi:
 
         :param profile_id: The unique identifier of the profile (required)
         :type profile_id: str
-        :param update_profile_request:
+        :param update_profile_request: (required)
         :type update_profile_request: UpdateProfileRequest
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -2816,7 +2816,7 @@ class ProfileApi:
     def update_profile_with_http_info(
         self,
         profile_id: Annotated[StrictStr, Field(description="The unique identifier of the profile")],
-        update_profile_request: Optional[UpdateProfileRequest] = None,
+        update_profile_request: UpdateProfileRequest,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -2835,7 +2835,7 @@ class ProfileApi:
 
         :param profile_id: The unique identifier of the profile (required)
         :type profile_id: str
-        :param update_profile_request:
+        :param update_profile_request: (required)
         :type update_profile_request: UpdateProfileRequest
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -2888,7 +2888,7 @@ class ProfileApi:
     def update_profile_without_preload_content(
         self,
         profile_id: Annotated[StrictStr, Field(description="The unique identifier of the profile")],
-        update_profile_request: Optional[UpdateProfileRequest] = None,
+        update_profile_request: UpdateProfileRequest,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -2907,7 +2907,7 @@ class ProfileApi:
 
         :param profile_id: The unique identifier of the profile (required)
         :type profile_id: str
-        :param update_profile_request:
+        :param update_profile_request: (required)
         :type update_profile_request: UpdateProfileRequest
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
