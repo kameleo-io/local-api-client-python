@@ -201,16 +201,13 @@ create_profile_request = CreateProfileRequest(
 profile = client.profile.create_profile(create_profile_request)
 
 # Start the profile
-client.profile.start_profile(profile.id, {
+client.profile.start_profile(profile.id, BrowserSettings(
     # This allows you to click on elements using the cursor when emulating a touch screen in the browser.
     # If you leave this out, your script may time out after clicks and fail.
-    'additionalOptions': [
-        {
-            'key': 'disableTouchEmulation',
-            'value': True,
-        },
+    additional_options=[
+        Preference(key='disableTouchEmulation', value=True)
     ],
-})
+))
 
 # At this point you can automate the browser with your favorite framework
 ```
